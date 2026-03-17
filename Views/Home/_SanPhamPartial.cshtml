@@ -1,0 +1,20 @@
+﻿@model List<Wedsite_LTWW.Models.SanPham>
+
+@foreach (var item in Model)
+{
+    <div class="product-card">
+        <a href="@Url.Action("SanPham","Home", new { id = item.Id })">
+            <div class="product-image">
+                <img src="@Url.Content("~/Images/" + item.Hinh)" />
+            </div>
+
+            <div class="product-name">
+                @item.Ten
+            </div>
+
+            <div class="product-price">
+                @item.Gia.ToString("N0") VNĐ
+            </div>
+        </a>
+    </div>
+}

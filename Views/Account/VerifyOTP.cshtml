@@ -1,0 +1,317 @@
+﻿@{
+    ViewBag.Title = "VerifyOTP";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+
+    <meta charset="utf-8">
+
+    <title>OTP Verification</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:radial-gradient(circle at top,#1c1c1c,#050505);
+color:white;
+}
+
+/* CARD */
+
+.card{
+width:420px;
+padding:45px;
+background:rgba(20,20,20,0.9);
+border-radius:20px;
+border:1px solid rgba(255,255,255,0.05);
+box-shadow:
+0 0 0 1px rgba(255,255,255,0.02),
+0 25px 60px rgba(0,0,0,0.7);
+text-align:center;
+backdrop-filter:blur(20px);
+animation:fade .6s ease;
+}
+
+@@keyframes fade{
+from{
+opacity:0;
+transform:translateY(20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* HEADER */
+
+.logo{
+font-size:32px;
+font-weight:600;
+letter-spacing:1px;
+margin-bottom:8px;
+}
+
+.title{
+font-size:20px;
+margin-bottom:6px;
+color:#ddd;
+}
+
+.sub{
+color:#8a8a8a;
+margin-bottom:35px;
+font-size:14px;
+}
+
+/* OTP BOX */
+
+.otp-container{
+display:flex;
+justify-content:center;
+gap:14px;
+}
+
+.otp{
+width:58px;
+height:65px;
+background:#0e0e0e;
+border-radius:12px;
+border:1px solid #2d2d2d;
+font-size:24px;
+text-align:center;
+color:white;
+transition:.25s;
+}
+
+.otp:hover{
+border:1px solid #8b5cf6;
+}
+
+.otp:focus{
+outline:none;
+border:1px solid #8b5cf6;
+box-shadow:0 0 15px rgba(139,92,246,0.4);
+transform:translateY(-2px);
+}
+
+/* BUTTON */
+
+button{
+margin-top:35px;
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+
+background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+
+color:white;
+font-size:16px;
+font-weight:600;
+
+cursor:pointer;
+
+transition:.25s;
+}
+
+button:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 10px 25px rgba(139,92,246,0.5);
+
+background:linear-gradient(135deg,#9f67ff,#7c3aed);
+
+}
+
+button:active{
+
+transform:scale(.97);
+
+}
+
+/* TIMER */
+
+.timer{
+margin-top:18px;
+color:#9a9a9a;
+}
+
+/* RESEND */
+
+.resend{
+margin-top:15px;
+padding:10px;
+border-radius:8px;
+border:1px solid #8b5cf6;
+color:#8b5cf6;
+cursor:pointer;
+display:none;
+transition:.25s;
+}
+
+.resend:hover{
+background:#8b5cf6;
+color:white;
+}
+
+/* ERROR */
+
+.error{
+color:#ff6b6b;
+margin-top:12px;
+}
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="card" id="card">
+
+        <div class="logo">Gas Spark</div>
+
+        <div class="title">Xác nhận OTP</div>
+
+        <div class="sub">Nhập mã 6 số đã gửi tới Gmail</div>
+
+        <form method="post" id="otpForm">
+
+            <div class="otp-container">
+
+                <input class="otp" maxlength="1">
+                <input class="otp" maxlength="1">
+                <input class="otp" maxlength="1">
+                <input class="otp" maxlength="1">
+                <input class="otp" maxlength="1">
+                <input class="otp" maxlength="1">
+
+            </div>
+
+            <input type="hidden" name="otp" id="otpValue">
+
+            <button id="verifyBtn">Xác nhận</button>
+
+        </form>
+
+        <div class="timer">
+            Gửi lại mã sau <span id="countdown">60</span>s
+        </div>
+
+        <div class="resend" id="resendBtn">
+            Gửi lại mã OTP
+        </div>
+
+        <div class="error">@ViewBag.Error</div>
+
+    </div>
+
+    <script>
+
+        const inputs = document.querySelectorAll(".otp")
+
+        inputs[0].focus()
+
+        inputs.forEach((input, index) => {
+
+            input.addEventListener("input", () => {
+
+                if (input.value.length == 1 && index < 5) {
+                    inputs[index + 1].focus()
+                }
+
+                checkAutoSubmit()
+
+            })
+
+            input.addEventListener("keydown", (e) => {
+
+                if (e.key === "Backspace" && input.value == "" && index > 0) {
+                    inputs[index - 1].focus()
+                }
+
+            })
+
+        })
+
+        /* AUTO SUBMIT */
+
+        function checkAutoSubmit() {
+
+            let otp = ""
+
+            inputs.forEach(i => otp += i.value)
+
+            if (otp.length === 6) {
+
+                document.getElementById("otpValue").value = otp
+
+                const btn = document.getElementById("verifyBtn")
+
+                btn.innerHTML = "Đang xác nhận..."
+                btn.style.opacity = "0.7"
+                btn.style.pointerEvents = "none"
+
+                setTimeout(() => {
+
+                    document.getElementById("otpForm").submit()
+
+                }, 700)
+
+            }
+
+        }
+
+        /* TIMER */
+
+        let time = 60
+
+        const timer = setInterval(() => {
+
+            time--
+
+            document.getElementById("countdown").innerText = time
+
+            if (time <= 0) {
+
+                clearInterval(timer)
+
+                document.querySelector(".timer").style.display = "none"
+
+                document.querySelector(".resend").style.display = "block"
+
+            }
+
+        }, 1000)
+
+        /* RESEND */
+
+        document.getElementById("resendBtn").onclick = function () {
+
+            location.reload()
+
+        }
+
+    </script>
+
+</body>
+
+</html>

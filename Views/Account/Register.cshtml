@@ -1,0 +1,276 @@
+﻿@{
+    Layout = null;
+}
+
+@model Wedsite_LTWW.Models.Users
+
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="utf-8" />
+    <title>Đăng ký - Gas Spark</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: Arial;
+            overflow: hidden;
+        }
+
+        /* video */
+
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* lớp tối */
+
+        .overlay {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.35);
+        }
+
+        /* register box */
+
+        .register-box {
+            width: 380px;
+            padding: 40px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            color: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            animation: fadeUp 0.8s ease;
+        }
+
+        @@keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%,-40%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%,-50%);
+            }
+        }
+
+        .register-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* input */
+
+        .register-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.9);
+        }
+
+        /* password box */
+
+        .password-box {
+            position: relative;
+        }
+
+            .password-box i {
+                position: absolute;
+                right: 12px;
+                top: 50%;
+                transform: translateY(-50%);
+                cursor: pointer;
+                color: #555;
+            }
+
+        /* button */
+
+        .register-box button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg,#ff7b00,#ff3c00);
+            color: white;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+            .register-box button:hover {
+                transform: scale(1.05);
+            }
+
+        /* link login */
+
+        .login-link {
+            margin-top: 15px;
+            text-align: center;
+        }
+
+            .login-link a {
+                color: #ffd27a;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+                .login-link a:hover {
+                    text-decoration: underline;
+                }
+
+        /* home */
+
+        .home-circle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #ff5a00;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transition: 0.3s;
+            z-index: 10;
+        }
+
+            .home-circle:hover {
+                background: linear-gradient(45deg,#ff7b00,#ff3c00);
+                color: white;
+                transform: scale(1.1);
+            }
+
+        /* password rules */
+
+        #password-rules {
+            font-size: 13px;
+            margin-top: 5px;
+        }
+
+        .valid {
+            color: #4cff4c;
+        }
+
+        .invalid {
+            color: #ff8080;
+        }
+
+        .strength-bar {
+            width: 100%;
+            height: 6px;
+            background: #ddd;
+            margin-top: 8px;
+            border-radius: 5px;
+        }
+
+        #strength {
+            height: 6px;
+            width: 0%;
+            background: red;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    
+
+
+    <a href='@Url.Action("Tranggiaodien","Home")' class="home-circle">
+        <i class="fa-solid fa-house"></i>
+    </a>
+
+    <div class="overlay"></div>
+
+    <div class="register-box">
+
+        <h2>Đăng ký</h2>
+
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+        {
+
+            @Html.TextBoxFor(m => m.Username, new { placeholder = "Username" })
+
+            <div class="password-box">
+
+                @Html.PasswordFor(m => m.Password, new { placeholder = "Password", id = "password" })
+
+                <i class="fa-solid fa-eye" onclick="togglePassword()"></i>
+
+            </div>
+
+            <div id="password-rules">
+
+                <p id="length" class="invalid">❌ 6 - 20 ký tự</p>
+
+                <p id="number" class="invalid">❌ Có ít nhất 1 số</p>
+
+                <p id="special" class="invalid">❌ Có ký tự đặc biệt</p>
+
+            </div>
+
+            <div class="strength-bar">
+                <div id="strength"></div>
+            </div>
+
+            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email" })
+
+            <button type="submit">
+                <i class="fa-solid fa-user-plus"></i>
+                Đăng ký
+            </button>
+
+            <p class="login-link">
+                Đã có tài khoản?
+                <a href="@Url.Action("Login","Account")">Đăng nhập</a>
+            </p>
+
+        }
+
+        @if (ViewBag.Error != null)
+        {
+            <p style="color:#ff8080">@ViewBag.Error</p>
+        }
+
+    </div>
+
+    <video autoplay muted loop playsinline preload="metadata"
+           poster="@Url.Content("~/Content/images/nen.jpg")"
+           class="bg-video">
+
+        <source src="@Url.Content("~/Content/nen.mp4")" type="video/mp4">
+
+    </video>
+
+    <script src="~/Scripts/Register.js"></script>
+
+</body>
+</html>

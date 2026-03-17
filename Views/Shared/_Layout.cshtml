@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <title>Gas Spark</title>
+
+    <link href="~/Content/StyleSheet1.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/Banner.css">
+    <link rel="stylesheet" href="~/Content/Footer.css">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- BANNER -->
+    <div class="top-banner">
+        <img src="~/Content/images/banner.gif" />
+        <div class="banner-text">NƯỚC GIẢI KHÁT GAS SPARK</div>
+    </div>
+
+
+    <!-- HEADER -->
+    <div class="top-header">
+
+        <div class="logo-box">
+            <img src="~/Content/images/logo.png" />
+            <span>Gas Spark</span>
+        </div>
+
+        <!-- SEARCH -->
+        <div class="search-box">
+            <input type="text" placeholder="Nhập sản phẩm cần tìm..." />
+            <button><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+
+        <!-- CART -->
+        <div class="cart-box">
+            <i class="fa-solid fa-cart-shopping"></i>
+            Giỏ hàng <br />
+            <span>0 sản phẩm</span>
+        </div>
+
+        <!-- USER -->
+        <div class="user-box">
+
+            @if (Session["Username"] == null)
+            {
+                <a href="@Url.Action("Register","Account")" class="btn-user">
+                    <i class="fa-solid fa-user-plus"></i> Đăng ký
+                </a>
+
+                <a href="@Url.Action("Login","Account")" class="btn-user">
+                    <i class="fa-solid fa-right-to-bracket"></i> Đăng nhập
+                </a>
+            }
+            else
+            {
+                <span class="user-name">
+                    <i class="fa-solid fa-user"></i>
+                    Xin chào, @Session["Username"]
+                </span>
+
+                <a href="@Url.Action("Logout","Account")" class="logout-btn">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                </a>
+            }
+
+        </div>
+
+    </div>
+
+
+    <!-- MENU -->
+    <div class="menu-bar">
+
+        <div class="category">
+            <i class="fa-solid fa-bars"></i> DANH MỤC
+        </div>
+
+        <div class="menu">
+            <a href="/">Trang chủ</a>
+            <a href="/Home/SanPham">Sản phẩm</a>
+            <a href="/Home/LienHe">Liên hệ</a>
+        </div>
+
+        <div class="hotline">
+            <i class="fa-solid fa-phone"></i>
+            0916 112 132
+        </div>
+
+    </div>
+
+    <!-- ================== HERO ================== -->
+    <div class="hero-feature">
+
+        <div class="hero-overlay">
+
+            <div class="hero-feature-box">
+                <div class="hero-icon">
+                    <i class="fa-solid fa-leaf"></i>
+                </div>
+                <h3>Tốt cho sức khỏe</h3>
+            </div>
+
+            <div class="hero-feature-box">
+                <div class="hero-icon">
+                    <i class="fa-solid fa-seedling"></i>
+                </div>
+                <h3>Nông sản tươi từ vườn</h3>
+            </div>
+
+            <div class="hero-feature-box">
+                <div class="hero-icon">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3>Luôn luôn an toàn</h3>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ================== NỘI DUNG ================== -->
+    <div class="content">
+        @RenderBody()
+    </div>
+
+
+    <!-- ================== FOOTER ================== -->
+    <footer class="footer">
+
+        <div class="footer-container">
+
+            <!-- CỘT 1 -->
+            <div class="footer-col">
+                <h3>THÔNG TIN CÔNG TY</h3>
+
+                <img src="/Content/images/logo.png" class="footer-logo">
+
+                <p>
+                    Công ty Cổ Phần Thực Phẩm & Nước Giải Khát Gas Spark
+                    là một trong những nhà sản xuất nước giải khát hàng đầu Việt Nam.
+                </p>
+
+                <p>
+                    Xuất khẩu hơn 200 quốc gia và vùng lãnh thổ trên thế giới.
+                </p>
+            </div>
+
+
+            <!-- CỘT 2 -->
+            <div class="footer-col box">
+                <h3>CHÍNH SÁCH</h3>
+
+                <ul>
+                    <li><a href="/Home/ChinhSachGiaoHang">Chính sách giao hàng</a></li>
+                    <li><a href="/Home/ChinhSachKiemHang">Chính sách kiểm hàng</a></li>
+                    <li><a href="/Home/ChinhSachDoiTra">Chính sách đổi trả</a></li>
+                    <li><a href="/Home/ChinhSachThanhToan">Chính sách thanh toán</a></li>
+                </ul>
+            </div>
+
+
+            <!-- CỘT 3 -->
+            <div class="footer-col box">
+                <h3>VỀ CHÚNG TÔI</h3>
+
+                <ul>
+                    <li>Quy mô và thị trường</li>
+                    <li>Tầm nhìn - Sứ mệnh - Giá trị cốt lõi</li>
+                    <li>Chứng nhận chất lượng</li>
+                </ul>
+            </div>
+
+
+            <!-- CỘT 4 -->
+            <div class="footer-col">
+                <h3>ĐÃ ĐĂNG KÝ</h3>
+
+                <img src="/Content/images/bocongthuong.png" class="footer-bct">
+            </div>
+
+        </div>
+
+
+        <!-- COPYRIGHT -->
+        <div class="footer-bottom">
+
+            <p>Copyright © 2026 Gas Spark. All Rights Reserved.</p>
+
+            <p>
+                Địa chỉ: TP.HCM |
+                Hotline: 1900 1234 |
+                Email: info@gasspark.vn
+            </p>
+
+            <div class="social">
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-youtube"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-tiktok"></i>
+            </div>
+
+        </div>
+
+    </footer>
+
+</body>
+</html>

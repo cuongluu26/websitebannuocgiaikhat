@@ -1,0 +1,217 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Đăng nhập - Gas Spark</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+
+body{
+margin:0;
+font-family:Arial;
+overflow:hidden;
+}
+
+/* VIDEO NỀN */
+
+.bg-video{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+z-index:-1;
+}
+
+/* LỚP TỐI */
+
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.35);
+}
+
+/* KHUNG LOGIN */
+
+.login-box{
+
+width:360px;
+padding:40px;
+
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(15px);
+
+border-radius:20px;
+
+box-shadow:0 15px 40px rgba(0,0,0,0.5);
+
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+
+color:white;
+
+animation:fadeUp 0.8s ease;
+}
+
+/* animation */
+
+@@keyframes fadeUp{
+from{
+opacity:0;
+transform:translate(-50%,-40%);
+}
+to{
+opacity:1;
+transform:translate(-50%,-50%);
+}
+}
+
+.login-box h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+/* input */
+
+.login-box input{
+
+width:100%;
+padding:12px;
+margin:10px 0;
+
+border:none;
+border-radius:10px;
+
+background:rgba(255,255,255,0.85);
+}
+
+/* button */
+
+.login-box button{
+
+width:100%;
+padding:12px;
+
+border:none;
+border-radius:25px;
+
+background:linear-gradient(45deg,#ff7b00,#ff3c00);
+
+color:white;
+font-size:15px;
+
+cursor:pointer;
+
+transition:0.3s;
+}
+
+.login-box button:hover{
+transform:scale(1.05);
+}
+
+/* nút home */
+
+        .home-circle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 55px;
+            height: 55px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #ff5a00;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            transition: 0.3s;
+            z-index: 10;
+        }
+
+.home-circle:hover{
+background:linear-gradient(45deg,#ff7b00,#ff3c00);
+color:white;
+transform:scale(1.1);
+}
+        .register-link {
+            margin-top: 15px;
+            text-align: center;
+            color: white;
+        }
+
+            .register-link a {
+                color: #ffd27a;
+                font-weight: bold;
+                text-decoration: none;
+            }
+
+                .register-link a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+
+</head>
+
+<body>
+
+    <a href='@Url.Action("Tranggiaodien","Home")' class="home-circle">
+        <i class="fa-solid fa-house"></i>
+    </a>
+
+    <div class="overlay"></div>
+
+    <div class="login-box">
+
+        <h2>Đăng nhập</h2>
+
+        @if (ViewBag.Error != null)
+        {
+            <p style="color:#ff8080">@ViewBag.Error</p>
+        }
+
+        <form method="post">
+
+            <input type="text" name="Username" placeholder="Username" />
+
+            <input type="password" name="Password" placeholder="Password" />
+
+            <button type="submit">
+                <i class="fa-solid fa-right-to-bracket"></i>
+                Đăng nhập
+            </button>
+
+        </form>
+        <p class="register-link">
+            Chưa có tài khoản?
+            <a href="@Url.Action("Register","Account")">
+                Đăng ký
+            </a>
+        </p>
+    </div>
+
+    <video autoplay muted loop playsinline preload="metadata"
+           poster="@Url.Content("~/Content/images/nen.jpg")"
+           class="bg-video">
+
+        <source src="@Url.Content("~/Content/nen.mp4")" type="video/mp4">
+
+    </video>
+    
+    <script src="~/Scripts/Register.js"></script>
+</body>
+</html>
