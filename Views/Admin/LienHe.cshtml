@@ -1,0 +1,118 @@
+﻿@model IEnumerable<Wedsite_LTWW.Models.LienHe>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h3 class="mb-3">📩 Quản lý liên hệ</h3>
+
+<!-- CARD THỐNG KÊ -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="p-3 bg-danger text-white rounded shadow-sm">
+            <h6>Chưa đọc</h6>
+            <h3>@Model.Count(x => x.DaDoc == false)</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="p-3 bg-success text-white rounded shadow-sm">
+            <h6>Đã đọc</h6>
+            <h3>@Model.Count(x => x.DaDoc == true)</h3>
+        </div>
+    </div>
+</div>
+
+<!-- TABLE -->
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table align-middle table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Họ tên</th>
+                    <th>Email</th>
+                    <th>SĐT</th>
+                    <th>Tiêu đề</th>
+                    <th>Nội dung</th>
+                    <th>Ngày gửi</th>
+                    <th>Trạng thái</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @{
+                    int i = 1;
+                }
+
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="9" class="text-center text-muted">
+                            Không có liên hệ nào
+                        </td>
+                    </tr>
+                }
+
+                @foreach (var lh in Model)
+                {
+                    <tr>
+                        <td>@i</td>
+
+                        <td><strong>@lh.HoTen</strong></td>
+
+                        <td>@lh.Email</td>
+
+                        <td>@lh.SoDienThoai</td>
+
+                        <td>@lh.TieuDe</td>
+
+                        <!-- Nội dung rút gọn -->
+                        <td style="max-width:200px;">
+                            @(lh.NoiDung.Length > 50
+                              ? lh.NoiDung.Substring(0, 50) + "..."
+                              : lh.NoiDung)
+                        </td>
+
+                        <td>
+                            @(lh.NgayGui.HasValue
+                              ? lh.NgayGui.Value.ToString("dd/MM/yyyy")
+                              : "")
+                        </td>
+
+                        <!-- TRẠNG THÁI -->
+                        <td>
+                            @if (lh.DaDoc == true)
+                            {
+                                <span class="badge bg-success">Đã đọc</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Chưa đọc</span>
+                            }
+                        </td>
+
+                        <!-- ACTION -->
+                        <td class="text-center">
+                            @if (lh.DaDoc == false)
+                            {
+                                <a href="@Url.Action("DanhDauDaDoc", new { id = lh.Id })"
+                                   class="btn btn-sm btn-primary">
+                                    ✔
+                                </a>
+                            }
+
+                            <a href="@Url.Action("XoaLienHe", new { id = lh.Id })"
+                               onclick="return confirm('Xóa liên hệ này?')"
+                               class="btn btn-sm btn-danger">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    i++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

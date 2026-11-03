@@ -1,0 +1,86 @@
+﻿@model Wedsite_LTWW.Models.SanPham
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h3 class="mb-4">➕ Thêm sản phẩm</h3>
+
+@using (Html.BeginForm("Create", "Admin", FormMethod.Post,
+        new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="card shadow-sm p-4" style="max-width:700px">
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Tên sản phẩm</label>
+            @Html.TextBoxFor(m => m.TenSanPham, new { @class = "form-control", placeholder = "Nhập tên sản phẩm" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Giá (đ)</label>
+            @Html.TextBoxFor(m => m.Gia, new { @class = "form-control", placeholder = "Ví dụ: 35000" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Thương hiệu</label>
+            @Html.TextBoxFor(m => m.ThuongHieu, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Danh mục</label>
+            <select name="IdDanhMuc" class="form-control">
+                <option value="">-- Chọn danh mục --</option>
+                @foreach (var dm in ViewBag.DanhMuc)
+                {
+                    <option value="@dm.Id">@dm.TenDanhMuc</option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Dung tích</label>
+            @Html.TextBoxFor(m => m.DungTich, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Thành phần</label>
+            @Html.TextBoxFor(m => m.ThanhPhan, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Xuất xứ</label>
+            @Html.TextBoxFor(m => m.XuatXu, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Hạn sử dụng</label>
+            @Html.TextBoxFor(m => m.HanSuDung, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Loại</label>
+            @Html.TextBoxFor(m => m.Loai, new { @class = "form-control" })
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Mô tả</label>
+            @Html.TextAreaFor(m => m.MoTa, new { @class = "form-control", rows = "3" })
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label fw-bold">Hình ảnh</label>
+            <input type="file" name="fileHinh" class="form-control" accept="image/*" />
+        </div>
+
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success px-4">
+                <i class="fa fa-save"></i> Lưu
+            </button>
+            <a href="@Url.Action("SanPham")" class="btn btn-secondary px-4">
+                Hủy
+            </a>
+        </div>
+
+    </div>
+}

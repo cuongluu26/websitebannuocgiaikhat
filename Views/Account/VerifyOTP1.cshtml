@@ -1,0 +1,180 @@
+﻿
+
+@{
+    ViewBag.Title = "Xác nhận OTP";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>OTP Verification</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+
+        /* GIỮ NGUYÊN CSS CỦA BẠN */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins',sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle at top,#1c1c1c,#050505);
+            color: white;
+        }
+
+        .card {
+            width: 420px;
+            padding: 45px;
+            background: rgba(20,20,20,0.9);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 25px 60px rgba(0,0,0,0.7);
+            text-align: center;
+            backdrop-filter: blur(20px);
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .title {
+            font-size: 20px;
+            margin-bottom: 6px;
+            color: #ddd;
+        }
+
+        .sub {
+            color: #8a8a8a;
+            margin-bottom: 35px;
+            font-size: 14px;
+        }
+
+        .otp-container {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+        }
+
+        .otp {
+            width: 58px;
+            height: 65px;
+            background: #0e0e0e;
+            border-radius: 12px;
+            border: 1px solid #2d2d2d;
+            font-size: 24px;
+            text-align: center;
+            color: white;
+        }
+
+        button {
+            margin-top: 35px;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg,#8b5cf6,#6d28d9);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .error {
+            color: #ff6b6b;
+            margin-top: 12px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="card">
+
+        <div class="logo">Gas Spark</div>
+        <div class="title">Xác nhận OTP</div>
+        <div class="sub">Nhập mã 6 số để đổi mật khẩu</div>
+
+        <!-- QUAN TRỌNG: thêm action -->
+        <form method="post" action="@Url.Action("VerifyOTP1","Account")" id="otpForm" onsubmit="getOTP()">
+            <div class="otp-container">
+                <input class="otp" maxlength="1">
+                <input class="otp" maxlength="1">
+                <input class="otp" maxlength="1">
+                <input class="otp" maxlength="1">
+                <input class="otp" maxlength="1">
+                <input class="otp" maxlength="1">
+            </div>
+
+            <input type="hidden" name="otp" id="otpValue">
+
+            <button type="submit" id="verifyBtn">Xác nhận</button>
+        </form>
+
+        <div class="error">@ViewBag.Message</div>
+
+    </div>
+
+    <script>
+
+        const inputs = document.querySelectorAll(".otp")
+
+        inputs[0].focus()
+
+        inputs.forEach((input, index) => {
+
+            input.addEventListener("input", () => {
+
+                if (input.value.length == 1 && index < 5) {
+                    inputs[index + 1].focus()
+                }
+
+                checkAutoSubmit()
+            })
+
+            input.addEventListener("keydown", (e) => {
+
+                if (e.key === "Backspace" && input.value == "" && index > 0) {
+                    inputs[index - 1].focus()
+                }
+
+            })
+
+        })
+
+        function checkAutoSubmit() {
+
+            let otp = ""
+
+            inputs.forEach(i => otp += i.value)
+
+            if (otp.length === 6) {
+
+                document.getElementById("otpValue").value = otp
+
+                document.getElementById("otpForm").submit()
+            }
+        }
+        function getOTP() {
+            let otp = "";
+            document.querySelectorAll(".otp").forEach(i => otp += i.value);
+            document.getElementById("otpValue").value = otp;
+        }
+    </script>
+     
+
+</body>
+</html>
+

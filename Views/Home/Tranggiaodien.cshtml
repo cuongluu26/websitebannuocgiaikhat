@@ -8,16 +8,15 @@
 
     @foreach (var item in Model)
     {
-
         <div class="product-card">
             <a href="@Url.Action("SanPham","Home", new { id = item.Id })">
 
                 <div class="product-image">
-                    <img src="@Url.Content("~/Images/" + item.Hinh)" alt="@item.Ten" />
+                    <img src="@Url.Content("~/Images/" + item.HinhAnh)" alt="@item.TenSanPham" />
                 </div>
 
                 <div class="product-name">
-                    @item.Ten
+                    @item.TenSanPham
                 </div>
 
                 <div class="product-price">
@@ -28,6 +27,7 @@
         </div>
     }
 </div>
+
 <div class="load-more-wrapper">
     <button id="loadMoreBtn" class="load-more-btn">
         HIỂN THỊ THÊM
@@ -39,17 +39,14 @@
     let page = 2;
 
     $("#loadMoreBtn").click(function () {
-
         $.ajax({
             url: '@Url.Action("LoadMore", "Home")',
             type: 'GET',
             data: { page: page },
             success: function (data) {
-
                 if (data.trim() === "") {
                     $("#loadMoreBtn").hide();
-                }
-                else {
+                } else {
                     $("#product-container").append(data);
                     page++;
                 }
@@ -58,6 +55,5 @@
                 alert("Có lỗi xảy ra!");
             }
         });
-
     });
-  </script>
+</script>

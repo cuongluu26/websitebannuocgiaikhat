@@ -1,0 +1,211 @@
+﻿@model Wedsite_LTWW.Models.DonHang
+@{
+    ViewBag.Title = "Chuyển khoản ngân hàng";
+}
+
+<style>
+    .hero-feature {
+        display: none !important;
+    }
+
+    .bank-page {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 30px 20px 60px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .bank-title {
+        font-size: 26px;
+        font-weight: 800;
+        color: #0a3cff;
+        margin-bottom: 24px;
+    }
+
+    .bank-layout {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 24px;
+        align-items: start;
+    }
+
+    .bank-card {
+        background: #fff;
+        border: 1px solid #eef0ff;
+        border-radius: 20px;
+        padding: 26px;
+        box-shadow: 0 4px 20px rgba(10,60,255,.05);
+    }
+
+    .qr-box {
+        text-align: center;
+    }
+
+        .qr-box img {
+            width: 100%;
+            max-width: 300px;
+            border-radius: 12px;
+        }
+
+    .info-row {
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f3f3;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .info-row:last-of-type {
+            border-bottom: none;
+        }
+
+    .info-label {
+        font-size: 13px;
+        color: #888;
+    }
+
+    .info-value {
+        font-size: 15px;
+        font-weight: 700;
+        color: #111;
+    }
+
+        .info-value.red {
+            color: #e63946;
+            font-size: 18px;
+        }
+
+    .btn-copy {
+        border: 1px solid #0a3cff;
+        background: #f0f4ff;
+        color: #0a3cff;
+        border-radius: 8px;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+        .btn-copy:hover {
+            background: #0a3cff;
+            color: #fff;
+        }
+
+    .waiting {
+        margin-top: 18px;
+        padding: 14px;
+        border-radius: 12px;
+        background: #fff8e1;
+        border: 1px solid #ffe08a;
+        color: #8a6d00;
+        font-weight: 600;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .waiting.ok {
+            background: #f0fff4;
+            border-color: #b7ebc8;
+            color: #2d7a4a;
+        }
+
+    .note {
+        margin-top: 14px;
+        font-size: 13px;
+        color: #c1121f;
+        font-weight: 600;
+    }
+
+    @@media (max-width: 768px) {
+        .bank-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="bank-page">
+    <div class="bank-title">
+        <i class="fa-solid fa-building-columns"></i> Thanh toán chuyển khoản
+    </div>
+
+    <div class="bank-layout">
+        <div class="bank-card qr-box">
+            <img src="@ViewBag.QrUrl" alt="QR chuyển khoản" />
+            <div style="margin-top:10px; font-size:13px; color:#888;">
+                Quét mã bằng app ngân hàng bất kỳ
+            </div>
+        </div>
+
+        <div class="bank-card">
+            <div class="info-row">
+                <span class="info-label">Ngân hàng</span>
+                <span class="info-value">Vietcombank (@ViewBag.BankId)</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Chủ tài khoản</span>
+                <span class="info-value">@ViewBag.AccountName</span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Số tài khoản</span>
+                <span class="info-value" id="acc">@ViewBag.Account</span>
+                <button type="button" class="btn-copy" onclick="copyText('acc')">Sao chép</button>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Số tiền</span>
+                <span class="info-value red" id="amt">@Model.TongTien.ToString("0")</span>
+                <button type="button" class="btn-copy" onclick="copyText('amt')">Sao chép</button>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Nội dung CK</span>
+                <span class="info-value" id="memo">@Model.NoiDungChuyenKhoan</span>
+                <button type="button" class="btn-copy" onclick="copyText('memo')">Sao chép</button>
+            </div>
+
+            <div class="note">
+                * Vui lòng nhập đúng số tiền và nội dung chuyển khoản để đơn được xác nhận tự động.
+            </div>
+
+            <div class="waiting" id="status">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Đang chờ thanh toán... Trang sẽ tự cập nhật khi nhận được tiền.
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function copyText(id) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        navigator.clipboard.writeText(el.innerText.trim());
+    }
+
+    (function () {
+        var checkUrl = '@Url.Action("KiemTraThanhToan", "Cart", new { id = Model.Id })';
+        var successUrl = '@Url.Action("DatHangThanhCong", "Cart", new { id = Model.Id })';
+        var tries = 0;
+
+        var timer = setInterval(function () {
+            tries++;
+            if (tries > 600) { clearInterval(timer); return; }
+
+            fetch(checkUrl, { credentials: 'same-origin', cache: 'no-store' })
+                .then(function (r) { return r.json(); })
+                .then(function (d) {
+                    if (d.paid) {
+                        clearInterval(timer);
+                        var s = document.getElementById('status');
+                        if (s) {
+                            s.className = 'waiting ok';
+                            s.innerHTML = '<i class="fa-solid fa-circle-check"></i> Đã nhận thanh toán! Đang chuyển trang...';
+                        }
+                        setTimeout(function () { window.location.href = successUrl; }, 1200);
+                    }
+                })
+                .catch(function () { });
+        }, 3000);
+    })();
+</script>

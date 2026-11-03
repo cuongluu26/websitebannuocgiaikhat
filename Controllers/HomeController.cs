@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Web.Mvc;
 using Wedsite_LTWW.Models;
@@ -7,85 +9,134 @@ namespace Wedsite_LTWW.Controllers
 {
     public class HomeController : Controller
     {
-        // Giả lập database
-        List<SanPham> ds = new List<SanPham>()
-{
-    new SanPham{ Id=1, Ten="Nước Ép Dứa", Hinh="dua.jpg", Gia=15000 },
-    new SanPham{ Id=2, Ten="Nước Ép Cam", Hinh="cam.jpg", Gia=18000 },
-    new SanPham{ Id=3, Ten="Nước Ép Xoài", Hinh="xoai.jpg", Gia=20000 },
-    new SanPham{ Id=4, Ten="Nước Ép Táo", Hinh="tao.jpg", Gia=17000 },
-    new SanPham{ Id=5, Ten="Nước Ép Nho", Hinh="nho.jpg", Gia=22000 },
-    new SanPham{ Id=6, Ten="Nước Ép Me", Hinh="me.jpg", Gia=16000 },
-    new SanPham{ Id=7, Ten="Nước Ép Lê", Hinh="le.jpg", Gia=19000 },
-    new SanPham{ Id=8, Ten="Nước Ép Dâu", Hinh="Dau.jpg", Gia=21000 },
-    new SanPham{ Id=9, Ten="Nước Ép Mãng Cầu", Hinh="mangcau.jpg", Gia=23000 },
-    new SanPham{ Id=10, Ten="Nước Ép Thanh Long", Hinh="thanhlong.jpg", Gia=25000 }
-};
+        GasSparkDBEntities db = new GasSparkDBEntities();
 
-        // Trang chính (Load 4 sản phẩm đầu)
+        // ===== LOAD MENU DANH MỤC =====
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            ViewBag.DanhMuc = db.DanhMucs.ToList();
+            base.OnActionExecuting(filterContext);
+        }
+
+        // ===== TRANG CHÍNH =====
         public ActionResult Tranggiaodien(int page = 1)
         {
             int pageSize = 4;
 
-            var data = ds
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            var data = db.SanPhams
+                         .OrderBy(x => Guid.NewGuid()) // ← random
+                         .Take(pageSize)
+                         .ToList();
 
             return View(data);
         }
-
-        // Action Load More (AJAX gọi tới đây)
+        // ===== LOAD MORE =====
         public ActionResult LoadMore(int page)
         {
             int pageSize = 4;
 
-            var data = ds
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            var data = db.SanPhams
+                         .OrderBy(x => x.Id)
+                         .Skip((page - 1) * pageSize)
+                         .Take(pageSize)
+                         .ToList();
 
             if (!data.Any())
-            {
                 return Content("");
-            }
 
             return PartialView("_SanPhamPartial", data);
         }
 
-        // Trang chi tiết sản phẩm
+        // ===== CHI TIẾT =====
         public ActionResult SanPham(int id)
         {
-            var sp = ds.FirstOrDefault(x => x.Id == id);
+            var sp = db.SanPhams.FirstOrDefault(x => x.Id == id);
+            if (sp == null) return HttpNotFound();
             return View(sp);
         }
-    
 
+        // ===== LỌC THEO DANH MỤC =====
+        public ActionResult DanhMuc(int id)
+        {
+            var list = db.SanPhams
+                         .Where(x => x.IdDanhMuc == id)
+                         .ToList();
 
+            return View("Tranggiaodien", list);
+        }
+        // ===== TÌM KIẾM =====
+        public ActionResult TimKiem(string q)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+                return RedirectToAction("Tranggiaodien");
 
-    public ActionResult ChinhSachGiaoHang()
+            var ketQua = db.SanPhams
+                           .Where(x => x.TenSanPham.Contains(q) ||
+                                        x.MoTa.Contains(q) ||
+                                        x.ThuongHieu.Contains(q))
+                           .ToList();
+
+            ViewBag.TuKhoa = q;
+            ViewBag.SoKetQua = ketQua.Count;
+            return View(ketQua);
+        }
+        public ActionResult GoiY(string q)
+        {
+            if (string.IsNullOrWhiteSpace(q))
+                return Json(new List<object>(), JsonRequestBehavior.AllowGet);
+
+            var ketQua = db.SanPhams
+                           .Where(x => x.TenSanPham.Contains(q) ||
+                                        x.ThuongHieu.Contains(q))
+                           .Take(6)
+                           .Select(x => new {
+                               x.Id,
+                               x.TenSanPham,
+                               x.Gia,
+                               x.HinhAnh
+                           })
+                           .ToList();
+
+            return Json(ketQua, JsonRequestBehavior.AllowGet);
+        }
+        // ===== LIÊN HỆ =====
+        public ActionResult LienHe()
         {
             return View();
         }
 
-        public ActionResult ChinhSachKiemHang()
+        [HttpPost]
+        public ActionResult LienHe(string hoTen, string email, string soDienThoai, string tieuDe, string noiDung)
         {
+            if (string.IsNullOrWhiteSpace(hoTen) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(noiDung))
+            {
+                ViewBag.Error = "Vui lòng điền đầy đủ thông tin bắt buộc!";
+                return View();
+            }
+
+            var lh = new LienHe
+            {
+                HoTen = hoTen,
+                Email = email,
+                SoDienThoai = soDienThoai,
+                TieuDe = tieuDe,
+                NoiDung = noiDung,
+                NgayGui = DateTime.Now,
+                DaDoc = false
+            };
+
+            db.LienHes.Add(lh);
+            db.SaveChanges();
+
+            ViewBag.Success = "Cảm ơn bạn đã liên hệ! Chúng tôi sẽ phản hồi sớm nhất có thể.";
             return View();
         }
-        public ActionResult ChinhSachĐoiTra()
-        {
-            return View();
-        }
-        public ActionResult ChinhSachThanhToan()
-        {
-            return View();
-        }
-        public ActionResult QuyMoVaThiTruong()
-        {
-            return View();
-        }
+        public ActionResult ChinhSachGiaoHang() => View();
+        public ActionResult ChinhSachKiemHang() => View();
+        public ActionResult ChinhSachDoiTra() => View();
+        public ActionResult ChinhSachThanhToan() => View();
+        public ActionResult QuyMoVaThiTruong() => View();
+        public ActionResult TamNhin() => View();
+        public ActionResult ChungNhanChatLuong() => View();
     }
 }
-
-
-    

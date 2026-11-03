@@ -2,7 +2,7 @@
     Layout = null;
 }
 
-@model Wedsite_LTWW.Models.Users
+@model Wedsite_LTWW.Models.User
 
 <!DOCTYPE html>
 <html>
@@ -217,11 +217,12 @@
         @using (Html.BeginForm("Register", "Account", FormMethod.Post))
         {
 
-            @Html.TextBoxFor(m => m.Username, new { placeholder = "Username" })
+            @Html.TextBoxFor(m => m.Username, new { placeholder = "Username", required = "required" })
+
 
             <div class="password-box">
 
-                @Html.PasswordFor(m => m.Password, new { placeholder = "Password", id = "password" })
+                @Html.PasswordFor(m => m.Password, new { placeholder = "Password", id = "password", required = "required" })
 
                 <i class="fa-solid fa-eye" onclick="togglePassword()"></i>
 
@@ -241,7 +242,7 @@
                 <div id="strength"></div>
             </div>
 
-            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email" })
+            @Html.TextBoxFor(m => m.Email, new { placeholder = "Email", required = "required", type = "email" })
 
             <button type="submit">
                 <i class="fa-solid fa-user-plus"></i>
@@ -257,7 +258,9 @@
 
         @if (ViewBag.Error != null)
         {
-            <p style="color:#ff8080">@ViewBag.Error</p>
+            <div style="color:#ff4d4d; margin-top:10px; text-align:center;">
+                @ViewBag.Error
+            </div>
         }
 
     </div>

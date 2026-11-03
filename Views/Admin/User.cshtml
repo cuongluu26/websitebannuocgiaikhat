@@ -1,0 +1,157 @@
+﻿@model IEnumerable<Wedsite_LTWW.Models.User>
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .bg-purple {
+        background: linear-gradient(135deg, #7b4dff, #8e5cff);
+    }
+
+    .table tbody tr:hover {
+        background: #f8f9fa;
+    }
+
+    .badge {
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+    }
+</style>
+
+<h3 class="mb-4">
+    <i class="fa fa-user text-primary"></i>
+    Quản lý người dùng
+</h3>
+
+<!-- THỐNG KÊ -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="p-4 bg-purple text-white rounded shadow-sm">
+            <h6>Tổng người dùng</h6>
+            <h2 class="fw-bold">@Model.Count()</h2>
+        </div>
+    </div>
+</div>
+
+<!-- SEARCH -->
+<div class="card p-3 mb-3 shadow-sm border-0">
+    <form method="get">
+        <div class="row g-2">
+
+            <div class="col-md-4">
+                <input type="text"
+                       name="keyword"
+                       value="@Request["keyword"]"
+                       class="form-control"
+                       placeholder="🔍 Tìm username hoặc email..." />
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-primary w-100">
+                    <i class="fa fa-search"></i> Tìm
+                </button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- TABLE -->
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+
+        <table class="table table-hover align-middle mb-0">
+
+            <thead class="table-light">
+                <tr>
+                    <th width="60">#</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th width="120">Role</th>
+                    <th width="120" class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @{
+                    int i = 1;
+                }
+
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            Không có người dùng nào
+                        </td>
+                    </tr>
+                }
+
+                @foreach (var u in Model)
+                {
+                    <tr>
+
+                        <td>@i</td>
+
+                        <!-- USERNAME -->
+                        <td>
+                            <i class="fa fa-user-circle text-secondary me-2"></i>
+                            <strong>@u.Username</strong>
+                        </td>
+
+                        <!-- EMAIL -->
+                        <td>
+                            @u.Email
+                        </td>
+
+                        <!-- ROLE -->
+                        <td>
+                            @if (u.Role == "admin")
+                            {
+                                <span class="badge bg-danger">
+                                    Admin
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    User
+                                </span>
+                            }
+                        </td>
+
+                        <!-- ACTION -->
+                        <td class="text-center">
+
+                            @if (u.Role != "admin")
+                            {
+                                <a href="@Url.Action("XoaUser", new { id = u.Id })"
+                                   onclick="return confirm('Xóa người dùng này?')"
+                                   class="btn btn-sm btn-danger"
+                                   title="Xóa người dùng">
+
+                                    <i class="fa fa-trash"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <button class="btn btn-sm btn-secondary" disabled>
+                                    <i class="fa fa-lock"></i>
+                                </button>
+                            }
+
+                        </td>
+
+                    </tr>
+
+                    i++;
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>

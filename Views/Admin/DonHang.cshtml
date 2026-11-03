@@ -1,0 +1,331 @@
+﻿
+@model IEnumerable<Wedsite_LTWW.Models.DonHang>
+
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    var danhSach = Model ?? Enumerable.Empty<Wedsite_LTWW.Models.DonHang>();
+}
+
+<h3 class="mb-3">🛒 Quản lý đơn hàng</h3>
+
+<!-- THỐNG KÊ -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="p-3 bg-primary text-white rounded shadow-sm">
+            <h6>Tổng đơn hàng</h6>
+            <h3>@danhSach.Count()</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="p-3 bg-warning text-white rounded shadow-sm">
+            <h6>Chờ xác nhận</h6>
+            <h3>@danhSach.Count(x => x.TrangThai == "Chờ xác nhận")</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="p-3 bg-info text-white rounded shadow-sm">
+            <h6>Đang giao</h6>
+            <h3>@danhSach.Count(x => x.TrangThai == "Đang giao")</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="p-3 bg-success text-white rounded shadow-sm">
+            <h6>Hoàn thành</h6>
+            <h3>@danhSach.Count(x => x.TrangThai == "Hoàn thành")</h3>
+        </div>
+    </div>
+</div>
+
+<!-- TÌM KIẾM VÀ LỌC -->
+<div class="card p-3 mb-3 shadow-sm">
+    <form method="get" action="@Url.Action("QuanLyDonHang", "Admin")">
+        <div class="row g-2">
+
+            <div class="col-md-4">
+                <input name="keyword"
+                       value="@Request["keyword"]"
+                       class="form-control"
+                       placeholder="🔍 Tìm tên hoặc SĐT..." />
+            </div>
+
+            <div class="col-md-3">
+                <select name="trangThai" class="form-control">
+                    <option value="">Tất cả trạng thái</option>
+
+                    @foreach (var tt in new[] {
+                        "Chờ xác nhận",
+                        "Đang giao",
+                        "Hoàn thành",
+                        "Đã hủy"
+                    })
+                    {
+                        <option value="@tt"
+                                @(Request["trangThai"] == tt ? "selected" : "")>
+                            @tt
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="fa fa-search"></i> Tìm
+                </button>
+            </div>
+
+        </div>
+    </form>
+</div>
+
+<!-- DANH SÁCH ĐƠN HÀNG -->
+<div class="card shadow-sm">
+    <div class="table-responsive">
+
+        <table class="table align-middle table-hover mb-0">
+
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Khách hàng</th>
+                    <th>SĐT</th>
+                    <th>Địa chỉ</th>
+                    <th>Tổng tiền</th>
+                    <th>Ngày đặt</th>
+                    <th>Trạng thái đơn</th>
+                    <th>Thanh toán</th>
+                    <th>Nội dung CK</th>
+                    <th class="text-center">Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @{
+                    int i = 1;
+                }
+
+                @if (!danhSach.Any())
+                {
+                    <tr>
+                        <td colspan="10"
+                            class="text-center text-muted py-4">
+                            Không có đơn hàng nào
+                        </td>
+                    </tr>
+                }
+
+                @foreach (var dh in danhSach)
+                {
+                    string badgeClass = "bg-warning";
+
+                    if (dh.TrangThai == "Đang giao")
+                    {
+                        badgeClass = "bg-info";
+                    }
+                    else if (dh.TrangThai == "Hoàn thành")
+                    {
+                        badgeClass = "bg-success";
+                    }
+                    else if (dh.TrangThai == "Đã hủy")
+                    {
+                        badgeClass = "bg-danger";
+                    }
+
+                    bool isBanking =
+                        dh.PhuongThucThanhToan == "Banking";
+
+                    bool isPaid =
+                        dh.TrangThaiThanhToan == "Đã thanh toán";
+
+                    <tr>
+
+                        <td>@i</td>
+
+                        <td>
+                            <strong>@dh.HoTen</strong>
+                        </td>
+
+                        <td>@dh.SoDienThoai</td>
+
+                        <td style="min-width:180px">
+                            @dh.DiaChi
+                        </td>
+
+                        <td class="text-primary fw-bold">
+                            @String.Format("{0:N0}", dh.TongTien) đ
+                        </td>
+
+                        <td>
+                            @dh.NgayDat.ToString("dd/MM/yyyy")
+                        </td>
+
+                        <!-- TRẠNG THÁI ĐƠN HÀNG -->
+                        <td>
+                            <span class="badge @badgeClass">
+                                @dh.TrangThai
+                            </span>
+                        </td>
+
+                        <!-- PHƯƠNG THỨC VÀ TRẠNG THÁI THANH TOÁN -->
+                        <td style="min-width:150px">
+
+                            @if (isBanking)
+                            {
+                                <div class="mb-2">
+                                    <span class="badge bg-primary">
+                                        <i class="fa fa-bank"></i>
+                                        Chuyển khoản
+                                    </span>
+                                </div>
+
+                                if (isPaid)
+                                {
+                                    <span class="badge bg-success">
+                                        <i class="fa fa-check-circle"></i>
+                                        Đã thanh toán
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark">
+                                        Chưa thanh toán
+                                    </span>
+                                }
+                            }
+                            else
+                            {
+                                <div class="mb-2">
+                                    <span class="badge bg-secondary">
+                                        COD
+                                    </span>
+                                </div>
+
+                                <span class="text-muted small">
+                                    Thanh toán khi nhận hàng
+                                </span>
+                            }
+
+                        </td>
+
+                        <!-- NỘI DUNG CHUYỂN KHOẢN -->
+                        <td>
+                            @if (isBanking)
+                            {
+                                <span class="fw-bold text-primary">
+                                    @dh.NoiDungChuyenKhoan
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">---</span>
+                            }
+                        </td>
+
+                        <!-- THAO TÁC -->
+                        <td class="text-center"
+                            style="min-width:190px">
+
+                            <!-- XEM CHI TIẾT -->
+                            <a href="@Url.Action(
+                                "ChiTietDonHang",
+                                "Admin",
+                                new { id = dh.Id })"
+                               class="btn btn-sm btn-info text-white mb-1"
+                               title="Xem chi tiết">
+
+                                <i class="fa fa-eye"></i>
+                            </a>
+
+                            <!-- XÁC NHẬN THANH TOÁN -->
+                            @if (isBanking && !isPaid)
+                            {
+                                using (Html.BeginForm(
+                                    "XacNhanThanhToan",
+                                    "Admin",
+                                    new { id = dh.Id },
+                                    FormMethod.Post,
+                                    new { style = "display:inline-block" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-success mb-1"
+                                            onclick="return confirm('Xác nhận đã kiểm tra và nhận được tiền cho đơn hàng này?')"
+                                            title="Xác nhận đã nhận tiền">
+
+                                        <i class="fa fa-check"></i>
+                                        Xác nhận tiền
+                                    </button>
+                                }
+                            }
+                            else if (isBanking && isPaid)
+                            {
+                                <span class="text-success small">
+                                    <i class="fa fa-check-circle"></i>
+                                    Đã xác nhận
+                                </span>
+                            }
+
+                            <!-- CẬP NHẬT TRẠNG THÁI ĐƠN -->
+                            <div class="btn-group mb-1">
+
+                                <button type="button"
+                                        class="btn btn-sm btn-warning dropdown-toggle"
+                                        data-bs-toggle="dropdown">
+
+                                    <i class="fa fa-refresh"></i>
+                                </button>
+
+                                <ul class="dropdown-menu">
+
+                                    @foreach (var tt in new[] {
+                                        "Chờ xác nhận",
+                                        "Đang giao",
+                                        "Hoàn thành",
+                                        "Đã hủy"
+                                    })
+                                    {
+                                        <li>
+                                            <a class="dropdown-item"
+                                               href="@Url.Action(
+                                                   "CapNhatTrangThaiDonHang",
+                                                   "Admin",
+                                                   new {
+                                                       id = dh.Id,
+                                                       trangThai = tt
+                                                   })">
+                                                @tt
+                                            </a>
+                                        </li>
+                                    }
+
+                                </ul>
+                            </div>
+
+                            <!-- XÓA ĐƠN HÀNG -->
+                            <a href="@Url.Action(
+                                "XoaDonHang",
+                                "Admin",
+                                new { id = dh.Id })"
+                               onclick="return confirm('Xóa đơn hàng này?')"
+                               class="btn btn-sm btn-danger mb-1">
+
+                                <i class="fa fa-trash"></i>
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    i++;
+                }
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>

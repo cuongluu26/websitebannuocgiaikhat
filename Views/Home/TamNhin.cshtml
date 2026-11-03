@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giới thiệu - GAS SPARK</title>
+
+    <!-- FONT -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500&display=swap" rel="stylesheet">
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f5f5;
+            overflow-x: hidden;
+        }
+
+        /* ===== SECTION ===== */
+
+        .about-section {
+            width: 100%;
+            padding: 120px 0;
+            background: #f3f3f3;
+            overflow: hidden;
+        }
+
+        .about-container {
+            width: 90%;
+            max-width: 1450px;
+            margin: auto;
+        }
+
+        /* ===== ITEM ===== */
+
+        .about-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 120px;
+            margin-bottom: 220px;
+            position: relative;
+        }
+
+        .reverse {
+            flex-direction: row-reverse;
+        }
+
+        /* ===== IMAGE ===== */
+
+        .about-image {
+            flex: 1;
+            position: relative;
+            height: 850px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* ===== HÌNH DƯỚI ===== */
+
+        .bg-image {
+            position: absolute;
+            left: -120px;
+            top: 140px;
+            width: 95%;
+            height: 620px;
+            object-fit: cover;
+            border-radius: 18px;
+            z-index: 1;
+            opacity: 0.95;
+            filter: brightness(0.95);
+            transition: transform 0.9s ease, box-shadow 0.9s ease;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.12);
+        }
+
+        /* ===== HÌNH TRÊN ===== */
+
+        .main-image {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 70%;
+            height: 760px;
+            object-fit: cover;
+            border-radius: 20px;
+            z-index: 2;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            transition: transform 0.9s ease, top 0.9s ease, box-shadow 0.9s ease;
+        }
+
+        /* ===== HIỆU ỨNG ===== */
+
+        .about-image:hover .main-image {
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 0 35px 70px rgba(0,0,0,0.25);
+        }
+
+        .about-image:hover .bg-image {
+            transform: translateY(15px) scale(0.99);
+            box-shadow: 0 30px 65px rgba(0,0,0,0.16);
+        }
+
+        /* ===== CONTENT ===== */
+
+        .about-content {
+            flex: 1;
+            position: relative;
+            z-index: 5;
+            padding-right: 30px;
+        }
+
+            /* ===== TITLE ===== */
+
+            .about-content h1 {
+                font-size: 92px;
+                font-weight: 200;
+                color: #1d1d1d;
+                margin-bottom: 50px;
+                line-height: 1.05;
+                letter-spacing: 2px;
+            }
+
+            /* ===== TEXT ===== */
+
+            .about-content p {
+                font-size: 22px;
+                color: #7c7c7c;
+                line-height: 2.1;
+                margin-bottom: 32px;
+                font-weight: 300;
+                letter-spacing: 0.3px;
+            }
+
+            .about-content strong {
+                color: #555;
+                font-weight: 500;
+            }
+
+        /* ===== BUTTON ===== */
+
+        .shop-btn {
+            display: inline-block;
+            padding: 20px 48px;
+            border: 1.5px solid #d8d8d8;
+            border-radius: 50px;
+            text-decoration: none;
+            color: #444;
+            font-size: 17px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            transition: 0.45s;
+            background: white;
+        }
+
+            .shop-btn:hover {
+                background: #111;
+                color: white;
+                border-color: #111;
+                transform: translateY(-4px);
+            }
+
+        /* ===== RESPONSIVE ===== */
+
+        @@media(max-width:1100px) {
+
+            .about-item,
+            .reverse {
+                flex-direction: column;
+            }
+
+            .about-content {
+                text-align: center;
+                padding-right: 0;
+            }
+
+                .about-content h1 {
+                    font-size: 60px;
+                }
+
+                .about-content p {
+                    font-size: 18px;
+                }
+
+            .about-image {
+                width: 100%;
+                height: 700px;
+            }
+
+            .bg-image {
+                left: -30px;
+                width: 100%;
+                height: 450px;
+            }
+
+            .main-image {
+                width: 72%;
+                height: 550px;
+                right: 50%;
+                transform: translateX(50%);
+            }
+
+
+            html, body {
+                scroll-behavior: smooth !important;
+                background: #f4f7fb;
+                font-family: Arial, sans-serif;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <section class="about-section">
+
+        <div class="about-container">
+
+            <!-- ================= TẦM NHÌN ================= -->
+
+            <div class="about-item">
+
+                <div class="about-image">
+
+                    <!-- HÌNH DƯỚI -->
+                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1600&auto=format&fit=crop"
+                         class="bg-image">
+
+                    <!-- HÌNH TRÊN -->
+                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop"
+                         class="main-image">
+
+                </div>
+
+                <div class="about-content">
+
+                    <h1 id="tam-nhin-su-menh">Tầm Nhìn</h1>
+
+                    <p>
+                        Trở thành một trong những nhà sản xuất nước giải khát
+                        hàng đầu Việt Nam, không ngừng nâng tầm thương hiệu
+                        trên thị trường quốc tế.
+                    </p>
+
+                    <p>
+                        <strong>
+                            "GAS SPARK – Thương hiệu Việt phục vụ toàn cầu"
+                        </strong>
+                    </p>
+
+                    <a href="#" class="shop-btn">XEM THÊM</a>
+
+                </div>
+
+            </div>
+
+            <!-- ================= SỨ MỆNH ================= -->
+
+            <div class="about-item reverse">
+
+                <div class="about-image">
+
+                    <!-- HÌNH DƯỚI -->
+                    <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1600&auto=format&fit=crop"
+                         class="bg-image">
+
+                    <!-- HÌNH TRÊN -->
+                    <img src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?q=80&w=1200&auto=format&fit=crop"
+                         class="main-image">
+
+                </div>
+
+                <div class="about-content">
+
+                    <h1>Sứ Mệnh</h1>
+
+                    <p>
+                        Mang đến cho khách hàng những sản phẩm chất lượng,
+                        an toàn và giàu giá trị dinh dưỡng từ thiên nhiên.
+                    </p>
+
+                    <p>
+                        Không ngừng đổi mới để tạo ra trải nghiệm tốt nhất
+                        cho người tiêu dùng trong và ngoài nước.
+                    </p>
+
+                    <a href="#" class="shop-btn">XEM THÊM</a>
+
+                </div>
+
+            </div>
+
+            <!-- ================= GIÁ TRỊ CỐT LÕI ================= -->
+
+            <div class="about-item">
+
+                <div class="about-image">
+
+                    <!-- HÌNH DƯỚI -->
+                    <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?q=80&w=1600&auto=format&fit=crop"
+                         class="bg-image">
+
+                    <!-- HÌNH TRÊN -->
+                    <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1200&auto=format&fit=crop"
+                         class="main-image">
+
+                </div>
+
+                <div class="about-content">
+
+                    <h1>Giá Trị Cốt Lõi</h1>
+
+                    <p>
+                        Chất lượng – Uy tín – Đổi mới – Khách hàng là trung tâm
+                        chính là nền tảng phát triển bền vững của GAS SPARK.
+                    </p>
+
+                    <p>
+                        Chúng tôi luôn hướng đến sự minh bạch, sáng tạo
+                        và trách nhiệm với cộng đồng.
+                    </p>
+
+                    <a href="#" class="shop-btn">XEM THÊM</a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</body>
+</html>

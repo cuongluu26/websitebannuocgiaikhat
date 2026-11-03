@@ -3,60 +3,195 @@
     ViewBag.Title = "QuyMoVaThiTruong";
 }
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <title>Quy mô & Thị trường - Gas Spark</title>
-   
-    <link href="~/Content/QuyMoVaThiTruong.css" rel="stylesheet" />
-</head>
+@{
+    ViewBag.Title = "QuyMoVaThiTruong";
+}
 
+@{
+    ViewBag.Title = "QuyMoVaThiTruong";
+}
 
+<style>
+    /* KHÔNG GÂY ẢNH HƯỞNG ĐẾN CÁC TRANG KHÁC */
+    .vinut-market-page {
+        padding: 30px 15px;
+        background-color: #ffffff;
+    }
 
-<body>
-    <section class="intro">
+        .vinut-market-page .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-        <div class="video">
-            <video controls>
-                <source src="video/gas-spark.mp4" type="video/mp4">
-            </video>
+        /* BANNER ĐẦU TRANG */
+        .vinut-market-page .banner-section {
+            background-color: #6d8075;
+            border-radius: 8px;
+            margin: 25px auto 50px auto;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .vinut-market-page .banner-left {
+            flex: 1;
+            min-width: 45%;
+        }
+
+        /* Định dạng ảnh Banner đầu trang thay cho Video */
+        .vinut-market-page .banner-img-thay-video {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background-color: #55665c;
+            transition: transform 0.3s ease;
+        }
+
+            .vinut-market-page .banner-img-thay-video:hover {
+                transform: scale(1.02);
+            }
+
+        .vinut-market-page .banner-right {
+            flex: 1;
+            color: #ffffff;
+            font-style: italic;
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+            .vinut-market-page .banner-right p {
+                margin-bottom: 15px;
+                text-align: justify;
+            }
+
+                .vinut-market-page .banner-right p:last-child {
+                    margin-bottom: 0;
+                }
+
+        /* ĐỊNH DẠNG CÁC KHỐI NỘI DUNG PHÍA DƯỚI */
+        .vinut-market-page .section-row {
+            display: flex;
+            margin-bottom: 50px;
+            gap: 40px;
+            align-items: flex-start;
+        }
+
+        .vinut-market-page .section-img {
+            flex: 0 0 25%;
+            max-width: 25%;
+            overflow: hidden;
+            border-radius: 12px;
+        }
+
+        /* Định dạng ảnh nhỏ của từng mục chính sách và hiệu ứng hover */
+        .vinut-market-page .section-real-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            background-color: #f5f5f5;
+            transition: all 0.3s ease-in-out;
+        }
+
+            .vinut-market-page .section-real-img:hover {
+                transform: scale(1.06);
+                filter: brightness(95%);
+            }
+
+        .vinut-market-page .section-content {
+            flex: 0 0 75%;
+            max-width: 75%;
+        }
+
+            /* Tiêu đề có gạch chân màu xanh đặc trưng */
+            .vinut-market-page .section-content h2 {
+                font-size: 22px;
+                font-weight: bold;
+                color: #1a1a1a;
+                margin-bottom: 15px;
+                padding-bottom: 6px;
+                border-bottom: 3px solid #007a3d;
+                display: inline-block;
+            }
+
+            .vinut-market-page .section-content ul {
+                list-style: none;
+            }
+
+                .vinut-market-page .section-content ul li {
+                    font-size: 15px;
+                    color: #333333;
+                    margin-bottom: 10px;
+                    position: relative;
+                    padding-left: 20px;
+                    line-height: 1.6;
+                }
+
+                    /* Dấu chấm tròn trước danh sách */
+                    .vinut-market-page .section-content ul li::before {
+                        content: "•";
+                        color: #a0aec0;
+                        font-size: 20px;
+                        position: absolute;
+                        left: 0;
+                        top: -3px;
+                    }
+
+            .vinut-market-page .section-content p {
+                font-size: 15px;
+                color: #444444;
+                line-height: 1.7;
+                text-align: justify;
+            }
+
+    /* Tương thích giao diện điện thoại mượt mà */
+    @@media (max-width: 768px) {
+        .vinut-market-page .banner-section,
+        .vinut-market-page .section-row {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .vinut-market-page .banner-left,
+        .vinut-market-page .banner-right,
+        .vinut-market-page .section-img,
+        .vinut-market-page .section-content {
+            flex: 0 0 100%;
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .vinut-market-page .section-content {
+            padding-left: 0;
+        }
+    }
+</style>
+
+<div class="vinut-market-page">
+    <div class="content-container">
+
+        <div class="banner-section" id="tong-quan-vinut">
+            <div class="banner-left">
+                <img class="banner-img-thay-video" src="@Url.Content("~/Content/images/thuonghieu.png")" alt="Hình ảnh giới thiệu nhà máy VINUT" />
+            </div>
+            <div class="banner-right">
+                <p><b>VINUT</b> là thương hiệu chuyên sản xuất và xuất khẩu nước giải khát hàng đầu Việt Nam, nổi bật với các dòng sản phẩm được chế biến từ nguyên liệu tự nhiên. Với hệ thống nhà máy hiện đại đạt chuẩn quốc tế, VINUT không ngừng cải tiến công nghệ và quy trình sản xuất nhằm mang đến những thức uống chất lượng cao, an toàn cho sức khỏe người tiêu dùng.</p>
+                <p>Mang trong mình khát vọng vươn tầm thế giới, VINUT không chỉ chinh phục thị trường nội địa mà còn khẳng định dấu ấn thương hiệu Việt trên bản đồ ngành đồ uống toàn cầu.</p>
+            </div>
         </div>
 
-        <div class="intro-text">
-            <p>
-                <b>GAS SPARK</b> là thương hiệu chuyên sản xuất và phân phối các dòng
-                nước giải khát chất lượng cao tại Việt Nam. Các sản phẩm của Gas Spark
-                được chế biến từ nguồn nguyên liệu tự nhiên, đảm bảo an toàn và tốt
-                cho sức khỏe người tiêu dùng.
-            </p>
-
-            <p>
-                Với hệ thống nhà máy hiện đại đạt tiêu chuẩn quốc tế, Gas Spark
-                không ngừng cải tiến công nghệ và quy trình sản xuất nhằm mang đến
-                những sản phẩm chất lượng cao và an toàn.
-            </p>
-
-            <p>
-                Mang trong mình khát vọng vươn ra thế giới, Gas Spark không chỉ
-                chinh phục thị trường nội địa mà còn khẳng định vị thế thương hiệu
-                trên bản đồ ngành đồ uống toàn cầu.
-            </p>
-        </div>
-
-    </section>
-
-    <div class="container">
-
-        <!-- Quy mô sản xuất -->
-        <div class="section">
-            <img src="img/sanxuat.jpg" alt="">
-
-            <div class="text">
-                <div class="title">
-                    <h2>Quy mô sản xuất ấn tượng</h2>
-                </div>
-
+        <div class="section-row">
+            <div class="section-img">
+                <img class="section-real-img" src="@Url.Content("~/images/anh5.png")" alt="Quy mô sản xuất VINUT" />
+            </div>
+            <div class="section-content">
+                <h2 id="quy-mo-san-xuat">Quy mô sản xuất ấn tượng</h2>
                 <ul>
                     <li>6 nhà máy sản xuất với công nghệ hiện đại.</li>
                     <li>50 dây chuyền sản xuất tự động hóa, đạt tiêu chuẩn quốc tế.</li>
@@ -66,95 +201,97 @@
             </div>
         </div>
 
-
-        <!-- Thị trường toàn cầu -->
-        <div class="section">
-            <img src="img/thitruong.jpg" alt="">
-
-            <div class="text">
-                <div class="title">
-                    <h2>Thị trường toàn cầu</h2>
-                </div>
-
+        <div class="section-row">
+            <div class="section-img">
+                <img class="section-real-img" src="@Url.Content("~/images/anh4.png")" alt="Thị trường toàn cầu VINUT" />
+            </div>
+            <div class="section-content">
+                <h2 id="thi-truong-toan-cau">Thị trường toàn cầu</h2>
                 <ul>
                     <li>Tham gia chuỗi cung ứng toàn cầu, sản phẩm xuất khẩu đến hơn 200 quốc gia và vùng lãnh thổ.</li>
-                    <li>Thâm nhập thành công vào các thị trường khó tính như: Mỹ, EU, Nhật Bản, Hàn Quốc, Nga...</li>
-                    <li>Có mặt trong hệ thống bán lẻ hàng đầu thế giới như Walmart và Amazon.</li>
+                    <li>Thâm nhập thành công vào các thị trường khó tính như: Mỹ, EU, Nhật Bản, Hàn Quốc, Nga,...</li>
+                    <li>Có mặt trong hệ thống của tập đoàn bán lẻ hàng đầu của Mỹ là Walmart và Amazon.</li>
                 </ul>
             </div>
         </div>
 
-
-        <!-- R&D -->
-        <div class="section">
-            <img src="img/rnd.jpg" alt="">
-
-            <div class="text">
-                <div class="title">
-                    <h2>Nghiên cứu & Phát triển (R&D)</h2>
-                </div>
-
+        <div class="section-row">
+            <div class="section-img">
+                <img class="section-real-img" src="@Url.Content("~/images/anh3.png")" alt="Trung tâm Nghiên cứu và Phát triển R&D VINUT" />
+            </div>
+            <div class="section-content">
+                <h2 id="nghien-cuu-phat-trien">Nghiên cứu & Phát triển (R&D)</h2>
                 <ul>
-                    <li>Gas Spark sở hữu trung tâm nghiên cứu và phát triển sản phẩm riêng.</li>
+                    <li>Sở hữu 1 trung tâm nghiên cứu và phát triển sản phẩm (R&D) riêng.</li>
                     <li>14 công nghệ sản xuất độc quyền.</li>
-                    <li>Thường xuyên ra mắt sản phẩm mới từ nguyên liệu tự nhiên như nước ép trái cây và thức uống dinh dưỡng.</li>
+                    <li>Thường xuyên cho ra mắt sản phẩm mới từ nguyên liệu tự nhiên như: sữa thực vật, nước ép trái cây, nước yến, thức uống hỗ trợ sức khỏe...</li>
                 </ul>
             </div>
         </div>
 
-
-        <!-- Chuỗi giá trị -->
-        <div class="section">
-            <img src="img/nongtrai.jpg" alt="">
-
-            <div class="text">
-                <div class="title">
-                    <h2>Chuỗi giá trị khép kín</h2>
-                </div>
-
-                <p>
-                    Gas Spark sở hữu hệ thống trang trại nguyên liệu và quy trình sản xuất khép kín,
-                    từ nguồn nguyên liệu đến sản phẩm hoàn chỉnh. Điều này giúp kiểm soát chất lượng
-                    đầu vào và đảm bảo sản phẩm đầu ra đạt tiêu chuẩn cao nhất.
-                </p>
+        <div class="section-row">
+            <div class="section-img">
+                <img class="section-real-img" src="@Url.Content("~/images/anh2.png")" alt="Chuỗi giá trị nông trại khép kín VINUT" />
+            </div>
+            <div class="section-content">
+                <h2 id="chuoi-gia-tri">Chuỗi giá trị khép kín</h2>
+                <p>Sở hữu một nông trại cây ăn quả nhiệt đới, cung cấp nguyên liệu sạch, an toàn cho sản xuất. Ứng dụng mô hình từ nông trại đến sản phẩm; tự chủ nguyên liệu, kiểm soát chất lượng đầu vào, nâng cao chất lượng sản phẩm đầu ra.</p>
             </div>
         </div>
 
-
-        <!-- Chứng nhận -->
-        <div class="section">
-            <img src="img/chungnhan.jpg" alt="">
-
-            <div class="text">
-                <div class="title">
-                    <h2>Chứng nhận và tiêu chuẩn quốc tế</h2>
-                </div>
-
+        <div class="section-row">
+            <div class="section-img">
+                <img class="section-real-img" src="@Url.Content("~/images/anh1.png")" alt="Chứng nhận và tiêu chuẩn quốc tế VINUT" />
+            </div>
+            <div class="section-content">
+                <h2 id="chung-nhan-quoc-te">Chứng nhận và tiêu chuẩn quốc tế</h2>
+                <p style="margin-bottom: 10px;">Với cam kết không ngừng đổi mới và nâng cao chất lượng, VINUT đã khẳng định uy tín của mình trong ngành nước giải khát, được minh chứng qua hàng loạt chứng nhận quốc tế danh giá như:</p>
                 <ul>
-                    <li>Hệ thống chứng nhận toàn diện: BRCGS, FDA, HACCP, GMP, ISO 14001, WCA, GSV, SMETA, SA 8000, Halal, Kosher...</li>
-                    <li>Được vinh danh với nhiều giải thưởng uy tín trong ngành thực phẩm và đồ uống.</li>
+                    <li>Hệ thống chứng nhận toàn diện: BRCGS, FDA, HACCP, GMP, ISO 14001, WCA, GSV, SMETA, SA 8000, Halal, Kosher, USDA Organic, EU Organi, ...</li>
+                    <li>Được vinh danh với nhiều giải thưởng uy tín như: Top 10 thương hiệu nổi tiếng Asean, Strong Brands 2024, Top 100 doanh nghiệp nổi bật trên Alibaba.com, ...</li>
                 </ul>
-            </div>
-        </div>
-
-
-        <!-- Thương hiệu -->
-        <div class="section">
-            <img src="img/logo.png" alt="">
-
-            <div class="text">
-                <div class="title">
-                    <h2>Xây dựng thương hiệu mạnh</h2>
-                </div>
-
-                <p>
-                    Gas Spark không ngừng xây dựng thương hiệu bằng chất lượng sản phẩm
-                    và sự đổi mới liên tục, từng bước khẳng định vị thế trên thị trường quốc tế.
-                </p>
             </div>
         </div>
 
     </div>
+</div>
 
-</body>
-</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (window.location.hash) {
+            const hash = window.location.hash;
+            const targetElement = document.querySelector(hash);
+
+            if (targetElement) {
+                // Ép màn hình ở đỉnh trang trước để tránh bị nhảy "bụp" giật lag
+                if ('scrollRestoration' in history) {
+                    history.scrollRestoration = 'manual';
+                }
+                window.scrollTo(0, 0);
+
+                // Chờ cấu trúc trang ổn định rồi kích hoạt hiệu ứng lướt xuống mượt mà
+                setTimeout(function () {
+                    // Lấy chiều cao của thanh menu header động (nếu có hệ thống menu bar)
+                    const header = document.querySelector('.top-header');
+                    const menuBar = document.querySelector('.menu-bar');
+
+                    let totalHeaderHeight = 0;
+                    if (header) totalHeaderHeight += header.offsetHeight;
+                    if (menuBar) totalHeaderHeight += menuBar.offsetHeight;
+
+                    // Nếu không bắt được class menu, dùng khoảng đệm mặc định 90px để tránh che chữ
+                    const totalOffset = totalHeaderHeight > 0 ? (totalHeaderHeight + 30) : 90;
+
+                    const elementPosition = targetElement.getBoundingClientRect().top;
+                    const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
+
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                }, 300); // Trì hoãn 300ms tạo hiệu ứng lướt cực đẹp mắt
+            }
+        }
+    });
+</script>
+

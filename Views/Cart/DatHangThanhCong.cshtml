@@ -1,0 +1,277 @@
+﻿@model Wedsite_LTWW.Models.DonHang
+@{
+    ViewBag.Title = "Đặt Hàng Thành Công";
+}
+
+<style>
+    .hero-feature {
+        display: none !important;
+    }
+
+    .success-page {
+        max-width: 700px;
+        margin: 40px auto 80px;
+        padding: 0 20px;
+        font-family: 'Segoe UI', sans-serif;
+        text-align: center;
+    }
+
+    .success-icon {
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(135deg, #28a745, #20c354);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        font-size: 44px;
+        color: white;
+        box-shadow: 0 10px 30px rgba(40,167,69,0.35);
+        animation: popIn 0.5s cubic-bezier(0.175,0.885,0.32,1.275);
+    }
+
+    @@keyframes popIn {
+        from {
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        to {
+            transform: scale(1);
+            opacity: 1;
+        }
+    }
+
+    .success-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #111;
+        margin-bottom: 10px;
+    }
+
+    .success-sub {
+        font-size: 15px;
+        color: #888;
+        margin-bottom: 32px;
+    }
+
+    /* ORDER CARD */
+    .order-card {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #eef0ff;
+        padding: 28px;
+        box-shadow: 0 4px 20px rgba(10,60,255,0.05);
+        text-align: left;
+        margin-bottom: 24px;
+    }
+
+    .order-card-title {
+        font-size: 16px;
+        font-weight: 800;
+        color: #111;
+        margin-bottom: 18px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .order-card-title i {
+            color: #0a3cff;
+        }
+
+    .order-info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #f5f5f5;
+        font-size: 14px;
+    }
+
+        .order-info-row:last-child {
+            border-bottom: none;
+        }
+
+        .order-info-row span:first-child {
+            color: #888;
+            font-weight: 600;
+        }
+
+        .order-info-row span:last-child {
+            color: #111;
+            font-weight: 700;
+            text-align: right;
+            max-width: 60%;
+        }
+
+    .order-id-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f0f4ff;
+        color: #0a3cff;
+        font-size: 13px;
+        font-weight: 800;
+        padding: 6px 16px;
+        border-radius: 20px;
+        border: 1px solid #d0e0ff;
+        margin-bottom: 24px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #fff8e6;
+        color: #e6a817;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 5px 14px;
+        border-radius: 20px;
+        border: 1px solid #ffe4a0;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0 0;
+        margin-top: 8px;
+        border-top: 2px solid #f0f0f0;
+    }
+
+        .total-row span:first-child {
+            font-size: 16px;
+            font-weight: 800;
+            color: #111;
+        }
+
+        .total-row span:last-child {
+            font-size: 22px;
+            font-weight: 800;
+            color: #e63946;
+        }
+
+    /* BUTTONS */
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .btn-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+        color: white;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(10,60,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+    .btn-continue {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 32px;
+        background: white;
+        color: #0a3cff;
+        border: 2px solid #0a3cff;
+        border-radius: 14px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 15px;
+        transition: 0.3s;
+    }
+
+        .btn-continue:hover {
+            background: #f0f4ff;
+            text-decoration: none;
+            color: #0a3cff;
+        }
+</style>
+
+<div class="success-page">
+
+    <div class="success-icon">
+        <i class="fa-solid fa-check"></i>
+    </div>
+
+    <h1 class="success-title">Đặt hàng thành công! 🎉</h1>
+    <p class="success-sub">Cảm ơn bạn đã tin tưởng Gas Spark. Đơn hàng của bạn đang được xử lý.</p>
+
+    <div class="order-id-badge">
+        <i class="fa-solid fa-hashtag"></i>
+        Mã đơn hàng: #@Model.Id
+    </div>
+
+    <!-- THÔNG TIN ĐƠN HÀNG -->
+    <div class="order-card">
+        <div class="order-card-title">
+            <i class="fa-solid fa-receipt"></i>
+            Thông tin đơn hàng
+        </div>
+
+        <div class="order-info-row">
+            <span>Người nhận</span>
+            <span>@Model.HoTen</span>
+        </div>
+        <div class="order-info-row">
+            <span>Số điện thoại</span>
+            <span>@Model.SoDienThoai</span>
+        </div>
+        <div class="order-info-row">
+            <span>Địa chỉ giao hàng</span>
+            <span>@Model.DiaChi</span>
+        </div>
+        @if (!string.IsNullOrEmpty(Model.GhiChu))
+        {
+            <div class="order-info-row">
+                <span>Ghi chú</span>
+                <span>@Model.GhiChu</span>
+            </div>
+        }
+        <div class="order-info-row">
+            <span>Ngày đặt</span>
+            <span>@Model.NgayDat.ToString("HH:mm - dd/MM/yyyy")</span>
+        </div>
+        <div class="order-info-row">
+            <span>Trạng thái</span>
+            <span>
+                <span class="status-badge">
+                    <i class="fa-solid fa-clock"></i> @Model.TrangThai
+                </span>
+            </span>
+        </div>
+
+        <div class="total-row">
+            <span>Tổng tiền</span>
+            <span>@Model.TongTien.ToString("N0") VNĐ</span>
+        </div>
+    </div>
+
+    <div class="action-buttons">
+        <a href="/" class="btn-home">
+            <i class="fa-solid fa-house"></i> Về trang chủ
+        </a>
+        <a href="/SanPham" class="btn-continue">
+            <i class="fa-solid fa-bag-shopping"></i> Mua thêm
+        </a>
+    </div>
+
+</div>

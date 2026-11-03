@@ -1,0 +1,489 @@
+﻿
+@model List<Wedsite_LTWW.Models.SanPham>
+
+<style>
+    .hero-feature {
+        display: none !important;
+    }
+
+    .danhmuc-header {
+        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+        padding: 30px 15px;
+        text-align: center;
+        margin: -25px -50px 30px -50px;
+        border-radius: 0 0 18px 18px;
+    }
+
+        .danhmuc-header h2 {
+            color: white;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .danhmuc-header p {
+            color: rgba(255,255,255,.85);
+            margin-top: 8px;
+            font-size: 15px;
+        }
+
+    /* BỘ LỌC GIÁ */
+    .filter-panel {
+        background: #fff;
+        border: 1px solid #e8edf5;
+        border-radius: 16px;
+        padding: 22px;
+        margin: 0 0 28px;
+        box-shadow: 0 5px 20px rgba(20, 50, 100, .06);
+    }
+
+    .filter-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #123b86;
+        font-size: 19px;
+        font-weight: 800;
+        margin-bottom: 18px;
+    }
+
+        .filter-heading i {
+            color: #168ddd;
+        }
+
+    .filter-form {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1.1fr auto auto;
+        align-items: end;
+        gap: 14px;
+    }
+
+    .filter-field label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        color: #526079;
+        margin-bottom: 8px;
+    }
+
+    .filter-input,
+    .filter-select {
+        width: 100%;
+        height: 44px;
+        box-sizing: border-box;
+        padding: 0 12px;
+        border: 1px solid #dce4ef;
+        border-radius: 10px;
+        background: #f9fbff;
+        color: #26364d;
+        font-size: 14px;
+        outline: none;
+        transition: .2s;
+    }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            border-color: #168ddd;
+            box-shadow: 0 0 0 3px rgba(22,141,221,.12);
+            background: white;
+        }
+
+    .filter-btn,
+    .reset-btn {
+        height: 44px;
+        padding: 0 19px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        font-weight: 700;
+        font-size: 13px;
+        text-decoration: none !important;
+        white-space: nowrap;
+        cursor: pointer;
+        transition: .2s;
+    }
+
+    .filter-btn {
+        border: none;
+        color: white !important;
+        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+    }
+
+        .filter-btn:hover {
+            box-shadow: 0 5px 14px rgba(10,60,255,.22);
+            transform: translateY(-1px);
+        }
+
+    .reset-btn {
+        border: 1px solid #dce4ef;
+        background: white;
+        color: #58677c !important;
+    }
+
+        .reset-btn:hover {
+            border-color: #168ddd;
+            color: #087dc0 !important;
+        }
+
+    .quick-prices {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 9px;
+        margin-top: 17px;
+        padding-top: 16px;
+        border-top: 1px solid #edf1f7;
+    }
+
+    .quick-label {
+        font-size: 13px;
+        color: #6b778b;
+        font-weight: 600;
+        margin-right: 3px;
+    }
+
+    .quick-price {
+        display: inline-block;
+        padding: 8px 14px;
+        border: 1px solid #dce7f5;
+        border-radius: 22px;
+        background: #f5f9ff;
+        color: #2364aa !important;
+        text-decoration: none !important;
+        font-size: 12px;
+        font-weight: 700;
+        transition: .2s;
+    }
+
+        .quick-price:hover,
+        .quick-price.active {
+            color: white !important;
+            border-color: #147fd0;
+            background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+        }
+
+    .product-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
+    }
+
+    .result-count {
+        color: #667085;
+        font-size: 14px;
+    }
+
+        .result-count strong {
+            color: #163d80;
+        }
+
+    /* LƯỚI SẢN PHẨM */
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 25px;
+        padding: 10px 0;
+    }
+
+    .product-card {
+        background: #fff;
+        border-radius: 16px;
+        overflow: hidden;
+        text-decoration: none;
+        color: inherit;
+        box-shadow: 0 4px 15px rgba(0,0,0,.08);
+        transition: all .3s ease;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #f0f0f0;
+        min-width: 0;
+    }
+
+        .product-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(10,60,255,.13);
+            border-color: #1a9bd7;
+        }
+
+    .product-image {
+        background: #f8f9ff;
+        padding: 20px;
+        text-align: center;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+        .product-image img {
+            max-height: 160px;
+            max-width: 100%;
+            object-fit: contain;
+            transition: transform .3s ease;
+        }
+
+    .product-card:hover .product-image img {
+        transform: scale(1.08);
+    }
+
+    .product-info {
+        padding: 15px;
+        flex: 1;
+    }
+
+    .product-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #222;
+        margin-bottom: 8px;
+        line-height: 1.5;
+        min-height: 42px;
+    }
+
+    .product-price {
+        font-size: 18px;
+        font-weight: 800;
+        color: #e63946;
+        margin: 0;
+    }
+
+    .product-btn {
+        display: block;
+        margin: 0 15px 15px;
+        padding: 10px;
+        text-align: center;
+        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+        color: white !important;
+        border-radius: 30px;
+        font-size: 13px;
+        font-weight: 600;
+        transition: .3s;
+    }
+
+    .product-card:hover .product-btn {
+        background: linear-gradient(135deg, #ff7b00, #ff3c00);
+    }
+
+    .empty-box {
+        text-align: center;
+        padding: 65px 20px;
+        color: #888;
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #edf1f7;
+    }
+
+        .empty-box i {
+            font-size: 52px;
+            color: #b8cce7;
+            margin-bottom: 18px;
+        }
+
+        .empty-box p {
+            font-size: 17px;
+            margin-bottom: 18px;
+        }
+
+    @@media (max-width: 1100px) {
+        .filter-form {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .product-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 700px) {
+        .danhmuc-header {
+            margin: -15px -12px 22px;
+            padding: 25px 10px;
+        }
+
+            .danhmuc-header h2 {
+                font-size: 23px;
+            }
+
+        .filter-panel {
+            padding: 16px;
+        }
+
+        .filter-form {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .filter-field.sort-field {
+            grid-column: 1 / -1;
+        }
+
+        .filter-btn, .reset-btn {
+            width: 100%;
+            padding: 0 8px;
+        }
+
+        .product-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .product-image {
+            height: 155px;
+            padding: 12px;
+        }
+
+            .product-image img {
+                max-height: 130px;
+            }
+
+        .product-info {
+            padding: 12px;
+        }
+
+        .product-name {
+            font-size: 13px;
+        }
+
+        .product-price {
+            font-size: 15px;
+        }
+
+        .product-btn {
+            margin: 0 10px 12px;
+            font-size: 12px;
+        }
+    }
+</style>
+
+@{
+    decimal? giaMin = ViewBag.GiaMin as decimal?;
+    decimal? giaMax = ViewBag.GiaMax as decimal?;
+    string sapXep = ViewBag.SapXep as string ?? "macdinh";
+}
+
+<div class="danhmuc-header">
+    <h2><i class="fa-solid fa-tag"></i> @ViewBag.TenDanhMuc</h2>
+    <p>Khám phá sản phẩm yêu thích với mức giá phù hợp</p>
+</div>
+
+<!-- BỘ LỌC GIÁ -->
+<div class="filter-panel">
+    <div class="filter-heading">
+        <i class="fa-solid fa-sliders"></i>
+        Lọc sản phẩm
+    </div>
+
+    @using (Html.BeginForm("DanhMuc", "SanPham",
+        new { id = ViewContext.RouteData.Values["id"] },
+        FormMethod.Get, new { @class = "filter-form" }))
+    {
+        <div class="filter-field">
+            <label for="giaMin">Giá thấp nhất (VNĐ)</label>
+            <input class="filter-input"
+                   type="number" id="giaMin" name="giaMin"
+                   min="0" step="1000"
+                   placeholder="Ví dụ: 10000"
+                   value="@(giaMin.HasValue ? giaMin.Value.ToString("0.##") : "")" />
+        </div>
+
+        <div class="filter-field">
+            <label for="giaMax">Giá cao nhất (VNĐ)</label>
+            <input class="filter-input"
+                   type="number" id="giaMax" name="giaMax"
+                   min="0" step="1000"
+                   placeholder="Ví dụ: 50000"
+                   value="@(giaMax.HasValue ? giaMax.Value.ToString("0.##") : "")" />
+        </div>
+
+        <div class="filter-field sort-field">
+            <label for="sapXep">Sắp xếp sản phẩm</label>
+            <select class="filter-select" id="sapXep" name="sapXep">
+                <option value="macdinh" @(sapXep == "macdinh" ? "selected" : "")>Mặc định</option>
+                <option value="tang" @(sapXep == "tang" ? "selected" : "")>Giá thấp đến cao</option>
+                <option value="giam" @(sapXep == "giam" ? "selected" : "")>Giá cao đến thấp</option>
+            </select>
+        </div>
+
+        <button class="filter-btn" type="submit">
+            <i class="fa-solid fa-filter"></i> Lọc giá
+        </button>
+
+        <a class="reset-btn"
+           href="@Url.Action("DanhMuc", "SanPham",
+                new { id = ViewContext.RouteData.Values["id"] })">
+            <i class="fa-solid fa-rotate-left"></i> Xóa lọc
+        </a>
+    }
+
+    <div class="quick-prices">
+        <span class="quick-label">Mức giá nhanh:</span>
+
+        <a class="quick-price"
+           href="@Url.Action("DanhMuc", "SanPham", new { id = ViewContext.RouteData.Values["id"], giaMax = 30000 })">
+            Dưới 30.000đ
+        </a>
+
+        <a class="quick-price"
+           href="@Url.Action("DanhMuc", "SanPham", new { id = ViewContext.RouteData.Values["id"], giaMin = 30000, giaMax = 50000 })">
+            30.000đ – 50.000đ
+        </a>
+
+        <a class="quick-price"
+           href="@Url.Action("DanhMuc", "SanPham", new { id = ViewContext.RouteData.Values["id"], giaMin = 50000 })">
+            Từ 50.000đ
+        </a>
+    </div>
+</div>
+
+<div class="product-toolbar">
+    <div class="result-count">
+        Danh mục: <strong>@ViewBag.TenDanhMuc</strong>
+        &nbsp;|&nbsp; Tìm thấy <strong>@Model.Count</strong> sản phẩm
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="empty-box">
+        <i class="fa-solid fa-box-open"></i>
+        <p>Không tìm thấy sản phẩm phù hợp với bộ lọc giá.</p>
+        <a class="reset-btn"
+           href="@Url.Action("DanhMuc", "SanPham",
+                new { id = ViewContext.RouteData.Values["id"] })">
+            Xem tất cả sản phẩm
+        </a>
+    </div>
+}
+else
+{
+    <div class="product-grid">
+        @foreach (var item in Model)
+        {
+            <a href="@Url.Action("SanPham", "Home", new { id = item.Id })"
+               class="product-card">
+                <div class="product-image">
+                    <img src="@Url.Content("~/Images/" + item.HinhAnh)"
+                         alt="@item.TenSanPham" />
+                </div>
+
+                <div class="product-info">
+                    <p class="product-name">@item.TenSanPham</p>
+                    <p class="product-price">
+                        @String.Format("{0:N0}", item.Gia) VNĐ
+                    </p>
+                </div>
+
+                <span class="product-btn">
+                    <i class="fa-solid fa-cart-shopping"></i> Xem chi tiết
+                </span>
+            </a>
+        }
+    </div>
+}

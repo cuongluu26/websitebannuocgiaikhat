@@ -1,0 +1,339 @@
+﻿@model Wedsite_LTWW.Models.DonHang
+@using System.Collections.Generic
+@using Wedsite_LTWW.Models
+@{
+    ViewBag.Title = "Chi tiết đơn hàng #" + Model.Id;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var chiTiets = ViewBag.ChiTiets as List<ChiTietDonHang> ?? new List<ChiTietDonHang>();
+}
+
+<style>
+    .hero-feature {
+        display: none !important;
+    }
+
+    .ct-wrapper {
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 0 30px;
+        font-family: Arial, sans-serif;
+    }
+
+    .ct-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        color: #1a56db;
+        font-size: 14px;
+        text-decoration: none;
+        margin-bottom: 20px;
+    }
+
+        .ct-back:hover {
+            text-decoration: underline;
+        }
+
+    .ct-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        overflow: hidden;
+        margin-bottom: 16px;
+    }
+
+    .ct-card-header {
+        background: #1a56db;
+        padding: 18px 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+        .ct-card-header h2 {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .ct-card-header p {
+            color: rgba(255,255,255,0.75);
+            font-size: 13px;
+            margin: 4px 0 0;
+        }
+
+    .ct-badge {
+        font-size: 13px;
+        padding: 6px 16px;
+        border-radius: 999px;
+        font-weight: 600;
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: 1px solid rgba(255,255,255,0.4);
+    }
+
+    .ct-section {
+        padding: 18px 22px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+        .ct-section:last-child {
+            border-bottom: none;
+        }
+
+    .ct-section-title {
+        font-size: 13px;
+        font-weight: bold;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 12px;
+    }
+
+    .ct-info-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .ct-info-item label {
+        font-size: 12px;
+        color: #9ca3af;
+        display: block;
+        margin-bottom: 2px;
+    }
+
+    .ct-info-item span {
+        font-size: 14px;
+        color: #111827;
+        font-weight: 500;
+    }
+
+    .ct-product-row {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 12px 0;
+        border-bottom: 1px dashed #f3f4f6;
+    }
+
+        .ct-product-row:last-child {
+            border-bottom: none;
+        }
+
+    .ct-product-img {
+        width: 60px;
+        height: 60px;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        flex-shrink: 0;
+    }
+
+    .ct-product-placeholder {
+        width: 60px;
+        height: 60px;
+        background: #f3f4f6;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        flex-shrink: 0;
+    }
+
+    .ct-product-name {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 600;
+        color: #111827;
+    }
+
+    .ct-product-unit {
+        font-size: 12px;
+        color: #6b7280;
+        margin-top: 2px;
+    }
+
+    .ct-product-qty {
+        font-size: 13px;
+        color: #6b7280;
+        min-width: 40px;
+        text-align: center;
+    }
+
+    .ct-product-price {
+        font-size: 15px;
+        font-weight: bold;
+        color: #dc2626;
+        min-width: 90px;
+        text-align: right;
+    }
+
+    .ct-total-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #374151;
+        padding: 6px 0;
+    }
+
+        .ct-total-row.main {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 12px;
+            margin-top: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #dc2626;
+        }
+
+    .ct-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        padding: 16px 22px;
+        background: #f9fafb;
+    }
+
+    .ct-btn {
+        padding: 9px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        border: 1px solid;
+        transition: all 0.15s;
+        display: inline-block;
+    }
+
+    .ct-btn-outline {
+        border-color: #d1d5db;
+        background: white;
+        color: #374151;
+    }
+
+        .ct-btn-outline:hover {
+            background: #f3f4f6;
+            color: #374151;
+            text-decoration: none;
+        }
+
+    .ct-btn-primary {
+        border-color: #1a56db;
+        background: #1a56db;
+        color: white;
+    }
+
+        .ct-btn-primary:hover {
+            background: #1e40af;
+            color: white;
+            text-decoration: none;
+        }
+
+    @@media (max-width: 600px) {
+        .ct-info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .ct-card-header {
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div class="ct-wrapper">
+    <a href="@Url.Action("LichSu", "DonHang")" class="ct-back">← Quay lại lịch sử đơn hàng</a>
+
+    <div class="ct-card">
+        <div class="ct-card-header">
+            <div>
+                <h2>Đơn hàng #@Model.Id</h2>
+                <p>Đặt lúc: @Model.NgayDat.ToString("HH:mm - dd/MM/yyyy")</p>
+            </div>
+            <span class="ct-badge">@Model.TrangThai</span>
+        </div>
+
+        <div class="ct-section">
+            <div class="ct-section-title">📋 Thông tin người nhận</div>
+            <div class="ct-info-grid">
+                <div class="ct-info-item">
+                    <label>Họ tên</label>
+                    <span>@Model.HoTen</span>
+                </div>
+                <div class="ct-info-item">
+                    <label>Số điện thoại</label>
+                    <span>@Model.SoDienThoai</span>
+                </div>
+                <div class="ct-info-item" style="grid-column:1/-1">
+                    <label>Địa chỉ giao hàng</label>
+                    <span>@(string.IsNullOrEmpty(Model.DiaChi) ? "—" : Model.DiaChi)</span>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.GhiChu))
+                {
+                    <div class="ct-info-item" style="grid-column:1/-1">
+                        <label>Ghi chú</label>
+                        <span>@Model.GhiChu</span>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="ct-section">
+            <div class="ct-section-title">🧃 Sản phẩm đã đặt</div>
+            @if (chiTiets.Any())
+            {
+                foreach (var ct in chiTiets)
+                {
+                    <div class="ct-product-row">
+                        @if (!string.IsNullOrEmpty(ct.HinhAnh))
+                        {
+                            <img class="ct-product-img" src="~/Images/@ct.HinhAnh" alt="@ct.TenSanPham"
+                                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                            <div class="ct-product-placeholder" style="display:none;">🧃</div>
+                        }
+                        else
+                        {
+                            <div class="ct-product-placeholder">🧃</div>
+                        }
+                        <div style="flex:1">
+                            <div class="ct-product-name">@ct.TenSanPham</div>
+                            <div class="ct-product-unit">Đơn giá: @String.Format("{0:N0}đ", ct.DonGia)</div>
+                        </div>
+                        <div class="ct-product-qty">
+                            @("x" + ct.SoLuong)
+                        </div>
+                        <div class="ct-product-price">@String.Format("{0:N0}đ", ct.DonGia * ct.SoLuong)</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p style="color:#9ca3af;font-size:13px;">Không có thông tin sản phẩm.</p>
+            }
+        </div>
+
+        <div class="ct-section">
+            <div class="ct-section-title">💰 Thanh toán</div>
+            <div class="ct-total-row">
+                <span>Tạm tính</span>
+                <span>@String.Format("{0:N0}đ", Model.TongTien)</span>
+            </div>
+            <div class="ct-total-row">
+                <span>Phí giao hàng</span>
+                <span style="color:#16a34a;">Miễn phí</span>
+            </div>
+            <div class="ct-total-row main">
+                <span>Tổng cộng</span>
+                <span>@String.Format("{0:N0}đ", Model.TongTien)</span>
+            </div>
+        </div>
+
+        <div class="ct-actions">
+            <a href="@Url.Action("LichSu", "DonHang")" class="ct-btn ct-btn-outline">← Quay lại</a>
+            <a href="@Url.Action("Index", "SanPham")" class="ct-btn ct-btn-primary">Tiếp tục mua sắm</a>
+        </div>
+    </div>
+</div>

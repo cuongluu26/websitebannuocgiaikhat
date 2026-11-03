@@ -1,0 +1,64 @@
+﻿@model IEnumerable<Wedsite_LTWW.Models.DanhMuc>
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h3 class="mb-3">📂 Quản lý danh mục</h3>
+
+<div class="card p-3 mb-3 shadow-sm">
+    <a href="@Url.Action("CreateDanhMuc")" class="btn btn-success">
+        + Thêm danh mục
+    </a>
+</div>
+
+<div class="card shadow-sm">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Tên danh mục</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @{
+                int i = 1;
+            }
+
+            @foreach (var dm in Model)
+            {
+                <tr>
+                    <td>@i</td>
+                    <td>@dm.TenDanhMuc</td>
+
+                    <td>
+                        @if (dm.TrangThai == true)
+                        {
+                            <span class="badge bg-success">Hiển thị</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">Ẩn</span>
+                        }
+                    </td>
+
+                    <td>
+                        <a href="@Url.Action("EditDanhMuc", new { id = dm.Id })"
+                           class="btn btn-sm btn-warning">
+                            <i class="fa fa-edit"></i>
+                        </a>
+
+                        <a href="@Url.Action("XoaDanhMuc", new { id = dm.Id })"
+                           onclick="return confirm('Xóa danh mục?')"
+                           class="btn btn-sm btn-danger">
+                            <i class="fa fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                i++;
+            }
+        </tbody>
+    </table>
+</div>

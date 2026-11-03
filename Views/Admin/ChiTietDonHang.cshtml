@@ -1,0 +1,127 @@
+﻿@model Wedsite_LTWW.Models.DonHang
+@{
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h3 class="mb-4">📋 Chi tiết đơn hàng #@Model.Id</h3>
+
+<div class="row">
+    <!-- THÔNG TIN KHÁCH -->
+    <div class="col-md-5 mb-4">
+        <div class="card shadow-sm p-4">
+            <h5 class="mb-3 border-bottom pb-2">👤 Thông tin khách hàng</h5>
+            <table class="table table-borderless mb-0">
+                <tr>
+                    <td class="fw-bold" style="width:130px">Họ tên:</td>
+                    <td>@Model.HoTen</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">SĐT:</td>
+                    <td>@Model.SoDienThoai</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Địa chỉ:</td>
+                    <td>@Model.DiaChi</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Ghi chú:</td>
+                    <td>@(string.IsNullOrEmpty(Model.GhiChu) ? "Không có" : Model.GhiChu)</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Ngày đặt:</td>
+                    <td>@Model.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                </tr>
+                <tr>
+                    <td class="fw-bold">Trạng thái:</td>
+                    <td>
+                        @{
+                            string badgeClass = "";
+
+                            if (Model.TrangThai == "Chờ xác nhận")
+                            {
+                                badgeClass = "bg-secondary";
+                            }
+                            else if (Model.TrangThai == "Đang giao")
+                            {
+                                badgeClass = "bg-info";
+                            }
+                            else if (Model.TrangThai == "Hoàn thành")
+                            {
+                                badgeClass = "bg-success";
+                            }
+                            else if (Model.TrangThai == "Đã hủy")
+                            {
+                                badgeClass = "bg-danger";
+                            }
+                        }
+
+                        <span class="badge @badgeClass">
+                            @Model.TrangThai
+                        </span>
+                    </td>
+                </tr>
+            </table>
+
+            <!-- CẬP NHẬT TRẠNG THÁI -->
+            <div class="mt-3">
+                <label class="fw-bold mb-1">Cập nhật trạng thái:</label>
+                <div class="d-flex gap-2 flex-wrap">
+                    @foreach (var tt in new[] { "Chờ xác nhận", "Đang giao", "Hoàn thành", "Đã hủy" })
+                    {
+                        <a href="@Url.Action("CapNhatTrangThaiDonHang", new { id = Model.Id, trangThai = tt })"
+                           class="btn btn-sm @(Model.TrangThai == tt ? "btn-dark" : "btn-outline-secondary")">
+                            @tt
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SẢN PHẨM TRONG ĐƠN -->
+    <div class="col-md-7 mb-4">
+        <div class="card shadow-sm p-4">
+            <h5 class="mb-3 border-bottom pb-2">🛍️ Sản phẩm trong đơn</h5>
+            <table class="table align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Hình</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Đơn giá</th>
+                        <th>SL</th>
+                        <th>Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ct in Model.ChiTietDonHangs)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@Url.Content("~/Images/" + ct.HinhAnh)"
+                                     width="50" height="50" class="rounded" />
+                            </td>
+                            <td><strong>@ct.TenSanPham</strong></td>
+                            <td>@String.Format("{0:N0}", ct.DonGia) đ</td>
+                            <td>@ct.SoLuong</td>
+                            <td class="text-primary fw-bold">
+                                @String.Format("{0:N0}", ct.DonGia * ct.SoLuong) đ
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" class="text-end fw-bold">Tổng cộng:</td>
+                        <td class="text-danger fw-bold fs-5">
+                            @String.Format("{0:N0}", Model.TongTien) đ
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<a href="@Url.Action("DonHang")" class="btn btn-secondary">
+    ← Quay lại
+</a>

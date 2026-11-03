@@ -1,15 +1,16 @@
-﻿using System.Linq;
-using System.Web.Mvc;
-using Wedsite_LTWW.Models;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
 using MimeKit;
 using System;
+using System.Linq;
+using System.Net;
+using System.Web.Mvc;
+using Wedsite_LTWW.Models;
 
 namespace Wedsite_LTWW.Controllers
 {
     public class AccountController : Controller
     {
-        accountEntities db = new accountEntities();
+        GasSparkDBEntities db = new GasSparkDBEntities();
         public void SendOTP(string email, string otp)
         {
             var message = new MimeMessage();
@@ -32,6 +33,10 @@ namespace Wedsite_LTWW.Controllers
             }
         }
         // ===== ĐĂNG KÝ =====
+        public ActionResult Register()
+        {
+            return View();
+        }
 
         [HttpPost]
         public ActionResult VerifyOTP(string otp)
@@ -40,7 +45,22 @@ namespace Wedsite_LTWW.Controllers
 
             if (otp == otpSession)
             {
-                Users user = Session["UserRegister"] as Users;
+                var username = Session["Username"] as string;
+                var password = Session["Password"] as string;
+                var email = Session["Email"] as string;
+
+                if (username == null || password == null || email == null)
+                {
+                    ViewBag.Error = "Session bị mất!";
+                    return View();
+                }
+
+                User user = new User()
+                {
+                    Username = username,
+                    Password = password,
+                    Email = email
+                };
 
                 db.Users.Add(user);
                 db.SaveChanges();
@@ -53,41 +73,30 @@ namespace Wedsite_LTWW.Controllers
         }
 
 
-        public ActionResult Register()
-        {
-            return View();
-        }
         [HttpPost]
-        public ActionResult Register(Users tk)
+        public ActionResult Register(User tk)
         {
             if (ModelState.IsValid)
             {
-                var check = db.Users.FirstOrDefault(x => x.Username == tk.Username);
+                var check = db.Users.FirstOrDefault(x => x.Email == tk.Email);
+
 
                 if (check != null)
                 {
-                    ViewBag.Error = "Tài khoản đã tồn tại!";
+                    ViewBag.Error = "Gmail đã tồn tại";
                     return View(tk);
                 }
 
-                // tạo OTP
-                Random rd = new Random();
-                string otp = rd.Next(100000, 999999).ToString();
+                string otp = new Random().Next(100000, 999999).ToString();
 
-                // lưu OTP vào session
                 Session["OTP"] = otp;
+                Session["Username"] = tk.Username;
+                Session["Password"] = tk.Password;
+                Session["Email"] = tk.Email;
 
-                // lưu thông tin user tạm
-                Session["UserRegister"] = tk;
-
-                // Gửi OTP vào Gmail
                 SendOTP(tk.Email, otp);
 
-                db.Users.Add(tk);
-                db.SaveChanges();
-
-                // chuyển sang trang đăng nhập
-                return RedirectToAction("VerifyOTP", "Account");
+                return RedirectToAction("VerifyOTP");
             }
 
             return View(tk);
@@ -101,6 +110,7 @@ namespace Wedsite_LTWW.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult Login(string Username, string Password)
         {
@@ -110,7 +120,12 @@ namespace Wedsite_LTWW.Controllers
             if (user != null)
             {
                 Session["Username"] = user.Username;
-                return RedirectToAction("Tranggiaodien", "Home");
+                Session["Role"] = user.Role;
+
+                if (user.Role == "admin")
+                    return RedirectToAction("Index", "Admin");
+                else
+                    return RedirectToAction("Tranggiaodien", "Home");
             }
 
             ViewBag.Error = "Sai tài khoản hoặc mật khẩu!";
@@ -123,5 +138,118 @@ namespace Wedsite_LTWW.Controllers
             Session.Clear();
             return RedirectToAction("Tranggiaodien", "Home");
         }
+
+
+        public ActionResult VerifyOTP1()
+        {
+            return View();          // POST: Xử lý đổi mật khẩu
+        }
+
+        [HttpPost]
+        public ActionResult VerifyOTP1(string otp)
+        {
+            string sessionOtp = Session["OTP"] as string;
+
+            if (sessionOtp == null)
+            {
+                ViewBag.Message = "OTP đã hết hạn!";
+                return View();
+            }
+
+            if (otp != sessionOtp)
+            {
+                ViewBag.Message = "OTP không đúng!";
+                return View();
+            }
+
+            return RedirectToAction("ResetPassword");
+        }
+
+        public void SendEmail(string toEmail, string subject, string body)
+        {
+            string fromEmail = "tranbao78900@gmail.com";
+            string appPassword = "ziiq heav vkgx nhhs"; // App Password Gmail
+
+            using (var smtp = new System.Net.Mail.SmtpClient())
+            {
+                smtp.Host = "smtp.gmail.com";
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                smtp.Credentials = new NetworkCredential(fromEmail, appPassword);
+                smtp.Send(fromEmail, toEmail, subject, body);
+            }
+        }
+
+        public ActionResult ForgotPassword()
+        {
+            return View();          // POST: Xử lý đổi mật khẩu
+        }
+        [HttpPost]
+        public ActionResult ForgotPassword(string Email)
+        {
+            if (string.IsNullOrEmpty(Email))
+            {
+                ViewBag.Message = "Vui lòng nhập Email!";
+                return View();
+            }
+
+            var user = db.Users.FirstOrDefault(x => x.Email == Email);
+
+            if (user == null)
+            {
+                ViewBag.Message = "Email không tồn tại!";
+                return View();
+            }
+
+            // tạo OTP
+            string otp = new Random().Next(100000, 999999).ToString();
+
+            // lưu lại
+            Session["OTP"] = otp;
+            Session["Email"] = Email;
+            Session["OTP_Type"] = "Forgot";
+
+            // test (sau này gửi mail)
+            SendOTP(Email, otp);
+
+            // 👉 CHỖ QUAN TRỌNG
+            return RedirectToAction("VerifyOTP1");
+        }
+
+
+        [HttpPost]
+        public ActionResult ResetPassword(string newPassword)
+        {
+            if (Session["Email"] == null)
+            {
+                return RedirectToAction("ForgotPassword");
+            }
+
+            string email = Session["Email"].ToString();
+
+            var user = db.Users.FirstOrDefault(x => x.Email == email);
+
+            if (user != null)
+            {
+                user.Password = newPassword;   // (có thể nâng cấp hash sau)
+                db.SaveChanges();
+            }
+
+            // xoá session sau khi đổi thành công
+            Session.Remove("OTP");
+            Session.Remove("Email");
+
+            return RedirectToAction("Login", "Account");
+        }
+
+        public ActionResult ResetPassword()
+        {
+            if (Session["Email"] == null)
+            {
+                return RedirectToAction("ForgotPassword");
+            }
+            return View();
+        }
+
     }
 }

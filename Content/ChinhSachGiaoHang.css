@@ -1,28 +1,152 @@
-﻿.shipping-policy {
-    max-width: 900px;
-    margin: 40px auto;
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.1);
-    line-height: 1.7;
+﻿/* ===== CHÍNH SÁCH GIAO HÀNG ===== */
+
+html, body {
+    scroll-behavior: smooth !important;
+    background: #f4f7fb;
+    font-family: Arial, sans-serif;
 }
+
+.shipping-policy {
+    max-width: 950px;
+    margin: 50px auto;
+    background: #ffffff;
+    padding: 45px;
+    border-radius: 18px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.08);
+    line-height: 1.9;
+    color: #333;
+    transition: 0.3s;
+    border: 1px solid #e5e5e5;
+}
+
+    .shipping-policy:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    }
+
+    /* ===== TIÊU ĐỀ CHÍNH ===== */
 
     .shipping-policy h1 {
         text-align: center;
         color: #0a3cff;
-        margin-bottom: 30px;
+        margin-bottom: 35px;
+        font-size: 38px;
+        font-weight: bold;
+        position: relative;
+        padding-bottom: 15px;
     }
+
+        .shipping-policy h1::after {
+            content: "";
+            width: 120px;
+            height: 4px;
+            background: linear-gradient(to right, #0a3cff, #00bfff);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: 0;
+            border-radius: 10px;
+        }
+
+    /* ===== TIÊU ĐỀ PHỤ ===== */
 
     .shipping-policy h2 {
         color: #0a7a3c;
-        margin-top: 25px;
+        margin-top: 35px;
+        margin-bottom: 15px;
+        font-size: 28px;
+        border-left: 6px solid #0a7a3c;
+        padding-left: 12px;
+        background: #f3fff7;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        border-radius: 6px;
     }
 
     .shipping-policy h3 {
-        margin-top: 15px;
+        margin-top: 20px;
+        color: #ff6600;
+        font-size: 22px;
     }
 
-    .shipping-policy ul {
-        margin-left: 20px;
+    /* ===== ĐOẠN VĂN ===== */
+
+    .shipping-policy p {
+        margin-bottom: 15px;
+        text-align: justify;
+        font-size: 17px;
     }
+
+    /* ===== DANH SÁCH ===== */
+
+    .shipping-policy ul {
+        margin-left: 25px;
+        margin-top: 10px;
+    }
+
+        .shipping-policy ul li {
+            margin-bottom: 12px;
+            padding-left: 5px;
+            transition: 0.2s;
+        }
+
+            .shipping-policy ul li:hover {
+                color: #0a3cff;
+                transform: translateX(5px);
+            }
+
+/* ===== HỘP NỘI DUNG ===== */
+
+.policy-box {
+    background: #f8fbff;
+    border-left: 5px solid #0a3cff;
+    padding: 18px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+/* ===== NÚT (nếu có) ===== */
+
+.shipping-btn {
+    display: inline-block;
+    margin-top: 20px;
+    background: linear-gradient(to right, #0a3cff, #005eff);
+    color: white;
+    padding: 12px 28px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+    .shipping-btn:hover {
+        background: linear-gradient(to right, #005eff, #0a3cff);
+        transform: scale(1.05);
+    }
+
+/* ===== RESPONSIVE ===== */
+
+@media (max-width: 768px) {
+
+    .shipping-policy {
+        padding: 25px;
+        margin: 20px;
+    }
+
+        .shipping-policy h1 {
+            font-size: 30px;
+        }
+
+        .shipping-policy h2 {
+            font-size: 24px;
+        }
+
+        .shipping-policy h3 {
+            font-size: 20px;
+        }
+
+        .shipping-policy p,
+        .shipping-policy li {
+            font-size: 16px;
+        }
+}

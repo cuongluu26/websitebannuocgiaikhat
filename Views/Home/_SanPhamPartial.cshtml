@@ -5,11 +5,11 @@
     <div class="product-card">
         <a href="@Url.Action("SanPham","Home", new { id = item.Id })">
             <div class="product-image">
-                <img src="@Url.Content("~/Images/" + item.Hinh)" />
+                <img src="@Url.Content("~/Images/" + item.HinhAnh)" />
             </div>
 
             <div class="product-name">
-                @item.Ten
+                @item.TenSanPham
             </div>
 
             <div class="product-price">

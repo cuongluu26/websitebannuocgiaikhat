@@ -1,0 +1,374 @@
+﻿@{
+    ViewBag.Title = "Liên Hệ";
+}
+
+<style>
+    .hero-feature {
+        display: none !important;
+    }
+    .lienhe-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 40px 20px 60px;
+    }
+
+    .lienhe-title {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+        .lienhe-title h2 {
+            font-size: 28px;
+            font-weight: 800;
+            color: #111;
+        }
+
+            .lienhe-title h2 span {
+                color: #0a3cff;
+            }
+
+        .lienhe-title p {
+            color: #888;
+            font-size: 15px;
+            margin-top: 8px;
+        }
+
+    .lienhe-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: start;
+    }
+
+    /* THÔNG TIN */
+    .info-box {
+        background: linear-gradient(135deg, #0a3cff, #1a9bd7);
+        border-radius: 20px;
+        padding: 36px 32px;
+        color: white;
+    }
+
+        .info-box h3 {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .info-box p {
+            font-size: 14px;
+            opacity: 0.85;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+    .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+        margin-bottom: 22px;
+    }
+
+    .info-icon {
+        width: 42px;
+        height: 42px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .info-text strong {
+        display: block;
+        font-size: 13px;
+        opacity: 0.75;
+        margin-bottom: 2px;
+    }
+
+    .info-text span {
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    .social-links {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+        .social-links a {
+            width: 38px;
+            height: 38px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+            .social-links a:hover {
+                background: rgba(255,255,255,0.35);
+            }
+
+    /* FORM */
+    .form-box {
+        background: white;
+        border-radius: 20px;
+        padding: 36px 32px;
+        box-shadow: 0 4px 20px rgba(10,60,255,0.08);
+        border: 1px solid #eef0ff;
+    }
+
+        .form-box h3 {
+            font-size: 20px;
+            font-weight: 800;
+            color: #111;
+            margin-bottom: 24px;
+        }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 6px;
+        }
+
+        .form-group .required {
+            color: #e63946;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e8ecff;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+            transition: 0.2s;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+            .form-group input:focus,
+            .form-group select:focus,
+            .form-group textarea:focus {
+                border-color: #0a3cff;
+                box-shadow: 0 0 0 3px rgba(10,60,255,0.08);
+            }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+    .btn-submit {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+        .btn-submit:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(10,60,255,0.3);
+        }
+
+    .alert-success {
+        background: #e8fff3;
+        border: 1px solid #5cb85c;
+        color: #2d6a2d;
+        padding: 14px 18px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .alert-error {
+        background: #fff0f0;
+        border: 1px solid #e63946;
+        color: #c0392b;
+        padding: 14px 18px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* MAP */
+    .map-box {
+        margin-top: 50px;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(10,60,255,0.1);
+        border: 1px solid #eef0ff;
+    }
+
+        .map-box iframe {
+            width: 100%;
+            height: 380px;
+            border: none;
+            display: block;
+        }
+
+    @@media (max-width: 768px) {
+        .lienhe-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="lienhe-page">
+
+    <!-- TIÊU ĐỀ -->
+    <div class="lienhe-title">
+        <h2>Liên Hệ <span>Gas Spark</span></h2>
+        <p>Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn!</p>
+    </div>
+
+    <div class="lienhe-grid">
+
+        <!-- THÔNG TIN LIÊN HỆ -->
+        <div class="info-box">
+            <h3>Thông tin liên hệ</h3>
+            <p>Liên hệ với chúng tôi qua các kênh bên dưới hoặc gửi tin nhắn trực tiếp.</p>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fa-solid fa-location-dot"></i></div>
+                <div class="info-text">
+                    <strong>Địa chỉ</strong>
+                    <span>Dĩ An, Bình Dương</span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fa-solid fa-phone"></i></div>
+                <div class="info-text">
+                    <strong>Hotline</strong>
+                    <span>0916 112 132</span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fa-solid fa-envelope"></i></div>
+                <div class="info-text">
+                    <strong>Email</strong>
+                    <span>support&#64;gasspark.vn</span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon"><i class="fa-solid fa-clock"></i></div>
+                <div class="info-text">
+                    <strong>Giờ làm việc</strong>
+                    <span>Thứ 2 – Thứ 7: 8:00 – 17:30</span>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="#" title="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+                <a href="#" title="Zalo"><i class="fa-solid fa-comment-dots"></i></a>
+                <a href="#" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                <a href="#" title="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+            </div>
+        </div>
+
+        <!-- FORM GỬI TIN -->
+        <div class="form-box">
+            <h3>📩 Gửi tin nhắn cho chúng tôi</h3>
+
+            @if (ViewBag.Success != null)
+            {
+                <div class="alert-success">
+                    <i class="fa-solid fa-circle-check"></i> @ViewBag.Success
+                </div>
+            }
+
+            @if (ViewBag.Error != null)
+            {
+                <div class="alert-error">
+                    <i class="fa-solid fa-triangle-exclamation"></i> @ViewBag.Error
+                </div>
+            }
+
+            @using (Html.BeginForm("LienHe", "Home", FormMethod.Post))
+            {
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Họ và tên <span class="required">*</span></label>
+                        <input type="text" name="hoTen" placeholder="Nguyễn Văn A" />
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại</label>
+                        <input type="text" name="soDienThoai" placeholder="0912 345 678" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email <span class="required">*</span></label>
+                    <input type="email" name="email" placeholder="example@gmail.com" />
+                </div>
+
+                <div class="form-group">
+                    <label>Tiêu đề</label>
+                    <input type="text" name="tieuDe" placeholder="Tôi muốn hỏi về..." />
+                </div>
+
+                <div class="form-group">
+                    <label>Nội dung <span class="required">*</span></label>
+                    <textarea name="noiDung" placeholder="Nhập nội dung tin nhắn của bạn..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fa-solid fa-paper-plane"></i> Gửi tin nhắn
+                </button>
+            }
+        </div>
+    </div>
+
+    <!-- BẢN ĐỒ -->
+    <div class="map-box">
+        <iframe src="https://maps.google.com/maps?q=61+Duong+so+21+Di+An+Ho+Chi+Minh&output=embed"
+                allowfullscreen loading="lazy">
+        </iframe>
+    </div>
+
+</div>

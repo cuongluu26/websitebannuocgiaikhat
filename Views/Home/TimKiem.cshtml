@@ -1,0 +1,250 @@
+﻿@model List<Wedsite_LTWW.Models.SanPham>
+@{
+    ViewBag.Title = "Tìm kiếm: " + ViewBag.TuKhoa;
+}
+
+<style>
+    .hero-feature {
+        display: none !important;
+    }
+
+    .search-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 30px 20px 60px;
+    }
+
+    .search-header {
+        margin-bottom: 28px;
+    }
+
+        .search-header h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: #111;
+            margin-bottom: 6px;
+        }
+
+            .search-header h2 span {
+                color: #0a3cff;
+            }
+
+    .search-meta {
+        font-size: 14px;
+        color: #888;
+    }
+
+        .search-meta b {
+            color: #e63946;
+        }
+
+    /* SEARCH BAR LỚN */
+    .search-bar-big {
+        display: flex;
+        gap: 0;
+        margin-bottom: 32px;
+        border: 2px solid #e0e4ff;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(10,60,255,0.08);
+    }
+
+        .search-bar-big input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            font-size: 15px;
+            outline: none;
+            background: white;
+        }
+
+        .search-bar-big button {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+            color: white;
+            border: none;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .search-bar-big button:hover {
+                opacity: 0.9;
+            }
+
+    /* GRID SẢN PHẨM */
+    .sp-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .sp-card {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid #eef0ff;
+        overflow: hidden;
+        transition: 0.3s;
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        box-shadow: 0 2px 10px rgba(10,60,255,0.05);
+    }
+
+        .sp-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(10,60,255,0.12);
+            text-decoration: none;
+            color: inherit;
+        }
+
+    .sp-card-img {
+        background: linear-gradient(145deg, #f0f4ff, #e8f0fe);
+        padding: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 180px;
+    }
+
+        .sp-card-img img {
+            max-height: 140px;
+            max-width: 100%;
+            object-fit: contain;
+            transition: transform 0.3s;
+        }
+
+    .sp-card:hover .sp-card-img img {
+        transform: scale(1.08);
+    }
+
+    .sp-card-body {
+        padding: 14px 16px;
+    }
+
+    .sp-card-name {
+        font-size: 14px;
+        font-weight: 700;
+        color: #111;
+        margin-bottom: 8px;
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .sp-card-price {
+        font-size: 16px;
+        font-weight: 800;
+        color: #e63946;
+    }
+
+    /* EMPTY */
+    .no-result {
+        text-align: center;
+        padding: 80px 20px;
+        background: #f8f9ff;
+        border-radius: 20px;
+    }
+
+    .no-result-icon {
+        font-size: 70px;
+        margin-bottom: 16px;
+    }
+
+    .no-result p {
+        font-size: 16px;
+        color: #888;
+        margin-bottom: 20px;
+    }
+
+    .btn-home {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 28px;
+        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+        color: white;
+        border-radius: 12px;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(10,60,255,0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+    @@media (max-width: 768px) {
+        .sp-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+
+<div class="search-page">
+
+    <!-- HEADER -->
+    <div class="search-header">
+        <h2>Kết quả tìm kiếm: "<span>@ViewBag.TuKhoa</span>"</h2>
+        <div class="search-meta">
+            Tìm thấy <b>@ViewBag.SoKetQua</b> sản phẩm
+        </div>
+    </div>
+
+    <!-- SEARCH BAR LỚN -->
+    <div class="search-bar-big">
+        <input type="text" id="search-input-big"
+               value="@ViewBag.TuKhoa"
+               placeholder="Tìm kiếm sản phẩm..."
+               onkeydown="if(event.key==='Enter') doSearch()" />
+        <button onclick="doSearch()">
+            <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm
+        </button>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="no-result">
+            <div class="no-result-icon">🔍</div>
+            <p>Không tìm thấy sản phẩm nào cho "<b>@ViewBag.TuKhoa</b>"</p>
+            <a href="/" class="btn-home">
+                <i class="fa-solid fa-house"></i> Về trang chủ
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="sp-grid">
+            @foreach (var sp in Model)
+            {
+                <a href="@Url.Action("SanPham", "Home", new { id = sp.Id })" class="sp-card">
+                    <div class="sp-card-img">
+                        <img src="@Url.Content("~/Images/" + sp.HinhAnh)" alt="@sp.TenSanPham" />
+                    </div>
+                    <div class="sp-card-body">
+                        <div class="sp-card-name">@sp.TenSanPham</div>
+                        <div class="sp-card-price">@sp.Gia.ToString("N0") VNĐ</div>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+</div>
+
+<script>
+    function doSearch() {
+        var q = document.getElementById('search-input-big').value.trim();
+        if (q === '') return;
+        window.location.href = '/Home/TimKiem?q=' + encodeURIComponent(q);
+    }
+</script>

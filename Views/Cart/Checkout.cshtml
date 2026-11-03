@@ -1,0 +1,518 @@
+﻿@model List<Wedsite_LTWW.Models.CartItem>
+@{
+    ViewBag.Title = "Thanh Toán";
+}
+
+<style>
+    .hero-feature {
+        display: none !important;
+    }
+
+    .checkout-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 30px 20px 60px;
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .checkout-title {
+        font-size: 28px;
+        font-weight: 800;
+        color: #111;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .checkout-title span {
+            background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+    /* STEPS */
+    .steps {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        margin-bottom: 36px;
+    }
+
+    .step {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #aaa;
+    }
+
+        .step.active {
+            color: #0a3cff;
+        }
+
+        .step.done {
+            color: #28a745;
+        }
+
+    .step-num {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 800;
+    }
+
+    .step.active .step-num {
+        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+        color: white;
+    }
+
+    .step.done .step-num {
+        background: #28a745;
+        color: white;
+    }
+
+    .step-line {
+        flex: 1;
+        height: 2px;
+        background: #eee;
+        margin: 0 10px;
+    }
+
+    /* LAYOUT */
+    .checkout-layout {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 24px;
+        align-items: start;
+    }
+
+    /* FORM */
+    .checkout-form {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #eef0ff;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(10,60,255,0.05);
+    }
+
+    .form-section-title {
+        font-size: 16px;
+        font-weight: 800;
+        color: #111;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+        .form-section-title i {
+            color: #0a3cff;
+        }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: #444;
+            margin-bottom: 7px;
+        }
+
+            .form-group label span {
+                color: #e63946;
+            }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #eef0ff;
+        border-radius: 12px;
+        font-size: 15px;
+        color: #111;
+        transition: 0.2s;
+        outline: none;
+        background: #fafbff;
+        box-sizing: border-box;
+    }
+
+        .form-control-custom:focus {
+            border-color: #0a3cff;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(10,60,255,0.08);
+        }
+
+    textarea.form-control-custom {
+        resize: vertical;
+        min-height: 90px;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    /* ORDER SUMMARY */
+    .order-summary {
+        background: white;
+        border-radius: 20px;
+        border: 1px solid #eef0ff;
+        padding: 28px;
+        box-shadow: 0 4px 20px rgba(10,60,255,0.05);
+        position: sticky;
+        top: 20px;
+    }
+
+    .summary-title {
+        font-size: 17px;
+        font-weight: 800;
+        color: #111;
+        margin-bottom: 18px;
+        padding-bottom: 14px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    .order-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 0;
+        border-bottom: 1px solid #f5f5f5;
+    }
+
+        .order-item:last-of-type {
+            border-bottom: none;
+        }
+
+        .order-item img {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            border-radius: 10px;
+            background: #f5f7ff;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+
+    .order-item-info {
+        flex: 1;
+    }
+
+    .order-item-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #111;
+        line-height: 1.4;
+    }
+
+    .order-item-qty {
+        font-size: 12px;
+        color: #888;
+        margin-top: 2px;
+    }
+
+    .order-item-price {
+        font-size: 14px;
+        font-weight: 700;
+        color: #e63946;
+        white-space: nowrap;
+    }
+
+    .summary-divider {
+        height: 1px;
+        background: #f0f0f0;
+        margin: 14px 0;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .summary-total {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 14px;
+        border-top: 2px solid #f0f0f0;
+        margin-top: 6px;
+    }
+
+        .summary-total span:first-child {
+            font-size: 16px;
+            font-weight: 800;
+            color: #111;
+        }
+
+        .summary-total span:last-child {
+            font-size: 22px;
+            font-weight: 800;
+            color: #e63946;
+        }
+
+    .btn-order {
+        display: block;
+        width: 100%;
+        padding: 16px;
+        margin-top: 20px;
+        background: linear-gradient(135deg, #e63946, #c1121f);
+        color: white;
+        border: none;
+        border-radius: 14px;
+        font-size: 16px;
+        font-weight: 700;
+        text-align: center;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .btn-order:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(230,57,70,0.35);
+        }
+
+    .btn-back-cart {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 12px;
+        color: #888;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: 0.2s;
+    }
+
+        .btn-back-cart:hover {
+            color: #0a3cff;
+            text-decoration: none;
+        }
+
+    .payment-note {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #f0fff4;
+        border: 1px solid #b7ebc8;
+        border-radius: 10px;
+        padding: 10px 14px;
+        font-size: 13px;
+        color: #2d7a4a;
+        margin-top: 14px;
+        font-weight: 600;
+    }
+    .pay-option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        border: 2px solid #eee;
+        border-radius: 12px;
+        cursor: pointer;
+        background: #fff;
+        transition: 0.2s;
+    }
+
+        .pay-option.selected {
+            border-color: #0a3cff;
+            background: #f0f4ff;
+        }
+
+        .pay-option input[type="radio"] {
+            width: 16px;
+            height: 16px;
+        }
+    @@media (max-width: 768px) {
+        .checkout-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="checkout-page">
+
+    <!-- TIÊU ĐỀ -->
+    <div class="checkout-title">
+        <i class="fa-solid fa-credit-card" style="color:#0a3cff"></i>
+        <span>Thanh Toán</span>
+    </div>
+
+    <!-- STEPS -->
+    <div class="steps">
+        <div class="step done">
+            <div class="step-num"><i class="fa-solid fa-check"></i></div>
+            Giỏ hàng
+        </div>
+        <div class="step-line"></div>
+        <div class="step active">
+            <div class="step-num">2</div>
+            Thông tin giao hàng
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+            <div class="step-num">3</div>
+            Xác nhận
+        </div>
+    </div>
+
+    @using (Html.BeginForm("DatHang", "Cart", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(
+                 false,
+                 "",
+                 new { @class = "text-danger", style = "margin-bottom:15px;" }
+             )
+
+        <div class="checkout-layout">
+
+            <!-- FORM THÔNG TIN -->
+            <div class="checkout-form">
+                <div class="form-section-title">
+                    <i class="fa-solid fa-location-dot"></i>
+                    Thông tin giao hàng
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Họ và tên <span>*</span></label>
+                        <input type="text" name="hoTen" class="form-control-custom"
+                               placeholder="Nguyễn Văn A" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại <span>*</span></label>
+                        <input type="text" name="soDienThoai" class="form-control-custom"
+                               placeholder="0912 345 678" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Địa chỉ giao hàng <span>*</span></label>
+                    <input type="text" name="diaChi" class="form-control-custom"
+                           placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố"
+                           required />
+                </div>
+
+                <div class="form-group">
+                    <label>Ghi chú</label>
+                    <textarea name="ghiChu" class="form-control-custom"
+                              placeholder="Ghi chú thêm (thời gian giao hàng, yêu cầu đặc biệt...)"></textarea>
+                </div>
+
+                <!-- PHƯƠNG THỨC THANH TOÁN -->
+                <div class="form-section-title" style="margin-top:10px">
+                    <i class="fa-solid fa-wallet"></i>
+                    Phương thức thanh toán
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <label class="pay-option selected">
+                        <input type="radio" name="phuongThuc" value="COD" checked />
+                        <i class="fa-solid fa-money-bill-wave" style="color:#28a745; font-size:18px;"></i>
+                        <div>
+                            <div style="font-weight:700; font-size:14px;">Thanh toán khi nhận hàng (COD)</div>
+                            <div style="font-size:12px; color:#888;">Trả tiền mặt khi nhận hàng</div>
+                        </div>
+                    </label>
+
+                    <label class="pay-option">
+                        <input type="radio" name="phuongThuc" value="Banking" />
+                        <i class="fa-solid fa-building-columns" style="color:#0a3cff; font-size:18px;"></i>
+                        <div>
+                            <div style="font-weight:700; font-size:14px;">Chuyển khoản ngân hàng</div>
+                            <div style="font-size:12px; color:#888;">Chuyển khoản trước khi giao</div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- TÓM TẮT ĐƠN HÀNG -->
+            <div class="order-summary">
+                <div class="summary-title">
+                    Đơn hàng (@Model.Sum(x => x.SoLuong) sản phẩm)
+                </div>
+
+                @foreach (var item in Model)
+                {
+                    <div class="order-item">
+                        <img src="@Url.Content("~/Images/" + item.HinhAnh)" alt="@item.TenSanPham" />
+                        <div class="order-item-info">
+                            <div class="order-item-name">@item.TenSanPham</div>
+                            <div class="order-item-qty">@item.SoLuong</div>
+                        </div>
+                        <div class="order-item-price">@item.ThanhTien.ToString("N0") VNĐ</div>
+                    </div>
+                }
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-row">
+                    <span>Tạm tính</span>
+                    <span>@Model.Sum(x => x.ThanhTien).ToString("N0") VNĐ</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí vận chuyển</span>
+                    <span style="color:#28a745; font-weight:700;">Miễn phí</span>
+                </div>
+
+                <div class="summary-total">
+                    <span>Tổng cộng</span>
+                    <span>@Model.Sum(x => x.ThanhTien).ToString("N0") VNĐ</span>
+                </div>
+
+                <button type="submit" class="btn-order">
+                    <i class="fa-solid fa-check-circle"></i> Đặt hàng ngay
+                </button>
+
+                <a href="/Cart/Index" class="btn-back-cart">
+                    <i class="fa-solid fa-arrow-left"></i> Quay lại giỏ hàng
+                </a>
+
+                <div class="payment-note">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    Thông tin của bạn được bảo mật an toàn
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+<script>
+    (function () {
+        var radios = document.querySelectorAll('input[name="phuongThuc"]');
+
+        function capNhat() {
+            for (var i = 0; i < radios.length; i++) {
+                var box = radios[i].closest('.pay-option');
+                if (box) box.classList.toggle('selected', radios[i].checked);
+            }
+        }
+
+        for (var i = 0; i < radios.length; i++) {
+            radios[i].addEventListener('change', capNhat);
+        }
+
+        capNhat();
+    })();
+</script>

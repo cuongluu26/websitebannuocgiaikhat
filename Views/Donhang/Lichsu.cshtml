@@ -1,0 +1,398 @@
+﻿@model List<Wedsite_LTWW.Models.DonHang>
+@using System.Collections.Generic
+@using Wedsite_LTWW.Models
+@{
+    ViewBag.Title = "Lịch sử đơn hàng";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var allChiTiets = ViewBag.AllChiTiets as List<ChiTietDonHang> ?? new List<ChiTietDonHang>();
+}
+
+<style>
+    .hero-feature {
+        display: none !important;
+    }
+
+    .dh-wrapper {
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 0 30px;
+        font-family: Arial, sans-serif;
+    }
+
+    .dh-title {
+        font-size: 24px;
+        font-weight: bold;
+        color: #1a56db;
+        margin-bottom: 6px;
+    }
+
+    .dh-subtitle {
+        color: #6b7280;
+        font-size: 14px;
+        margin-bottom: 24px;
+    }
+
+    .dh-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .dh-stat-card {
+        background: #f0f4ff;
+        border-radius: 10px;
+        padding: 14px 18px;
+        text-align: center;
+    }
+
+        .dh-stat-card .stat-num {
+            font-size: 22px;
+            font-weight: bold;
+            color: #1a56db;
+        }
+
+        .dh-stat-card .stat-lbl {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+    .dh-filters {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+
+    .dh-filter-btn {
+        padding: 6px 16px;
+        border-radius: 999px;
+        border: 1px solid #d1d5db;
+        background: white;
+        color: #6b7280;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.15s;
+    }
+
+        .dh-filter-btn:hover, .dh-filter-btn.active {
+            background: #1a56db;
+            color: white;
+            border-color: #1a56db;
+        }
+
+    .dh-card {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        margin-bottom: 14px;
+        overflow: hidden;
+        transition: box-shadow 0.15s;
+    }
+
+        .dh-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+    .dh-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 18px;
+        background: #f9fafb;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .dh-order-id {
+        font-weight: bold;
+        font-size: 14px;
+        color: #111827;
+    }
+
+    .dh-order-date {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-top: 2px;
+    }
+
+    .dh-badge {
+        font-size: 12px;
+        padding: 4px 12px;
+        border-radius: 999px;
+        font-weight: 600;
+    }
+
+    .badge-dangxuly {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .badge-danggiao {
+        background: #dbeafe;
+        color: #1e40af;
+    }
+
+    .badge-dagiao {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .badge-dahuy {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .dh-card-body {
+        padding: 14px 18px;
+    }
+
+    .dh-item-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px 0;
+        border-bottom: 1px dashed #f3f4f6;
+    }
+
+        .dh-item-row:last-child {
+            border-bottom: none;
+        }
+
+    .dh-item-img {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 1px solid #e5e7eb;
+        flex-shrink: 0;
+    }
+
+    .dh-item-placeholder {
+        width: 50px;
+        height: 50px;
+        background: #f3f4f6;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #9ca3af;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .dh-item-name {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 500;
+        color: #111827;
+    }
+
+    .dh-item-qty {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    .dh-item-price {
+        font-size: 14px;
+        font-weight: 600;
+        color: #1a56db;
+        white-space: nowrap;
+    }
+
+    .dh-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 18px;
+        background: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .dh-total-label {
+        font-size: 12px;
+        color: #6b7280;
+    }
+
+    .dh-total-amount {
+        font-size: 18px;
+        font-weight: bold;
+        color: #dc2626;
+    }
+
+    .dh-btn-detail {
+        padding: 7px 16px;
+        border-radius: 8px;
+        border: 1px solid #1a56db;
+        background: white;
+        color: #1a56db;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.15s;
+    }
+
+        .dh-btn-detail:hover {
+            background: #1a56db;
+            color: white;
+            text-decoration: none;
+        }
+
+    .dh-empty {
+        text-align: center;
+        padding: 60px 0;
+    }
+
+    .dh-empty-icon {
+        font-size: 60px;
+        margin-bottom: 16px;
+    }
+
+    .dh-empty h3 {
+        font-size: 18px;
+        color: #6b7280;
+        margin-bottom: 8px;
+    }
+
+    .dh-btn-shop {
+        display: inline-block;
+        margin-top: 16px;
+        padding: 10px 24px;
+        background: #1a56db;
+        color: white;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+        .dh-btn-shop:hover {
+            background: #1e40af;
+            color: white;
+            text-decoration: none;
+        }
+
+    @@media (max-width: 600px) {
+        .dh-stats {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .dh-card-header, .dh-card-footer {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+    }
+</style>
+
+<div class="dh-wrapper">
+    <div class="dh-title">📦 Lịch sử đơn hàng</div>
+    <div class="dh-subtitle">Xin chào, <strong>@Session["HoTen"]</strong></div>
+
+    @if (Model != null && Model.Count > 0)
+    {
+        <div class="dh-stats">
+            <div class="dh-stat-card">
+                <div class="stat-num">@Model.Count</div>
+                <div class="stat-lbl">Tổng đơn hàng</div>
+            </div>
+            <div class="dh-stat-card">
+                <div class="stat-num">@Model.Count(d => d.TrangThai == "Đã giao")</div>
+                <div class="stat-lbl">Đã giao thành công</div>
+            </div>
+            <div class="dh-stat-card">
+                <div class="stat-num">@String.Format("{0:N0}đ", Model.Where(d => d.TrangThai == "Đã giao").Sum(d => d.TongTien))</div>
+                <div class="stat-lbl">Tổng đã chi</div>
+            </div>
+        </div>
+
+        <div class="dh-filters">
+            <button class="dh-filter-btn active" onclick="filterDH(this,'all')">Tất cả (@Model.Count)</button>
+            <button class="dh-filter-btn" onclick="filterDH(this,'Đang xử lý')">Đang xử lý</button>
+            <button class="dh-filter-btn" onclick="filterDH(this,'Đang giao')">Đang giao</button>
+            <button class="dh-filter-btn" onclick="filterDH(this,'Đã giao')">Đã giao</button>
+            <button class="dh-filter-btn" onclick="filterDH(this,'Đã huỷ')">Đã huỷ</button>
+        </div>
+
+        <div id="dh-list">
+            @foreach (var dh in Model)
+            {
+                string badgeClass;
+                if (dh.TrangThai == "Đang giao") { badgeClass = "badge-danggiao"; }
+                else if (dh.TrangThai == "Đã giao") { badgeClass = "badge-dagiao"; }
+                else if (dh.TrangThai == "Đã huỷ") { badgeClass = "badge-dahuy"; }
+                else { badgeClass = "badge-dangxuly"; }
+
+                var chiTiets = allChiTiets.Where(c => c.IdDonHang == dh.Id).ToList();
+
+                <div class="dh-card" data-trangthai="@dh.TrangThai">
+                    <div class="dh-card-header">
+                        <div>
+                            <div class="dh-order-id">Đơn hàng #@dh.Id</div>
+                            <div class="dh-order-date">🕐 @dh.NgayDat.ToString("dd/MM/yyyy HH:mm")</div>
+                        </div>
+                        <span class="dh-badge @badgeClass">@dh.TrangThai</span>
+                    </div>
+
+                    <div class="dh-card-body">
+                        @if (chiTiets.Any())
+                        {
+                            foreach (var ct in chiTiets)
+                            {
+                                <div class="dh-item-row">
+                                    @if (!string.IsNullOrEmpty(ct.HinhAnh))
+                                    {
+                                        <img class="dh-item-img" src="~/Images/@ct.HinhAnh" alt="@ct.TenSanPham"
+                                             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+                                        <div class="dh-item-placeholder" style="display:none;">🧃</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="dh-item-placeholder">🧃</div>
+                                    }
+                                    <div class="dh-item-name">@ct.TenSanPham</div>
+                                    <div class="ct-product-qty">
+                                        @("x" + ct.SoLuong)
+                                    </div>
+                                    <div class="dh-item-price">@String.Format("{0:N0}đ", ct.DonGia * ct.SoLuong)</div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <p style="color:#9ca3af;font-size:13px;">Không có thông tin sản phẩm.</p>
+                        }
+                    </div>
+
+                    <div class="dh-card-footer">
+                        <div>
+                            <div class="dh-total-label">Tổng tiền</div>
+                            <div class="dh-total-amount">@String.Format("{0:N0}đ", dh.TongTien)</div>
+                        </div>
+                        <a href="@Url.Action("ChiTiet", "DonHang", new { id = dh.Id })" class="dh-btn-detail">Xem chi tiết</a>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="dh-empty">
+            <div class="dh-empty-icon">🛒</div>
+            <h3>Bạn chưa có đơn hàng nào</h3>
+            <p style="color:#9ca3af;">Hãy mua sắm và đặt hàng ngay hôm nay!</p>
+            <a href="@Url.Action("Index", "SanPham")" class="dh-btn-shop">Mua sắm ngay</a>
+        </div>
+    }
+</div>
+
+<script>
+    function filterDH(btn, trangthai) {
+        document.querySelectorAll('.dh-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.dh-card').forEach(card => {
+            card.style.display = (trangthai === 'all' || card.dataset.trangthai === trangthai) ? '' : 'none';
+        });
+    }
+</script>

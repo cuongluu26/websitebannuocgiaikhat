@@ -1,17 +1,70 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
-  <!-- EF Runtime content -->
-  <edmx:Runtime>
-    <!-- SSDL content -->
-    <edmx:StorageModels>
-    <Schema Namespace="accountModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+	<!-- EF Runtime content -->
+	<edmx:Runtime>
+		<!-- SSDL content -->
+		<edmx:StorageModels>
+		<Schema Namespace="GasSparkDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ChiTietDonHang">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdDonHang" Type="int" Nullable="false" />
+          <Property Name="IdSanPham" Type="int" Nullable="false" />
+          <Property Name="TenSanPham" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="HinhAnh" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="DonGia" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="SoLuong" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DanhMucs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TenDanhMuc" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="MoTa" Type="nvarchar" MaxLength="255" />
+          <Property Name="HinhAnh" Type="nvarchar" MaxLength="500" />
+          <Property Name="ThuTu" Type="int" />
+          <Property Name="TrangThai" Type="bit" />
+        </EntityType>
+        <EntityType Name="DonHang">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="HoTen" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="SoDienThoai" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="DiaChi" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="GhiChu" Type="nvarchar" MaxLength="500" />
+          <Property Name="TongTien" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="NgayDat" Type="datetime" Nullable="false" />
+          <Property Name="TrangThai" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PhuongThucThanhToan" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="TrangThaiThanhToan" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="NoiDungChuyenKhoan" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="LienHe">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HoTen" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SoDienThoai" Type="nvarchar" MaxLength="20" />
+          <Property Name="TieuDe" Type="nvarchar" MaxLength="200" />
+          <Property Name="NoiDung" Type="nvarchar" MaxLength="1000" Nullable="false" />
+          <Property Name="NgayGui" Type="datetime" />
+          <Property Name="DaDoc" Type="bit" />
+        </EntityType>
         <EntityType Name="SanPhams">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="TenSanPham" Type="nvarchar" MaxLength="200" />
-          <Property Name="Gia" Type="int" />
+          <Property Name="Gia" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="HinhAnh" Type="nvarchar" MaxLength="200" />
           <Property Name="MoTa" Type="nvarchar" MaxLength="500" />
           <Property Name="ThuongHieu" Type="nvarchar" MaxLength="100" />
@@ -20,6 +73,7 @@
           <Property Name="XuatXu" Type="nvarchar" MaxLength="100" />
           <Property Name="HanSuDung" Type="nvarchar" MaxLength="50" />
           <Property Name="Loai" Type="nvarchar" MaxLength="100" />
+          <Property Name="IdDanhMuc" Type="int" />
         </EntityType>
         <EntityType Name="Users">
           <Key>
@@ -29,98 +83,383 @@
           <Property Name="Username" Type="nvarchar" MaxLength="50" />
           <Property Name="Password" Type="nvarchar" MaxLength="50" />
           <Property Name="Email" Type="nvarchar" MaxLength="100" />
+          <Property Name="Role" Type="nvarchar" MaxLength="20" />
         </EntityType>
-        <EntityContainer Name="accountModelStoreContainer">
+        <EntityType Name="YeuThiches">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IdSanPham" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__ChiTietDo__IdDon__361203C5">
+          <End Role="DonHang" Type="Self.DonHang" Multiplicity="1" />
+          <End Role="ChiTietDonHang" Type="Self.ChiTietDonHang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DonHang">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChiTietDonHang">
+              <PropertyRef Name="IdDonHang" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__ChiTietDo__IdSan__370627FE">
+          <End Role="SanPhams" Type="Self.SanPhams" Multiplicity="1" />
+          <End Role="ChiTietDonHang" Type="Self.ChiTietDonHang" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SanPhams">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ChiTietDonHang">
+              <PropertyRef Name="IdSanPham" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__YeuThiche__IdSan__2F650636">
+          <End Role="SanPhams" Type="Self.SanPhams" Multiplicity="1" />
+          <End Role="YeuThiches" Type="Self.YeuThiches" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SanPhams">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="YeuThiches">
+              <PropertyRef Name="IdSanPham" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SanPhams_DanhMucs">
+          <End Role="DanhMucs" Type="Self.DanhMucs" Multiplicity="0..1" />
+          <End Role="SanPhams" Type="Self.SanPhams" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DanhMucs">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="SanPhams">
+              <PropertyRef Name="IdDanhMuc" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="GasSparkDBModelStoreContainer">
+          <EntitySet Name="ChiTietDonHang" EntityType="Self.ChiTietDonHang" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DanhMucs" EntityType="Self.DanhMucs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DonHang" EntityType="Self.DonHang" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LienHe" EntityType="Self.LienHe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SanPhams" EntityType="Self.SanPhams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="YeuThiches" EntityType="Self.YeuThiches" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__ChiTietDo__IdDon__361203C5" Association="Self.FK__ChiTietDo__IdDon__361203C5">
+            <End Role="DonHang" EntitySet="DonHang" />
+            <End Role="ChiTietDonHang" EntitySet="ChiTietDonHang" />
+          </AssociationSet>
+          <AssociationSet Name="FK__ChiTietDo__IdSan__370627FE" Association="Self.FK__ChiTietDo__IdSan__370627FE">
+            <End Role="SanPhams" EntitySet="SanPhams" />
+            <End Role="ChiTietDonHang" EntitySet="ChiTietDonHang" />
+          </AssociationSet>
+          <AssociationSet Name="FK__YeuThiche__IdSan__2F650636" Association="Self.FK__YeuThiche__IdSan__2F650636">
+            <End Role="SanPhams" EntitySet="SanPhams" />
+            <End Role="YeuThiches" EntitySet="YeuThiches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SanPhams_DanhMucs" Association="Self.FK_SanPhams_DanhMucs">
+            <End Role="DanhMucs" EntitySet="DanhMucs" />
+            <End Role="SanPhams" EntitySet="SanPhams" />
+          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
-    <!-- CSDL content -->
-    <edmx:ConceptualModels>
-      <Schema Namespace="accountModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityContainer Name="accountEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="SanPhams" EntityType="accountModel.SanPhams" />
-          <EntitySet Name="Users" EntityType="accountModel.Users" />
-        </EntityContainer>
-        <EntityType Name="SanPhams">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TenSanPham" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Gia" Type="Int32" />
-          <Property Name="HinhAnh" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="MoTa" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ThuongHieu" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="DungTich" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="ThanhPhan" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="XuatXu" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="HanSuDung" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Loai" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="Users">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-      </Schema>
-    </edmx:ConceptualModels>
-    <!-- C-S mapping content -->
-    <edmx:Mappings>
-      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="accountModelStoreContainer" CdmEntityContainer="accountEntities">
-          <EntitySetMapping Name="SanPhams">
-            <EntityTypeMapping TypeName="accountModel.SanPhams">
-              <MappingFragment StoreEntitySet="SanPhams">
-                <ScalarProperty Name="Loai" ColumnName="Loai" />
-                <ScalarProperty Name="HanSuDung" ColumnName="HanSuDung" />
-                <ScalarProperty Name="XuatXu" ColumnName="XuatXu" />
-                <ScalarProperty Name="ThanhPhan" ColumnName="ThanhPhan" />
-                <ScalarProperty Name="DungTich" ColumnName="DungTich" />
-                <ScalarProperty Name="ThuongHieu" ColumnName="ThuongHieu" />
-                <ScalarProperty Name="MoTa" ColumnName="MoTa" />
-                <ScalarProperty Name="HinhAnh" ColumnName="HinhAnh" />
-                <ScalarProperty Name="Gia" ColumnName="Gia" />
-                <ScalarProperty Name="TenSanPham" ColumnName="TenSanPham" />
+		<!-- CSDL content -->
+		<edmx:ConceptualModels>
+			<Schema Namespace="GasSparkDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+				<EntityType Name="SanPham">
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="TenSanPham" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+					<Property Name="Gia" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+					<Property Name="HinhAnh" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+					<Property Name="MoTa" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+					<Property Name="ThuongHieu" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+					<Property Name="DungTich" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+					<Property Name="ThanhPhan" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+					<Property Name="XuatXu" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+					<Property Name="HanSuDung" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+					<Property Name="Loai" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+					<Property Name="IdDanhMuc" Type="Int32" />
+					<NavigationProperty Name="DanhMuc" Relationship="GasSparkDBModel.FK_SanPhams_DanhMucs" FromRole="SanPham" ToRole="DanhMuc" />
+					<NavigationProperty Name="YeuThiches" Relationship="GasSparkDBModel.FK__YeuThiche__IdSan__3C34F16F" FromRole="SanPham" ToRole="YeuThich" />
+					<NavigationProperty Name="ChiTietDonHangs" Relationship="GasSparkDBModel.FK__ChiTietDo__IdSan__58D1301D" FromRole="SanPham" ToRole="ChiTietDonHang" />
+				</EntityType>
+				<EntityType Name="User">
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+					<Property Name="Password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+					<Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Role" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+				</EntityType>
+				<EntityContainer Name="GasSparkDBEntities" annotation:LazyLoadingEnabled="true">
+					<EntitySet Name="SanPhams" EntityType="Self.SanPham" />
+					<EntitySet Name="Users" EntityType="Self.User" />
+					<EntitySet Name="DanhMucs" EntityType="GasSparkDBModel.DanhMuc" />
+					<AssociationSet Name="FK_SanPhams_DanhMucs" Association="GasSparkDBModel.FK_SanPhams_DanhMucs">
+						<End Role="DanhMuc" EntitySet="DanhMucs" />
+						<End Role="SanPham" EntitySet="SanPhams" />
+					</AssociationSet>
+					<EntitySet Name="YeuThiches" EntityType="GasSparkDBModel.YeuThich" />
+					<AssociationSet Name="FK__YeuThiche__IdSan__3C34F16F" Association="GasSparkDBModel.FK__YeuThiche__IdSan__3C34F16F">
+						<End Role="SanPham" EntitySet="SanPhams" />
+						<End Role="YeuThich" EntitySet="YeuThiches" />
+					</AssociationSet>
+					<EntitySet Name="ChiTietDonHangs" EntityType="GasSparkDBModel.ChiTietDonHang" />
+					<EntitySet Name="DonHangs" EntityType="GasSparkDBModel.DonHang" />
+					<AssociationSet Name="FK__ChiTietDo__IdDon__57DD0BE4" Association="GasSparkDBModel.FK__ChiTietDo__IdDon__57DD0BE4">
+						<End Role="DonHang" EntitySet="DonHangs" />
+						<End Role="ChiTietDonHang" EntitySet="ChiTietDonHangs" />
+					</AssociationSet>
+					<AssociationSet Name="FK__ChiTietDo__IdSan__58D1301D" Association="GasSparkDBModel.FK__ChiTietDo__IdSan__58D1301D">
+						<End Role="SanPham" EntitySet="SanPhams" />
+						<End Role="ChiTietDonHang" EntitySet="ChiTietDonHangs" />
+					</AssociationSet>
+					<EntitySet Name="LienHes" EntityType="GasSparkDBModel.LienHe" />
+				</EntityContainer>
+				<EntityType Name="DanhMuc">
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="TenDanhMuc" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+					<Property Name="MoTa" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+					<Property Name="HinhAnh" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+					<Property Name="ThuTu" Type="Int32" />
+					<Property Name="TrangThai" Type="Boolean" />
+					<NavigationProperty Name="SanPhams" Relationship="GasSparkDBModel.FK_SanPhams_DanhMucs" FromRole="DanhMuc" ToRole="SanPham" />
+				</EntityType>
+				<Association Name="FK_SanPhams_DanhMucs">
+					<End Type="GasSparkDBModel.DanhMuc" Role="DanhMuc" Multiplicity="0..1" />
+					<End Type="GasSparkDBModel.SanPham" Role="SanPham" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="DanhMuc">
+							<PropertyRef Name="Id" />
+						</Principal>
+						<Dependent Role="SanPham">
+							<PropertyRef Name="IdDanhMuc" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<EntityType Name="YeuThich">
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="Username" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+					<Property Name="IdSanPham" Type="Int32" Nullable="false" />
+					<NavigationProperty Name="SanPham" Relationship="GasSparkDBModel.FK__YeuThiche__IdSan__3C34F16F" FromRole="YeuThich" ToRole="SanPham" />
+				</EntityType>
+				<Association Name="FK__YeuThiche__IdSan__3C34F16F">
+					<End Type="GasSparkDBModel.SanPham" Role="SanPham" Multiplicity="1" />
+					<End Type="GasSparkDBModel.YeuThich" Role="YeuThich" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="SanPham">
+							<PropertyRef Name="Id" />
+						</Principal>
+						<Dependent Role="YeuThich">
+							<PropertyRef Name="IdSanPham" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<EntityType Name="ChiTietDonHang">
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="IdDonHang" Type="Int32" Nullable="false" />
+					<Property Name="IdSanPham" Type="Int32" Nullable="false" />
+					<Property Name="TenSanPham" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+					<Property Name="HinhAnh" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+					<Property Name="DonGia" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+					<Property Name="SoLuong" Type="Int32" Nullable="false" />
+					<NavigationProperty Name="DonHang" Relationship="GasSparkDBModel.FK__ChiTietDo__IdDon__57DD0BE4" FromRole="ChiTietDonHang" ToRole="DonHang" />
+					<NavigationProperty Name="SanPham" Relationship="GasSparkDBModel.FK__ChiTietDo__IdSan__58D1301D" FromRole="ChiTietDonHang" ToRole="SanPham" />
+				</EntityType>
+				<EntityType Name="DonHang">
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="Username" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+					<Property Name="HoTen" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+					<Property Name="SoDienThoai" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+					<Property Name="DiaChi" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+					<Property Name="GhiChu" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+					<Property Name="TongTien" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+					<Property Name="NgayDat" Type="DateTime" Nullable="false" Precision="3" />
+					<Property Name="TrangThai" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+					<NavigationProperty Name="ChiTietDonHangs" Relationship="GasSparkDBModel.FK__ChiTietDo__IdDon__57DD0BE4" FromRole="DonHang" ToRole="ChiTietDonHang" />
+          <Property Name="PhuongThucThanhToan" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TrangThaiThanhToan" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="NoiDungChuyenKhoan" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+				</EntityType>
+				<Association Name="FK__ChiTietDo__IdDon__57DD0BE4">
+					<End Type="GasSparkDBModel.DonHang" Role="DonHang" Multiplicity="1" />
+					<End Type="GasSparkDBModel.ChiTietDonHang" Role="ChiTietDonHang" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="DonHang">
+							<PropertyRef Name="Id" />
+						</Principal>
+						<Dependent Role="ChiTietDonHang">
+							<PropertyRef Name="IdDonHang" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<Association Name="FK__ChiTietDo__IdSan__58D1301D">
+					<End Type="GasSparkDBModel.SanPham" Role="SanPham" Multiplicity="1" />
+					<End Type="GasSparkDBModel.ChiTietDonHang" Role="ChiTietDonHang" Multiplicity="*" />
+					<ReferentialConstraint>
+						<Principal Role="SanPham">
+							<PropertyRef Name="Id" />
+						</Principal>
+						<Dependent Role="ChiTietDonHang">
+							<PropertyRef Name="IdSanPham" />
+						</Dependent>
+					</ReferentialConstraint>
+				</Association>
+				<EntityType Name="LienHe">
+					<Key>
+						<PropertyRef Name="Id" />
+					</Key>
+					<Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+					<Property Name="HoTen" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+					<Property Name="Email" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+					<Property Name="SoDienThoai" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+					<Property Name="TieuDe" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+					<Property Name="NoiDung" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+					<Property Name="NgayGui" Type="DateTime" Precision="3" />
+					<Property Name="DaDoc" Type="Boolean" />
+				</EntityType>
+			</Schema>
+		</edmx:ConceptualModels>
+		<!-- C-S mapping content -->
+		<edmx:Mappings>
+			<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+				<EntityContainerMapping StorageEntityContainer="GasSparkDBModelStoreContainer" CdmEntityContainer="GasSparkDBEntities">
+					<EntitySetMapping Name="SanPhams">
+						<EntityTypeMapping TypeName="GasSparkDBModel.SanPham">
+							<MappingFragment StoreEntitySet="SanPhams">
+								<ScalarProperty Name="IdDanhMuc" ColumnName="IdDanhMuc" />
+								<ScalarProperty Name="Id" ColumnName="Id" />
+								<ScalarProperty Name="TenSanPham" ColumnName="TenSanPham" />
+								<ScalarProperty Name="Gia" ColumnName="Gia" />
+								<ScalarProperty Name="HinhAnh" ColumnName="HinhAnh" />
+								<ScalarProperty Name="MoTa" ColumnName="MoTa" />
+								<ScalarProperty Name="ThuongHieu" ColumnName="ThuongHieu" />
+								<ScalarProperty Name="DungTich" ColumnName="DungTich" />
+								<ScalarProperty Name="ThanhPhan" ColumnName="ThanhPhan" />
+								<ScalarProperty Name="XuatXu" ColumnName="XuatXu" />
+								<ScalarProperty Name="HanSuDung" ColumnName="HanSuDung" />
+								<ScalarProperty Name="Loai" ColumnName="Loai" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="Users">
+						<EntityTypeMapping TypeName="GasSparkDBModel.User">
+							<MappingFragment StoreEntitySet="Users">
+								<ScalarProperty Name="Role" ColumnName="Role" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="accountModel.Users">
-              <MappingFragment StoreEntitySet="Users">
-                <ScalarProperty Name="Email" ColumnName="Email" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Username" ColumnName="Username" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-        </EntityContainerMapping>
-      </Mapping>
-    </edmx:Mappings>
-  </edmx:Runtime>
-  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
-  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
-    <Connection>
-      <DesignerInfoPropertySet>
-        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
-      </DesignerInfoPropertySet>
-    </Connection>
-    <Options>
-      <DesignerInfoPropertySet>
-        <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="false" />
-        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
-        <DesignerProperty Name="UseLegacyProvider" Value="false" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
-      </DesignerInfoPropertySet>
-    </Options>
-    <!-- Diagram content (shape and connector positions) -->
-    <Diagrams></Diagrams>
-  </Designer>
+								<ScalarProperty Name="Username" ColumnName="Username" />
+								<ScalarProperty Name="Password" ColumnName="Password" />
+								<ScalarProperty Name="Email" ColumnName="Email" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="DanhMucs">
+						<EntityTypeMapping TypeName="GasSparkDBModel.DanhMuc">
+							<MappingFragment StoreEntitySet="DanhMucs">
+								<ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
+								<ScalarProperty Name="ThuTu" ColumnName="ThuTu" />
+								<ScalarProperty Name="HinhAnh" ColumnName="HinhAnh" />
+								<ScalarProperty Name="MoTa" ColumnName="MoTa" />
+								<ScalarProperty Name="TenDanhMuc" ColumnName="TenDanhMuc" />
+								<ScalarProperty Name="Id" ColumnName="Id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="YeuThiches">
+						<EntityTypeMapping TypeName="GasSparkDBModel.YeuThich">
+							<MappingFragment StoreEntitySet="YeuThiches">
+								<ScalarProperty Name="IdSanPham" ColumnName="IdSanPham" />
+								<ScalarProperty Name="Username" ColumnName="Username" />
+								<ScalarProperty Name="Id" ColumnName="Id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="ChiTietDonHangs">
+						<EntityTypeMapping TypeName="GasSparkDBModel.ChiTietDonHang">
+							<MappingFragment StoreEntitySet="ChiTietDonHang">
+								<ScalarProperty Name="SoLuong" ColumnName="SoLuong" />
+								<ScalarProperty Name="DonGia" ColumnName="DonGia" />
+								<ScalarProperty Name="HinhAnh" ColumnName="HinhAnh" />
+								<ScalarProperty Name="TenSanPham" ColumnName="TenSanPham" />
+								<ScalarProperty Name="IdSanPham" ColumnName="IdSanPham" />
+								<ScalarProperty Name="IdDonHang" ColumnName="IdDonHang" />
+								<ScalarProperty Name="Id" ColumnName="Id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="DonHangs">
+						<EntityTypeMapping TypeName="GasSparkDBModel.DonHang">
+							<MappingFragment StoreEntitySet="DonHang">
+								<ScalarProperty Name="NoiDungChuyenKhoan" ColumnName="NoiDungChuyenKhoan" />
+                <ScalarProperty Name="TrangThaiThanhToan" ColumnName="TrangThaiThanhToan" />
+                <ScalarProperty Name="PhuongThucThanhToan" ColumnName="PhuongThucThanhToan" />
+                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
+								<ScalarProperty Name="NgayDat" ColumnName="NgayDat" />
+								<ScalarProperty Name="TongTien" ColumnName="TongTien" />
+								<ScalarProperty Name="GhiChu" ColumnName="GhiChu" />
+								<ScalarProperty Name="DiaChi" ColumnName="DiaChi" />
+								<ScalarProperty Name="SoDienThoai" ColumnName="SoDienThoai" />
+								<ScalarProperty Name="HoTen" ColumnName="HoTen" />
+								<ScalarProperty Name="Username" ColumnName="Username" />
+								<ScalarProperty Name="Id" ColumnName="Id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+					<EntitySetMapping Name="LienHes">
+						<EntityTypeMapping TypeName="GasSparkDBModel.LienHe">
+							<MappingFragment StoreEntitySet="LienHe">
+								<ScalarProperty Name="DaDoc" ColumnName="DaDoc" />
+								<ScalarProperty Name="NgayGui" ColumnName="NgayGui" />
+								<ScalarProperty Name="NoiDung" ColumnName="NoiDung" />
+								<ScalarProperty Name="TieuDe" ColumnName="TieuDe" />
+								<ScalarProperty Name="SoDienThoai" ColumnName="SoDienThoai" />
+								<ScalarProperty Name="Email" ColumnName="Email" />
+								<ScalarProperty Name="HoTen" ColumnName="HoTen" />
+								<ScalarProperty Name="Id" ColumnName="Id" />
+							</MappingFragment>
+						</EntityTypeMapping>
+					</EntitySetMapping>
+				</EntityContainerMapping>
+			</Mapping>
+		</edmx:Mappings>
+	</edmx:Runtime>
+	<!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+	<Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+		<Connection>
+			<DesignerInfoPropertySet>
+				<DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+			</DesignerInfoPropertySet>
+		</Connection>
+		<Options>
+			<DesignerInfoPropertySet>
+				<DesignerProperty Name="ValidateOnBuild" Value="true" />
+				<DesignerProperty Name="EnablePluralization" Value="true" />
+				<DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+				<DesignerProperty Name="UseLegacyProvider" Value="false" />
+				<DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+			</DesignerInfoPropertySet>
+		</Options>
+		<Diagrams></Diagrams>
+	</Designer>
 </edmx:Edmx>

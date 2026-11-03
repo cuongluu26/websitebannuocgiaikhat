@@ -13,10 +13,10 @@ namespace Wedsite_LTWW.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class accountEntities : DbContext
+    public partial class GasSparkDBEntities : DbContext
     {
-        public accountEntities()
-            : base("name=accountEntities")
+        public GasSparkDBEntities()
+            : base("name=GasSparkDBEntities")
         {
         }
     
@@ -25,7 +25,12 @@ namespace Wedsite_LTWW.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<SanPhams> SanPhams { get; set; }
-        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<SanPham> SanPhams { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<DanhMuc> DanhMucs { get; set; }
+        public virtual DbSet<YeuThich> YeuThiches { get; set; }
+        public virtual DbSet<ChiTietDonHang> ChiTietDonHangs { get; set; }
+        public virtual DbSet<DonHang> DonHangs { get; set; }
+        public virtual DbSet<LienHe> LienHes { get; set; }
     }
 }
