@@ -25,3 +25,4 @@ packages/
 [Tt]mp/
 # Video nền
 /Content/nen.mp4
+secrets.config

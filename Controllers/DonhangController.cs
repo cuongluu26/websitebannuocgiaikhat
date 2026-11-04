@@ -13,8 +13,7 @@ namespace Wedsite_LTWW.Controllers
         {
             string username = Session["Username"] as string;
             if (string.IsNullOrEmpty(username))
-                return RedirectToAction("DangNhap", "Account");
-
+                return RedirectToAction("Login", "Account");
             var donHangs = db.DonHangs
                 .Where(d => d.Username == username)
                 .OrderByDescending(d => d.NgayDat)
@@ -33,7 +32,7 @@ namespace Wedsite_LTWW.Controllers
         {
             string username = Session["Username"] as string;
             if (string.IsNullOrEmpty(username))
-                return RedirectToAction("DangNhap", "Account");
+                return RedirectToAction("Login", "Account");
 
             var donHang = db.DonHangs
                 .FirstOrDefault(d => d.Id == id && d.Username == username);

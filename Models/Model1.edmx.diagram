@@ -16,7 +16,7 @@
         <EntityTypeShape EntityType="GasSparkDBModel.DonHang" Width="1.5" PointX="9.25" PointY="3.875" />
         <AssociationConnector Association="GasSparkDBModel.FK__ChiTietDo__IdDon__57DD0BE4" />
         <AssociationConnector Association="GasSparkDBModel.FK__ChiTietDo__IdSan__58D1301D" />
-        <EntityTypeShape EntityType="GasSparkDBModel.LienHe" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="GasSparkDBModel.LienHe" Width="1.5" PointX="1" PointY="4" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -46,71 +46,71 @@
         </div>
 
         <script>
-                        var searchTimer = null;
+                                                var searchTimer = null;
 
-                        document.getElementById('search-input').addEventListener('input', function () {
-                            clearTimeout(searchTimer);
-                            var q = this.value.trim();
-                            var dropdown = document.getElementById('search-dropdown');
+                                                document.getElementById('search-input').addEventListener('input', function () {
+                                                    clearTimeout(searchTimer);
+                                                    var q = this.value.trim();
+                                                    var dropdown = document.getElementById('search-dropdown');
 
-                            if (q.length < 1) {
-                                dropdown.style.display = 'none';
-                                return;
-                            }
+                                                    if (q.length < 1) {
+                                                        dropdown.style.display = 'none';
+                                                        return;
+                                                    }
 
-                            searchTimer = setTimeout(function () {
-                                fetch('/Home/GoiY?q=' + encodeURIComponent(q))
-                                    .then(function (r) { return r.json(); })
-                                    .then(function (data) {
-                                        if (data.length === 0) {
-                                            dropdown.style.display = 'none';
-                                            return;
-                                        }
+                                                    searchTimer = setTimeout(function () {
+                                                        fetch('/Home/GoiY?q=' + encodeURIComponent(q))
+                                                            .then(function (r) { return r.json(); })
+                                                            .then(function (data) {
+                                                                if (data.length === 0) {
+                                                                    dropdown.style.display = 'none';
+                                                                    return;
+                                                                }
 
-                                        var html = data.map(function (sp) {
-                                            return '<a href="/Home/SanPham/' + sp.Id + '" '
-                                                + 'style="display:flex;align-items:center;gap:12px;padding:10px 14px;'
-                                                + 'text-decoration:none;color:#111;border-bottom:1px solid #f0f2ff;" '
-                                                + 'onmouseover="this.style.background=\'#f0f4ff\'" '
-                                                + 'onmouseout="this.style.background=\'white\'">'
-                                                + '<img src="/Images/' + sp.HinhAnh + '" '
-                                                + 'style="width:44px;height:44px;object-fit:contain;'
-                                                + 'border-radius:8px;background:#f5f7ff;padding:4px;" />'
-                                                + '<div>'
-                                                + '<div style="font-size:13px;font-weight:600;margin-bottom:2px;">' + sp.TenSanPham + '</div>'
-                                                + '<div style="font-size:13px;color:#e63946;font-weight:700;">'
-                                                + parseInt(sp.Gia).toLocaleString('vi-VN') + ' VNĐ</div>'
-                                                + '</div></a>';
-                                        }).join('');
+                                                                var html = data.map(function (sp) {
+                                                                    return '<a href="/Home/SanPham/' + sp.Id + '" '
+                                                                        + 'style="display:flex;align-items:center;gap:12px;padding:10px 14px;'
+                                                                        + 'text-decoration:none;color:#111;border-bottom:1px solid #f0f2ff;" '
+                                                                        + 'onmouseover="this.style.background=\'#f0f4ff\'" '
+                                                                        + 'onmouseout="this.style.background=\'white\'">'
+                                                                        + '<img src="/Images/' + sp.HinhAnh + '" '
+                                                                        + 'style="width:44px;height:44px;object-fit:contain;'
+                                                                        + 'border-radius:8px;background:#f5f7ff;padding:4px;" />'
+                                                                        + '<div>'
+                                                                        + '<div style="font-size:13px;font-weight:600;margin-bottom:2px;">' + sp.TenSanPham + '</div>'
+                                                                        + '<div style="font-size:13px;color:#e63946;font-weight:700;">'
+                                                                        + parseInt(sp.Gia).toLocaleString('vi-VN') + ' VNĐ</div>'
+                                                                        + '</div></a>';
+                                                                }).join('');
 
-                                        // Dòng "Xem tất cả"
-                                        html += '<a href="/Home/TimKiem?q=' + encodeURIComponent(q) + '" '
-                                            + 'style="display:block;text-align:center;padding:10px;'
-                                            + 'font-size:13px;color:#0a3cff;font-weight:600;'
-                                            + 'text-decoration:none;background:#f8f9ff;" '
-                                            + 'onmouseover="this.style.background=\'#eef0ff\'" '
-                                            + 'onmouseout="this.style.background=\'#f8f9ff\'">'
-                                            + '🔍 Xem tất cả kết quả cho "<b>' + q + '</b>"</a>';
+                                                                // Dòng "Xem tất cả"
+                                                                html += '<a href="/Home/TimKiem?q=' + encodeURIComponent(q) + '" '
+                                                                    + 'style="display:block;text-align:center;padding:10px;'
+                                                                    + 'font-size:13px;color:#0a3cff;font-weight:600;'
+                                                                    + 'text-decoration:none;background:#f8f9ff;" '
+                                                                    + 'onmouseover="this.style.background=\'#eef0ff\'" '
+                                                                    + 'onmouseout="this.style.background=\'#f8f9ff\'">'
+                                                                    + '🔍 Xem tất cả kết quả cho "<b>' + q + '</b>"</a>';
 
-                                        dropdown.innerHTML = html;
-                                        dropdown.style.display = 'block';
-                                    });
-                            }, 300);
-                        });
+                                                                dropdown.innerHTML = html;
+                                                                dropdown.style.display = 'block';
+                                                            });
+                                                    }, 300);
+                                                });
 
-                        // Ẩn dropdown khi click ra ngoài
-                        document.addEventListener('click', function (e) {
-                            if (!document.getElementById('search-input').contains(e.target)
-                                && !document.getElementById('search-dropdown').contains(e.target)) {
-                                document.getElementById('search-dropdown').style.display = 'none';
-                            }
-                        });
+                                                // Ẩn dropdown khi click ra ngoài
+                                                document.addEventListener('click', function (e) {
+                                                    if (!document.getElementById('search-input').contains(e.target)
+                                                        && !document.getElementById('search-dropdown').contains(e.target)) {
+                                                        document.getElementById('search-dropdown').style.display = 'none';
+                                                    }
+                                                });
 
-                        function doSearch() {
-                            var q = document.getElementById('search-input').value.trim();
-                            if (q === '') return;
-                            window.location.href = '/Home/TimKiem?q=' + encodeURIComponent(q);
-                        }
+                                                function doSearch() {
+                                                    var q = document.getElementById('search-input').value.trim();
+                                                    if (q === '') return;
+                                                    window.location.href = '/Home/TimKiem?q=' + encodeURIComponent(q);
+                                                }
         </script>
         <!-- CART -->
         <a href="@Url.Action("Index","Cart")" class="cart-box" style="text-decoration:none;">
@@ -176,6 +176,9 @@
         {
             <a href="@Url.Action("DanhSach","YeuThich")" class="btn-user" style="color:#e63946; border-color:#e63946">
                 <i class="fa-solid fa-heart"></i> Yêu thích
+            </a>
+            <a href="@Url.Action("LichSu","DonHang")" class="btn-user" style="margin-left:8px;">
+                <i class="fa-solid fa-box"></i> Đơn hàng
             </a>
         }
     </div>
@@ -340,16 +343,16 @@
     </style>
 
     <script>
-                var dropdown = document.querySelector('.nav-dropdown');
-                var content = document.querySelector('.nav-dropdown-content');
+                        var dropdown = document.querySelector('.nav-dropdown');
+                        var content = document.querySelector('.nav-dropdown-content');
 
-                dropdown.addEventListener('mouseenter', function () {
-                    content.classList.add('show');
-                });
+                        dropdown.addEventListener('mouseenter', function () {
+                            content.classList.add('show');
+                        });
 
-                dropdown.addEventListener('mouseleave', function () {
-                    content.classList.remove('show');
-                });
+                        dropdown.addEventListener('mouseleave', function () {
+                            content.classList.remove('show');
+                        });
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @RenderSection("Scripts", required: false)
@@ -473,25 +476,90 @@
                 padding: 10px 14px;
                 cursor: pointer;
             }
+
+        .chat-products {
+            float: left;
+            clear: both;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 4px 0 8px;
+        }
+
+        .chat-product-card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border: 1px solid #dde4ff;
+            border-radius: 12px;
+            padding: 8px;
+        }
+
+            .chat-product-card img {
+                width: 56px;
+                height: 56px;
+                object-fit: contain;
+                background: #f5f7ff;
+                border-radius: 8px;
+                flex-shrink: 0;
+            }
+
+        .cp-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .cp-name {
+            font-weight: 600;
+            font-size: 13px;
+            color: #111;
+        }
+
+        .cp-price {
+            color: #e63946;
+            font-weight: 700;
+            font-size: 13px;
+            margin: 2px 0 4px;
+        }
+
+        .cp-btn {
+            display: inline-block;
+            background: #0a3cff;
+            color: #fff !important;
+            border-radius: 12px;
+            padding: 3px 10px;
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+        .msg-typing {
+            opacity: .6;
+            font-style: italic;
+        }
     </style>
 
     <script>
-
                 document.addEventListener("DOMContentLoaded", function () {
 
                     var toggle = document.getElementById("chatbot-toggle");
                     var box = document.getElementById("chatbot-box");
                     var closeBtn = document.getElementById("chat-close");
                     var input = document.getElementById("chat-input");
+                    var greeted = false;
 
                     toggle.onclick = function () {
-
                         if (box.style.display === "flex") {
                             box.style.display = "none";
                         } else {
                             box.style.display = "flex";
+                            if (!greeted) {
+                                greeted = true;
+                                addMessage("Xin chào! Mình là trợ lý của Gas Spark 🥤 Bạn muốn tìm loại nước nào hôm nay?", "bot");
+                            }
+                            input.focus();
                         }
-
                     };
 
                     closeBtn.onclick = function () {
@@ -503,68 +571,98 @@
                             sendMessage();
                         }
                     });
-
                 });
 
-
                 function addMessage(text, type) {
-
                     var div = document.createElement("div");
-
                     div.className = type === "user" ? "msg-user" : "msg-bot";
-
                     div.innerText = text;
 
                     var box = document.getElementById("chat-messages");
-
                     box.appendChild(div);
-
                     box.scrollTop = box.scrollHeight;
-
+                    return div;
                 }
 
+                function renderProducts(products) {
+                    if (!products || !products.length) return;
+
+                    var container = document.getElementById("chat-messages");
+                    var wrap = document.createElement("div");
+                    wrap.className = "chat-products";
+
+                    products.forEach(function (p) {
+                        var card = document.createElement("div");
+                        card.className = "chat-product-card";
+
+                        var img = document.createElement("img");
+                        img.src = p.hinhAnh;
+                        img.alt = p.ten;
+
+                        var info = document.createElement("div");
+                        info.className = "cp-info";
+
+                        var name = document.createElement("div");
+                        name.className = "cp-name";
+                        name.textContent = p.ten;
+
+                        var price = document.createElement("div");
+                        price.className = "cp-price";
+                        price.textContent = p.gia;
+
+                        var a = document.createElement("a");
+                        a.href = p.link;
+                        a.className = "cp-btn";
+                        a.textContent = "Xem chi tiết";
+
+                        info.appendChild(name);
+                        info.appendChild(price);
+                        info.appendChild(a);
+                        card.appendChild(img);
+                        card.appendChild(info);
+                        wrap.appendChild(card);
+                    });
+
+                    container.appendChild(wrap);
+                    container.scrollTop = container.scrollHeight;
+                }
+
+                var chatBusy = false;
 
                 function sendMessage() {
+                    if (chatBusy) return;
 
                     var input = document.getElementById("chat-input");
-
                     var msg = input.value.trim();
-
                     if (msg === "") return;
 
                     addMessage(msg, "user");
-
                     input.value = "";
+
+                    chatBusy = true;
+                    var typing = addMessage("Đang trả lời...", "bot");
+                    typing.classList.add("msg-typing");
 
                     fetch("/ChatAI/Ask", {
                         method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            message: msg
-                        })
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ message: msg })
                     })
-                        .then(response => response.json())
-                        .then(data => {
-
-                            if (data.reply) {
-                                addMessage(data.reply, "bot");
-                            } else {
-                                addMessage("AI không trả lời.", "bot");
-                            }
-
+                        .then(function (response) { return response.json(); })
+                        .then(function (data) {
+                            typing.remove();
+                            addMessage(data.reply ? data.reply : "AI không trả lời.", "bot");
+                            renderProducts(data.products);
                         })
-                        .catch(error => {
-
+                        .catch(function (error) {
                             console.log(error);
-
+                            typing.remove();
                             addMessage("Không kết nối được AI.", "bot");
-
+                        })
+                        .finally(function () {
+                            chatBusy = false;
                         });
-
                 }
-
     </script>
 </body>
 </html>

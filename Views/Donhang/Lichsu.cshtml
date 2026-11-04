@@ -288,7 +288,7 @@
 
 <div class="dh-wrapper">
     <div class="dh-title">📦 Lịch sử đơn hàng</div>
-    <div class="dh-subtitle">Xin chào, <strong>@Session["HoTen"]</strong></div>
+    <div class="dh-subtitle">Xin chào, <strong>@Session["Username"]</strong></div>
 
     @if (Model != null && Model.Count > 0)
     {
@@ -298,21 +298,21 @@
                 <div class="stat-lbl">Tổng đơn hàng</div>
             </div>
             <div class="dh-stat-card">
-                <div class="stat-num">@Model.Count(d => d.TrangThai == "Đã giao")</div>
+                <div class="stat-num">@Model.Count(d => d.TrangThai == "Hoàn thành")</div>
                 <div class="stat-lbl">Đã giao thành công</div>
             </div>
             <div class="dh-stat-card">
-                <div class="stat-num">@String.Format("{0:N0}đ", Model.Where(d => d.TrangThai == "Đã giao").Sum(d => d.TongTien))</div>
+                <div class="stat-num">@String.Format("{0:N0}đ", Model.Where(d => d.TrangThai == "Hoàn thành").Sum(d => d.TongTien))</div>
                 <div class="stat-lbl">Tổng đã chi</div>
             </div>
         </div>
 
         <div class="dh-filters">
             <button class="dh-filter-btn active" onclick="filterDH(this,'all')">Tất cả (@Model.Count)</button>
-            <button class="dh-filter-btn" onclick="filterDH(this,'Đang xử lý')">Đang xử lý</button>
+            <button class="dh-filter-btn" onclick="filterDH(this,'Chờ xác nhận')">Chờ xác nhận</button>
             <button class="dh-filter-btn" onclick="filterDH(this,'Đang giao')">Đang giao</button>
-            <button class="dh-filter-btn" onclick="filterDH(this,'Đã giao')">Đã giao</button>
-            <button class="dh-filter-btn" onclick="filterDH(this,'Đã huỷ')">Đã huỷ</button>
+            <button class="dh-filter-btn" onclick="filterDH(this,'Hoàn thành')">Hoàn thành</button>
+            <button class="dh-filter-btn" onclick="filterDH(this,'Đã hủy')">Đã hủy</button>
         </div>
 
         <div id="dh-list">
@@ -320,8 +320,8 @@
             {
                 string badgeClass;
                 if (dh.TrangThai == "Đang giao") { badgeClass = "badge-danggiao"; }
-                else if (dh.TrangThai == "Đã giao") { badgeClass = "badge-dagiao"; }
-                else if (dh.TrangThai == "Đã huỷ") { badgeClass = "badge-dahuy"; }
+                else if (dh.TrangThai == "Hoàn thành") { badgeClass = "badge-dagiao"; }
+                else if (dh.TrangThai == "Đã hủy") { badgeClass = "badge-dahuy"; }
                 else { badgeClass = "badge-dangxuly"; }
 
                 var chiTiets = allChiTiets.Where(c => c.IdDonHang == dh.Id).ToList();
