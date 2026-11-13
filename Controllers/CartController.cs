@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -11,26 +10,162 @@ namespace Wedsite_LTWW.Controllers
     public class CartController : Controller
     {
         private const string CART_KEY = "GioHang";
+        private const string VOUCHER_KEY = "VoucherCode";
 
         private readonly GasSparkDBEntities db =
             new GasSparkDBEntities();
 
-        private const string BANK_ID = "VCB";
-        private const string BANK_ACCOUNT = "1026771542";
-        private const string BANK_ACCOUNT_NAME = "LUU HUNG CUONG";
+        private const string BANK_ID = "VPB";
+        private const string BANK_ACCOUNT = "0000000001";
+        private const string BANK_ACCOUNT_NAME = "Le Tien P";
 
+        // Dung de bao voucher vua het luot trong luc dat hang
+        private class VoucherHetLuotException : Exception { }
+
+        // ============================================================
+        //  GIO HANG (SESSION + SQL)
+        // ============================================================
+
+        // Lấy giỏ: ưu tiên Session, chưa có thì nạp từ SQL theo tài khoản
         private List<CartItem> GetCart()
         {
             var cart = Session[CART_KEY] as List<CartItem>;
+            if (cart != null) return cart;
 
-            if (cart == null)
+            cart = new List<CartItem>();
+            string username = Session["Username"] as string;
+            if (!string.IsNullOrEmpty(username))
             {
-                cart = new List<CartItem>();
-                Session[CART_KEY] = cart;
+                cart = db.Database.SqlQuery<CartItem>(
+                    @"SELECT SanPhamId, TenSanPham, HinhAnh, DonGia, SoLuong
+                      FROM GioHang WHERE Username = @p0 ORDER BY Id", username).ToList();
             }
-
+            Session[CART_KEY] = cart;
             return cart;
         }
+
+        // Lưu giỏ xuống SQL (gọi sau MỖI thay đổi)
+        private void SaveCart(List<CartItem> cart)
+        {
+            Session[CART_KEY] = cart;
+            string username = Session["Username"] as string;
+            if (string.IsNullOrEmpty(username)) return;
+
+            using (var tx = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    db.Database.ExecuteSqlCommand(
+                        "DELETE FROM GioHang WHERE Username = @p0", username);
+
+                    foreach (var i in cart)
+                    {
+                        db.Database.ExecuteSqlCommand(
+                            @"INSERT INTO GioHang (Username, SanPhamId, TenSanPham, HinhAnh, DonGia, SoLuong)
+                              VALUES (@p0, @p1, @p2, @p3, @p4, @p5)",
+                            username, i.SanPhamId,
+                            (object)i.TenSanPham ?? DBNull.Value,
+                            (object)i.HinhAnh ?? DBNull.Value,
+                            i.DonGia, i.SoLuong);
+                    }
+                    tx.Commit();
+                }
+                catch
+                {
+                    tx.Rollback();
+                    throw;
+                }
+            }
+        }
+
+        private void ClearCart()
+        {
+            Session.Remove(CART_KEY);
+            Session.Remove(VOUCHER_KEY);
+
+            string username = Session["Username"] as string;
+            if (!string.IsNullOrEmpty(username))
+                db.Database.ExecuteSqlCommand(
+                    "DELETE FROM GioHang WHERE Username = @p0", username);
+        }
+
+        // ============================================================
+        //  VOUCHER
+        // ============================================================
+
+        private List<Voucher> LayDsVoucher()
+        {
+            var now = DateTime.Now;
+            return db.Vouchers
+                .Where(v => v.TrangThai && v.NgayBatDau <= now && v.NgayKetThuc >= now
+                            && (v.SoLuong == null || v.DaDung < v.SoLuong))
+                .OrderBy(v => v.NgayKetThuc)
+                .ToList();
+        }
+
+        // Nạp dữ liệu voucher cho trang Checkout
+        private void NapVoucherViewBag(List<CartItem> cart)
+        {
+            decimal tamTinh = cart.Sum(x => x.ThanhTien);
+            ViewBag.DsVoucher = LayDsVoucher();
+            ViewBag.VoucherMa = null;
+            ViewBag.TienGiam = 0m;
+
+            string ma = Session[VOUCHER_KEY] as string;
+            if (!string.IsNullOrEmpty(ma))
+            {
+                var r = VoucherService.Kiem(db, ma, Session["Username"].ToString(), tamTinh);
+                if (r.Ok)
+                {
+                    ViewBag.VoucherMa = r.Voucher.Ma;
+                    ViewBag.TienGiam = r.TienGiam;
+                }
+                else
+                {
+                    Session.Remove(VOUCHER_KEY);
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult ApDungVoucher(string ma)
+        {
+            if (Session["Username"] == null)
+                return Json(new { success = false, requireLogin = true });
+
+            decimal tamTinh = GetCart().Sum(x => x.ThanhTien);
+            var r = VoucherService.Kiem(db, ma, Session["Username"].ToString(), tamTinh);
+
+            if (!r.Ok)
+            {
+                Session.Remove(VOUCHER_KEY);
+                return Json(new { success = false, message = r.Message, giam = 0m, tong = tamTinh });
+            }
+
+            Session[VOUCHER_KEY] = r.Voucher.Ma;
+            return Json(new
+            {
+                success = true,
+                message = r.Message,
+                ma = r.Voucher.Ma,
+                giam = r.TienGiam,
+                tong = tamTinh - r.TienGiam
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult GoVoucher()
+        {
+            Session.Remove(VOUCHER_KEY);
+            decimal tamTinh = GetCart().Sum(x => x.ThanhTien);
+            return Json(new { success = true, giam = 0m, tong = tamTinh });
+        }
+
+        // ============================================================
+        //  GIO HANG
+        // ============================================================
 
         // GIO HANG
         public ActionResult Index()
@@ -101,6 +236,8 @@ namespace Wedsite_LTWW.Controllers
                 item.SoLuong += soLuong;
             }
 
+            SaveCart(cart);
+
             return Json(new
             {
                 success = true,
@@ -113,12 +250,16 @@ namespace Wedsite_LTWW.Controllers
         [HttpPost]
         public JsonResult XoaSanPham(int id)
         {
-            var cart = Session[CART_KEY] as List<CartItem>
-                       ?? new List<CartItem>();
+            if (Session["Username"] == null)
+            {
+                return Json(new { success = false, requireLogin = true });
+            }
+
+            var cart = GetCart();
 
             cart.RemoveAll(x => x.SanPhamId == id);
 
-            Session[CART_KEY] = cart;
+            SaveCart(cart);
 
             return Json(new
             {
@@ -132,8 +273,10 @@ namespace Wedsite_LTWW.Controllers
         [HttpPost]
         public JsonResult CapNhatSoLuong(int id, int soLuong)
         {
-            var cart = Session[CART_KEY] as List<CartItem>
-                       ?? new List<CartItem>();
+            if (Session["Username"] == null)
+            {
+                return Json(new { success = false, requireLogin = true });
+            }
 
             if (soLuong < 0 || soLuong > 100)
             {
@@ -143,6 +286,8 @@ namespace Wedsite_LTWW.Controllers
                     message = "So luong khong hop le."
                 });
             }
+
+            var cart = GetCart();
 
             decimal thanhTien = 0;
 
@@ -163,7 +308,7 @@ namespace Wedsite_LTWW.Controllers
                 }
             }
 
-            Session[CART_KEY] = cart;
+            SaveCart(cart);
 
             return Json(new
             {
@@ -178,10 +323,14 @@ namespace Wedsite_LTWW.Controllers
         [HttpPost]
         public JsonResult XoaTatCa()
         {
-            Session.Remove(CART_KEY);
+            ClearCart();
 
             return Json(new { success = true });
         }
+
+        // ============================================================
+        //  CHECKOUT + DAT HANG
+        // ============================================================
 
         // CHECKOUT
         public ActionResult Checkout()
@@ -198,6 +347,7 @@ namespace Wedsite_LTWW.Controllers
                 return RedirectToAction("Index");
             }
 
+            NapVoucherViewBag(cart);
             return View(cart);
         }
 
@@ -232,6 +382,7 @@ namespace Wedsite_LTWW.Controllers
                     "Vui long nhap day du thong tin giao hang."
                 );
 
+                NapVoucherViewBag(cart);
                 return View("Checkout", cart);
             }
 
@@ -246,18 +397,42 @@ namespace Wedsite_LTWW.Controllers
                 return new HttpStatusCodeResult(400);
             }
 
+            // ----- Tinh lai voucher o server (khong tin gia tri tu trinh duyet) -----
+            string username = Session["Username"].ToString();
+            decimal tamTinh = cart.Sum(x => x.ThanhTien);
+            decimal tienGiam = 0;
+            Voucher voucher = null;
+
+            string maVoucher = Session[VOUCHER_KEY] as string;
+            if (!string.IsNullOrEmpty(maVoucher))
+            {
+                var r = VoucherService.Kiem(db, maVoucher, username, tamTinh);
+                if (!r.Ok)
+                {
+                    Session.Remove(VOUCHER_KEY);
+                    ModelState.AddModelError("", "Voucher không còn hợp lệ: " + r.Message);
+                    NapVoucherViewBag(cart);
+                    return View("Checkout", cart);
+                }
+
+                voucher = r.Voucher;
+                tienGiam = r.TienGiam;
+            }
+
             using (var transaction = db.Database.BeginTransaction())
             {
                 try
                 {
                     var donHang = new DonHang
                     {
-                        Username = Session["Username"].ToString(),
+                        Username = username,
                         HoTen = hoTen.Trim(),
                         SoDienThoai = soDienThoai.Trim(),
                         DiaChi = diaChi.Trim(),
                         GhiChu = ghiChu,
-                        TongTien = cart.Sum(x => x.ThanhTien),
+                        TongTien = tamTinh - tienGiam,
+                        MaVoucher = voucher != null ? voucher.Ma : null,
+                        TienGiam = tienGiam,
                         NgayDat = DateTime.Now,
                         TrangThai = "Chờ xác nhận",
 
@@ -296,12 +471,39 @@ namespace Wedsite_LTWW.Controllers
 
                     db.SaveChanges();
 
+                    // GHI NHAN VOUCHER (tru luot an toan khi nhieu nguoi dung cung luc)
+                    if (voucher != null)
+                    {
+                        int n = db.Database.ExecuteSqlCommand(
+                            @"UPDATE Voucher SET DaDung = DaDung + 1
+                              WHERE Id = @p0 AND (SoLuong IS NULL OR DaDung < SoLuong)",
+                            voucher.Id);
+
+                        if (n != 1)
+                            throw new VoucherHetLuotException();
+
+                        db.VoucherUsages.Add(new VoucherUsage
+                        {
+                            VoucherId = voucher.Id,
+                            Username = username,
+                            IdDonHang = donHang.Id,
+                            NgaySuDung = DateTime.Now
+                        });
+
+                        db.SaveChanges();
+                    }
+
                     int idDonHang = donHang.Id;
 
                     transaction.Commit();
 
-                    Session.Remove(CART_KEY);
+                    // Đặt hàng xong: xóa giỏ (Session + SQL) và voucher đang chọn
+                    ClearCart();
 
+                    if (phuongThuc == "COD")
+                    {
+                        InvoiceMailService.GuiHoaDon(db, idDonHang);
+                    }
                     if (phuongThuc == "Banking")
                     {
                         return RedirectToAction(
@@ -314,6 +516,15 @@ namespace Wedsite_LTWW.Controllers
                         "DatHangThanhCong",
                         new { id = idDonHang }
                     );
+                }
+                catch (VoucherHetLuotException)
+                {
+                    transaction.Rollback();
+
+                    Session.Remove(VOUCHER_KEY);
+                    ModelState.AddModelError("", "Voucher vừa hết lượt sử dụng. Vui lòng kiểm tra lại đơn hàng.");
+                    NapVoucherViewBag(cart);
+                    return View("Checkout", cart);
                 }
                 catch
                 {
@@ -390,6 +601,7 @@ namespace Wedsite_LTWW.Controllers
 
             return View(donHang);
         }
+
         // TRANG QR HOI TRANG THAI THANH TOAN
         [HttpGet]
         public JsonResult KiemTraThanhToan(int id)
@@ -408,6 +620,7 @@ namespace Wedsite_LTWW.Controllers
 
             return Json(new { paid = paid }, JsonRequestBehavior.AllowGet);
         }
+
         // DAT HANG THANH CONG
         public ActionResult DatHangThanhCong(int id)
         {

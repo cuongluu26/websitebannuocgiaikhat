@@ -32,6 +32,8 @@ namespace Wedsite_LTWW.Models
         public string PhuongThucThanhToan { get; set; }
         public string TrangThaiThanhToan { get; set; }
         public string NoiDungChuyenKhoan { get; set; }
+        public string MaVoucher { get; set; }
+        public decimal TienGiam { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; }

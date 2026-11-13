@@ -1,0 +1,159 @@
+﻿@model List<Wedsite_LTWW.Models.Voucher>
+@{
+    ViewBag.Title = "Quản lý voucher";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .vc-wrap {
+        padding: 20px;
+    }
+
+    .vc-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 18px;
+    }
+
+        .vc-head h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+    .vc-btn {
+        display: inline-block;
+        padding: 9px 18px;
+        border-radius: 8px;
+        background: #0a3cff;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+        .vc-btn.gray {
+            background: #6c757d;
+        }
+
+        .vc-btn.red {
+            background: #e63946;
+        }
+
+    .vc-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+    }
+
+        .vc-table th, .vc-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            font-size: 13px;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        .vc-table th {
+            background: #f0f4ff;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+    .tag {
+        padding: 3px 10px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+        .tag.on {
+            background: #e6f7ec;
+            color: #1e8e3e;
+        }
+
+        .tag.off {
+            background: #fdeaea;
+            color: #d93025;
+        }
+
+    .vc-actions form {
+        display: inline;
+    }
+</style>
+
+<div class="vc-wrap">
+    <div class="vc-head">
+        <h2>Quản lý voucher</h2>
+        <a class="vc-btn" href="@Url.Action("Create")">+ Thêm voucher</a>
+    </div>
+
+    <div style="overflow-x:auto">
+        <table class="vc-table">
+            <thead>
+                <tr>
+                    <th>Mã</th>
+                    <th>Tiêu đề</th>
+                    <th>Giảm</th>
+                    <th>Đơn tối thiểu</th>
+                    <th>Thời gian</th>
+                    <th>Đã dùng</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model)
+                {
+                    bool hetHan = v.NgayKetThuc < DateTime.Now;
+                    <tr>
+                        <td><b>@v.Ma</b></td>
+                        <td>@v.TieuDe</td>
+                        <td>
+                            @if (v.LoaiGiam == "PhanTram")
+                            {
+                                @:@v.GiaTri.ToString("0")%
+                                if (v.GiamToiDa.HasValue)
+                                {
+                                    @:(tối đa @v.GiamToiDa.Value.ToString("N0"))
+                                }
+                            }
+                            else
+                            {
+                                @:@v.GiaTri.ToString("N0") VNĐ
+                            }
+                        </td>
+                        <td>@v.DonToiThieu.ToString("N0")</td>
+                        <td>@v.NgayBatDau.ToString("dd/MM/yy HH:mm") → @v.NgayKetThuc.ToString("dd/MM/yy HH:mm")</td>
+                        <td>@v.DaDung / @(v.SoLuong.HasValue ? v.SoLuong.Value.ToString() : "∞")</td>
+                        <td>
+                            @if (!v.TrangThai)
+                            {
+                                <span class="tag off">Đã tắt</span>
+                            }
+                            else if (hetHan)
+                            {
+                                <span class="tag off">Hết hạn</span>
+                            }
+                            else
+                            {
+                                <span class="tag on">Đang chạy</span>
+                            }
+                        </td>
+                        <td class="vc-actions">
+                            <a class="vc-btn gray" href="@Url.Action("Edit", new { id = v.Id })">Sửa</a>
+                            @using (Html.BeginForm("Delete", "VoucherAdmin", new { id = v.Id }, FormMethod.Post, new { onsubmit = "return confirm('Xóa/tắt voucher này?');" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="vc-btn red">Xóa</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

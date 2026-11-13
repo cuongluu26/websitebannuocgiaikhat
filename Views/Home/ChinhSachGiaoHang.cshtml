@@ -1,97 +1,127 @@
-﻿<link href="~/Content/ChinhSachGiaoHang.css" rel="stylesheet" />
-@{
-    ViewBag.Title = "ChinhSachGiaoHang";
+﻿@{
+    ViewBag.Title = "Chính Sách Giao Hàng";
 }
 
-<div class="shipping-policy">
+<style>
+    .hero-feature {
+        display: none !important;
+    }
+</style>
 
+<div class="page-hero">
     <h1 id="tieu-de-giao-hang">Chính Sách Giao Hàng</h1>
+    <p>Giao hàng nhanh, đóng gói cẩn thận, hỗ trợ toàn quốc</p>
+</div>
 
-    <h2>I. Các phương thức giao hàng</h2>
+<div class="policy-layout">
 
-    <h3>1. Mua trực tiếp tại công ty</h3>
-    <p>
-        Khách hàng có thể đến trực tiếp văn phòng hoặc nhà máy của Gas Spark để nhận hàng.
-        Đội ngũ kinh doanh của chúng tôi luôn sẵn sàng hỗ trợ.
-    </p>
+    @Html.Partial("_PolicyNav", "giaohang")
 
-    <h3>2. Giao hàng tận nơi</h3>
-    <p>
-        Gas Spark hợp tác với các đơn vị vận chuyển chuyên nghiệp và uy tín
-        để giao hàng đến tận địa chỉ của khách hàng trên toàn quốc.
-    </p>
+    <article class="policy-card">
 
-    <h2>II. Thời gian giao hàng dự kiến</h2>
+        <section class="policy-section" style="margin-top:0;padding-top:0;border-top:0;">
+            <h2><span class="policy-num">I</span> Các phương thức giao hàng</h2>
 
-    <p>
-        Sau khi nhận được đơn đặt hàng, Gas Spark sẽ tiến hành xử lý trong vòng
-        <b>24 giờ làm việc</b> và liên hệ xác nhận thông tin đơn hàng.
-    </p>
+            <h3>1. Mua trực tiếp tại công ty</h3>
+            <p>
+                Khách hàng có thể đến trực tiếp văn phòng hoặc nhà máy của Gas Spark để nhận hàng.
+                Đội ngũ kinh doanh của chúng tôi luôn sẵn sàng hỗ trợ.
+            </p>
 
-    <p>
-        Thời gian giao hàng thông thường từ <b>3 – 5 ngày làm việc</b>, tùy thuộc vào:
-    </p>
+            <h3>2. Giao hàng tận nơi</h3>
+            <p>
+                Gas Spark hợp tác với các đơn vị vận chuyển chuyên nghiệp và uy tín
+                để giao hàng đến tận địa chỉ của khách hàng trên toàn quốc.
+            </p>
+        </section>
 
-    <ul>
-        <li>Khoảng cách địa lý</li>
-        <li>Mức độ thuận tiện khi liên hệ với khách</li>
-        <li>Mức độ phức tạp của địa chỉ giao hàng</li>
-        <li>Số lượng đơn hàng phát sinh cùng thời điểm</li>
-        <li>Điều kiện bất khả kháng từ phía đơn vị vận chuyển</li>
-    </ul>
+        <section class="policy-section">
+            <h2><span class="policy-num">II</span> Thời gian giao hàng dự kiến</h2>
 
-    <h2>III. Phạm vi giao hàng</h2>
+            <div class="policy-callout">
+                <i class="fa-solid fa-clock"></i>
+                <p>
+                    Sau khi nhận được đơn đặt hàng, Gas Spark sẽ tiến hành xử lý trong vòng
+                    <b>24 giờ làm việc</b> và liên hệ xác nhận thông tin đơn hàng.
+                </p>
+            </div>
 
-    <p>
-        Gas Spark hỗ trợ giao hàng trên toàn quốc và xuất khẩu sang nhiều quốc gia.
-    </p>
+            <p>
+                Thời gian giao hàng thông thường từ <b>3 – 5 ngày làm việc</b>, tùy thuộc vào:
+            </p>
 
-    <p>
-        Đối với khách hàng tỉnh xa, khách hàng sỉ hoặc đại lý,
-        chi phí vận chuyển sẽ được tính theo thỏa thuận cụ thể trong quá trình đặt hàng.
-    </p>
+            <ul>
+                <li>Khoảng cách địa lý</li>
+                <li>Mức độ thuận tiện khi liên hệ với khách</li>
+                <li>Mức độ phức tạp của địa chỉ giao hàng</li>
+                <li>Số lượng đơn hàng phát sinh cùng thời điểm</li>
+                <li>Điều kiện bất khả kháng từ phía đơn vị vận chuyển</li>
+            </ul>
+        </section>
 
-    <h2>IV. Trách nhiệm trong quá trình giao hàng</h2>
+        <section class="policy-section">
+            <h2><span class="policy-num">III</span> Phạm vi giao hàng</h2>
 
-    <h3>1. Về phía Gas Spark</h3>
+            <p>
+                Gas Spark hỗ trợ giao hàng trên toàn quốc và xuất khẩu sang nhiều quốc gia.
+            </p>
 
-    <ul>
-        <li>Đóng gói hàng hóa cẩn thận trước khi bàn giao cho đơn vị vận chuyển</li>
-        <li>Cung cấp hóa đơn bán hàng và phiếu xuất kho hợp lệ</li>
-        <li>Hỗ trợ giải quyết khiếu nại liên quan đến giao hàng</li>
-    </ul>
+            <p>
+                Đối với khách hàng tỉnh xa, khách hàng sỉ hoặc đại lý,
+                chi phí vận chuyển sẽ được tính theo thỏa thuận cụ thể trong quá trình đặt hàng.
+            </p>
+        </section>
 
-    <h3>2. Về phía đơn vị vận chuyển</h3>
+        <section class="policy-section">
+            <h2><span class="policy-num">IV</span> Trách nhiệm trong quá trình giao hàng</h2>
 
-    <ul>
-        <li>Đảm bảo giao hàng đúng thời gian</li>
-        <li>Bảo quản hàng hóa và chứng từ đi kèm</li>
-        <li>Bàn giao đúng người nhận</li>
-    </ul>
+            <h3>1. Về phía Gas Spark</h3>
+            <ul>
+                <li>Đóng gói hàng hóa cẩn thận trước khi bàn giao cho đơn vị vận chuyển</li>
+                <li>Cung cấp hóa đơn bán hàng và phiếu xuất kho hợp lệ</li>
+                <li>Hỗ trợ giải quyết khiếu nại liên quan đến giao hàng</li>
+            </ul>
 
-    <h2>V. Trách nhiệm khi hàng hóa bị hư hỏng</h2>
+            <h3>2. Về phía đơn vị vận chuyển</h3>
+            <ul>
+                <li>Đảm bảo giao hàng đúng thời gian</li>
+                <li>Bảo quản hàng hóa và chứng từ đi kèm</li>
+                <li>Bàn giao đúng người nhận</li>
+            </ul>
+        </section>
 
-    <p>
-        Nếu hàng hóa bị hư hỏng, móp méo hoặc rách vỡ trong quá trình vận chuyển,
-        Gas Spark cam kết sẽ hỗ trợ giải quyết theo chính sách đổi trả.
-    </p>
+        <section class="policy-section">
+            <h2><span class="policy-num">V</span> Trách nhiệm khi hàng hóa bị hư hỏng</h2>
 
-    <p>Khách hàng có thể:</p>
+            <p>
+                Nếu hàng hóa bị hư hỏng, móp méo hoặc rách vỡ trong quá trình vận chuyển,
+                Gas Spark cam kết sẽ hỗ trợ giải quyết theo chính sách đổi trả.
+            </p>
 
-    <ul>
-        <li>Từ chối nhận hàng</li>
-        <li>Yêu cầu đổi mới sản phẩm</li>
-        <li>Hoặc yêu cầu hoàn tiền</li>
-    </ul>
+            <p>Khách hàng có thể:</p>
 
-    <h2>VI. Lưu ý</h2>
+            <ul>
+                <li>Từ chối nhận hàng</li>
+                <li>Yêu cầu đổi mới sản phẩm</li>
+                <li>Hoặc yêu cầu hoàn tiền</li>
+            </ul>
+        </section>
 
-    <p>
-        Trong trường hợp đơn hàng bị chậm trễ do nguyên nhân khách quan,
-        Gas Spark sẽ chủ động thông báo cho khách hàng.
-    </p>
+        <section class="policy-section">
+            <h2><span class="policy-num">VI</span> Lưu ý</h2>
 
-    <p>
-        Khách hàng có quyền lựa chọn hủy đơn hàng hoặc tiếp tục chờ nhận hàng.
-    </p>
+            <div class="policy-callout">
+                <i class="fa-solid fa-circle-info"></i>
+                <p>
+                    Trong trường hợp đơn hàng bị chậm trễ do nguyên nhân khách quan,
+                    Gas Spark sẽ chủ động thông báo cho khách hàng.
+                </p>
+            </div>
+
+            <p>
+                Khách hàng có quyền lựa chọn hủy đơn hàng hoặc tiếp tục chờ nhận hàng.
+            </p>
+        </section>
+
+    </article>
 </div>

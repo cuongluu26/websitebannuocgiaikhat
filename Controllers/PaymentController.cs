@@ -103,6 +103,7 @@ namespace Wedsite_LTWW.Controllers
             donHang.TrangThaiThanhToan = "Đã thanh toán";
             db.SaveChanges();
 
+            InvoiceMailService.GuiHoaDon(db, donHang.Id);
             return Json(new { success = true });
         }
 

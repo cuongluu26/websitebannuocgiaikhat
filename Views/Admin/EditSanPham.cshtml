@@ -5,7 +5,7 @@
 
 <h3 class="mb-4">✏️ Sửa sản phẩm</h3>
 
-@using (Html.BeginForm("Edit", "Admin", FormMethod.Post,
+@using (Html.BeginForm("EditSanPham", "Admin", FormMethod.Post,
         new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()

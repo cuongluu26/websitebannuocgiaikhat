@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 public class ChatAIController : Controller
 {
     private const string ImageFolder = "~/Images/";
-    private const string SessionUserKey = "Username";   // key Session lưu tên đăng nhập
+    private const string SessionUserKey = "Username";
 
     private const int MaxHistoryTurns = 10;
 
@@ -55,7 +55,8 @@ public class ChatAIController : Controller
             var favIds = string.IsNullOrEmpty(username) ? new List<int>() : LoadFavorites(username);
             string orderText = string.IsNullOrEmpty(username) ? "" : LoadOrderContext(username);
 
-            var history = Session["ChatHistory"] as List<Turn> ?? new List<Turn>();
+            // Đã đăng nhập -> lấy từ SQL, khách -> Session
+            var history = LoadHistory(username, MaxHistoryTurns * 2);
 
             string aiText = await CallGemini(
                 BuildSystemPrompt(products, favIds, username, orderText), history, message);
@@ -69,13 +70,10 @@ public class ChatAIController : Controller
                 var arr = obj["productIds"] as JArray;
                 if (arr != null) ids = arr.Select(x => (int)x).Distinct().ToList();
             }
-            catch { reply = aiText; }   // nếu AI không trả JSON thì hiển thị nguyên văn
+            catch { reply = aiText; }
 
             // Lưu lịch sử hội thoại
-            history.Add(new Turn { Role = "user", Text = message });
-            history.Add(new Turn { Role = "model", Text = reply });
-            while (history.Count > MaxHistoryTurns * 2) history.RemoveRange(0, 2);
-            Session["ChatHistory"] = history;
+            SaveHistory(username, message, reply);
 
             // Dựng thẻ sản phẩm từ DB (chỉ lấy id có thật)
             var cards = products.Where(p => ids.Contains(p.Id)).Take(4).Select(p => new
@@ -102,8 +100,99 @@ public class ChatAIController : Controller
     [HttpPost]
     public JsonResult Reset()
     {
-        Session["ChatHistory"] = null;
+        string username = Session[SessionUserKey] as string;
+        if (string.IsNullOrEmpty(username))
+        {
+            Session["ChatHistory"] = null;
+        }
+        else
+        {
+            using (var con = new SqlConnection(GetSqlConnectionString()))
+            using (var cmd = new SqlCommand("DELETE FROM ChatLichSu WHERE Username = @u", con))
+            {
+                cmd.Parameters.AddWithValue("@u", username);
+                con.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
         return Json(new { ok = true });
+    }
+
+    // Để chatbox tải lại tin nhắn cũ khi mở trang
+    [HttpGet]
+    public JsonResult History()
+    {
+        string username = Session[SessionUserKey] as string;
+        var msgs = LoadHistory(username, 50)
+            .Select(t => new { role = t.Role == "user" ? "user" : "bot", text = t.Text })
+            .ToList();
+        return Json(new { messages = msgs }, JsonRequestBehavior.AllowGet);
+    }
+
+    // ---------- Lưu / tải lịch sử chat ----------
+    // Lấy n tin gần nhất. Đã đăng nhập -> SQL, khách -> Session
+    private List<Turn> LoadHistory(string username, int n)
+    {
+        if (string.IsNullOrEmpty(username))
+            return Session["ChatHistory"] as List<Turn> ?? new List<Turn>();
+
+        var list = new List<Turn>();
+        using (var con = new SqlConnection(GetSqlConnectionString()))
+        using (var cmd = new SqlCommand(
+            @"SELECT VaiTro, NoiDung FROM (
+                  SELECT TOP (@n) Id, VaiTro, NoiDung FROM ChatLichSu
+                  WHERE Username = @u ORDER BY Id DESC) t
+              ORDER BY Id", con))
+        {
+            cmd.Parameters.AddWithValue("@n", n);
+            cmd.Parameters.AddWithValue("@u", username);
+            con.Open();
+            using (var r = cmd.ExecuteReader())
+                while (r.Read())
+                    list.Add(new Turn { Role = r.GetString(0), Text = r.GetString(1) });
+        }
+
+        // Gemini yêu cầu hội thoại bắt đầu bằng lượt của user
+        while (list.Count > 0 && list[0].Role != "user") list.RemoveAt(0);
+        return list;
+    }
+
+    private void SaveHistory(string username, string userMsg, string botReply)
+    {
+        if (string.IsNullOrEmpty(username))
+        {
+            var h = Session["ChatHistory"] as List<Turn> ?? new List<Turn>();
+            h.Add(new Turn { Role = "user", Text = userMsg });
+            h.Add(new Turn { Role = "model", Text = botReply });
+            while (h.Count > MaxHistoryTurns * 2) h.RemoveRange(0, 2);
+            Session["ChatHistory"] = h;
+            return;
+        }
+
+        using (var con = new SqlConnection(GetSqlConnectionString()))
+        {
+            con.Open();
+            foreach (var t in new[] { Tuple.Create("user", userMsg), Tuple.Create("model", botReply) })
+            {
+                using (var cmd = new SqlCommand(
+                    "INSERT INTO ChatLichSu (Username, VaiTro, NoiDung) VALUES (@u, @r, @t)", con))
+                {
+                    cmd.Parameters.AddWithValue("@u", username);
+                    cmd.Parameters.AddWithValue("@r", t.Item1);
+                    cmd.Parameters.AddWithValue("@t", t.Item2);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            // Chỉ giữ 200 tin gần nhất mỗi tài khoản
+            using (var cmd = new SqlCommand(
+                @"DELETE FROM ChatLichSu WHERE Username = @u AND Id NOT IN
+                  (SELECT TOP 200 Id FROM ChatLichSu WHERE Username = @u ORDER BY Id DESC)", con))
+            {
+                cmd.Parameters.AddWithValue("@u", username);
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 
     // ---------- Đọc DB (chỉ đọc, có tham số) ----------

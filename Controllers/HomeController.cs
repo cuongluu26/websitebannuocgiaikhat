@@ -21,7 +21,7 @@ namespace Wedsite_LTWW.Controllers
         // ===== TRANG CHÍNH =====
         public ActionResult Tranggiaodien(int page = 1)
         {
-            int pageSize = 4;
+            int pageSize = 5;
 
             var data = db.SanPhams
                          .OrderBy(x => Guid.NewGuid()) // ← random
@@ -33,7 +33,7 @@ namespace Wedsite_LTWW.Controllers
         // ===== LOAD MORE =====
         public ActionResult LoadMore(int page)
         {
-            int pageSize = 4;
+            int pageSize = 5;
 
             var data = db.SanPhams
                          .OrderBy(x => x.Id)

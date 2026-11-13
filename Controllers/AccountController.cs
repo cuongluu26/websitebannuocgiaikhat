@@ -1,6 +1,8 @@
 ﻿using MailKit.Net.Smtp;
+using MailKit.Security;
 using MimeKit;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -11,11 +13,16 @@ namespace Wedsite_LTWW.Controllers
     public class AccountController : Controller
     {
         GasSparkDBEntities db = new GasSparkDBEntities();
+
+      
+        private static readonly string MailUser = ConfigurationManager.AppSettings["MailUser"];
+        private static readonly string MailPass = ConfigurationManager.AppSettings["MailPass"];
+
         public void SendOTP(string email, string otp)
         {
             var message = new MimeMessage();
 
-            message.From.Add(new MailboxAddress("Gas Spark", "tranbao78900@gmail.com"));
+            message.From.Add(new MailboxAddress("Gas Spark", MailUser));
             message.To.Add(new MailboxAddress("", email));
             message.Subject = "Mã xác nhận đăng ký";
 
@@ -26,12 +33,13 @@ namespace Wedsite_LTWW.Controllers
 
             using (var client = new SmtpClient())
             {
-                client.Connect("smtp.gmail.com", 587, false);
-                client.Authenticate("tranbao78900@gmail.com", "tmvyburwncytypie");
+                client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                client.Authenticate(MailUser, MailPass);
                 client.Send(message);
                 client.Disconnect(true);
             }
         }
+
         // ===== ĐĂNG KÝ =====
         public ActionResult Register()
         {
@@ -101,6 +109,7 @@ namespace Wedsite_LTWW.Controllers
 
             return View(tk);
         }
+
         // ===== ĐĂNG NHẬP =====
         public ActionResult Login()
         {
@@ -121,6 +130,10 @@ namespace Wedsite_LTWW.Controllers
             {
                 Session["Username"] = user.Username;
                 Session["Role"] = user.Role;
+                Session.Remove("ChatHistory");
+                Session["GioHang"] = db.Database.SqlQuery<CartItem>(
+                    @"SELECT SanPhamId, TenSanPham, HinhAnh, DonGia, SoLuong
+      FROM GioHang WHERE Username = @p0 ORDER BY Id", user.Username).ToList();
 
                 if (user.Role == "admin")
                     return RedirectToAction("Index", "Admin");
@@ -167,16 +180,13 @@ namespace Wedsite_LTWW.Controllers
 
         public void SendEmail(string toEmail, string subject, string body)
         {
-            string fromEmail = "tranbao78900@gmail.com";
-            string appPassword = "ziiq heav vkgx nhhs"; // App Password Gmail
-
             using (var smtp = new System.Net.Mail.SmtpClient())
             {
                 smtp.Host = "smtp.gmail.com";
                 smtp.Port = 587;
                 smtp.EnableSsl = true;
-                smtp.Credentials = new NetworkCredential(fromEmail, appPassword);
-                smtp.Send(fromEmail, toEmail, subject, body);
+                smtp.Credentials = new NetworkCredential(MailUser, MailPass);
+                smtp.Send(MailUser, toEmail, subject, body);
             }
         }
 
@@ -184,6 +194,7 @@ namespace Wedsite_LTWW.Controllers
         {
             return View();          // POST: Xử lý đổi mật khẩu
         }
+
         [HttpPost]
         public ActionResult ForgotPassword(string Email)
         {
@@ -209,10 +220,8 @@ namespace Wedsite_LTWW.Controllers
             Session["Email"] = Email;
             Session["OTP_Type"] = "Forgot";
 
-            // test (sau này gửi mail)
             SendOTP(Email, otp);
 
-            // 👉 CHỖ QUAN TRỌNG
             return RedirectToAction("VerifyOTP1");
         }
 

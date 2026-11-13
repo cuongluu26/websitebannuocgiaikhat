@@ -1,297 +1,264 @@
-﻿
-@{
-    ViewBag.Title = "QuyMoVaThiTruong";
-}
-
-@{
-    ViewBag.Title = "QuyMoVaThiTruong";
-}
-
-@{
-    ViewBag.Title = "QuyMoVaThiTruong";
+﻿@{
+    ViewBag.Title = "Quy mô và thị trường";
 }
 
 <style>
-    /* KHÔNG GÂY ẢNH HƯỞNG ĐẾN CÁC TRANG KHÁC */
-    .vinut-market-page {
-        padding: 30px 15px;
-        background-color: #ffffff;
+    /* Chỉ áp dụng trong .market-page, không ảnh hưởng trang khác */
+    .market-page .banner-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: clamp(20px, 4vw, 40px);
+        align-items: center;
+        margin-bottom: 40px;
+        padding: clamp(20px, 3vw, 40px);
+        border-radius: var(--gs-r-lg);
+        background: linear-gradient(135deg, var(--gs-blue-700), var(--gs-blue-900));
+        color: #fff;
+        box-shadow: var(--gs-sh-lg);
     }
 
-        .vinut-market-page .content-container {
-            max-width: 1200px;
-            margin: 0 auto;
+    .market-page .banner-img-thay-video {
+        display: block;
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border: 1px solid rgba(255, 255, 255, .25);
+        border-radius: var(--gs-r-md);
+        background: rgba(255, 255, 255, .08);
+        transition: transform .3s ease;
+    }
+
+        .market-page .banner-img-thay-video:hover {
+            transform: scale(1.02);
         }
 
-        /* BANNER ĐẦU TRANG */
-        .vinut-market-page .banner-section {
-            background-color: #6d8075;
-            border-radius: 8px;
-            margin: 25px auto 50px auto;
-            padding: 40px;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    .market-page .banner-right p {
+        margin: 0 0 14px;
+        font-size: 15.5px;
+        line-height: 1.85;
+        color: rgba(255, 255, 255, .92);
+    }
+
+        .market-page .banner-right p:last-child {
+            margin-bottom: 0;
         }
 
-        .vinut-market-page .banner-left {
-            flex: 1;
-            min-width: 45%;
+    .market-page .banner-right b {
+        color: #fff;
+    }
+
+    /* ===== Các khối nội dung ===== */
+    .market-page .section-row {
+        display: grid;
+        grid-template-columns: 260px 1fr;
+        gap: 28px;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 22px;
+        background: var(--gs-surface);
+        border: 1px solid var(--gs-line);
+        border-radius: var(--gs-r-md);
+        transition: box-shadow .25s, border-color .25s;
+    }
+
+        .market-page .section-row:hover {
+            border-color: #bfd2f6;
+            box-shadow: var(--gs-sh-md);
         }
 
-        /* Định dạng ảnh Banner đầu trang thay cho Video */
-        .vinut-market-page .banner-img-thay-video {
-            width: 100%;
-            height: 280px;
-            object-fit: cover;
-            border-radius: 6px;
-            border: 1px solid rgba(255,255,255,0.3);
-            background-color: #55665c;
-            transition: transform 0.3s ease;
+    .market-page .section-real-img {
+        display: block;
+        width: 100%;
+        height: 170px;
+        object-fit: cover;
+        border-radius: var(--gs-r-sm);
+        background: var(--gs-bg);
+        transition: transform .3s ease;
+    }
+
+    .market-page .section-img {
+        overflow: hidden;
+        border-radius: var(--gs-r-sm);
+    }
+
+        .market-page .section-img:hover .section-real-img {
+            transform: scale(1.06);
         }
 
-            .vinut-market-page .banner-img-thay-video:hover {
-                transform: scale(1.02);
-            }
+    .market-page .section-content h2 {
+        display: inline-block;
+        scroll-margin-top: 120px;
+        margin: 0 0 14px;
+        padding-bottom: 6px;
+        border-bottom: 3px solid var(--gs-blue-700);
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--gs-ink);
+    }
 
-        .vinut-market-page .banner-right {
-            flex: 1;
-            color: #ffffff;
-            font-style: italic;
+    .market-page .section-content ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+        .market-page .section-content ul li {
+            position: relative;
+            margin-bottom: 9px;
+            padding-left: 22px;
             font-size: 15px;
-            line-height: 1.8;
+            line-height: 1.65;
+            color: var(--gs-text);
         }
 
-            .vinut-market-page .banner-right p {
-                margin-bottom: 15px;
-                text-align: justify;
+            .market-page .section-content ul li:last-child {
+                margin-bottom: 0;
             }
 
-                .vinut-market-page .banner-right p:last-child {
-                    margin-bottom: 0;
-                }
-
-        /* ĐỊNH DẠNG CÁC KHỐI NỘI DUNG PHÍA DƯỚI */
-        .vinut-market-page .section-row {
-            display: flex;
-            margin-bottom: 50px;
-            gap: 40px;
-            align-items: flex-start;
-        }
-
-        .vinut-market-page .section-img {
-            flex: 0 0 25%;
-            max-width: 25%;
-            overflow: hidden;
-            border-radius: 12px;
-        }
-
-        /* Định dạng ảnh nhỏ của từng mục chính sách và hiệu ứng hover */
-        .vinut-market-page .section-real-img {
-            width: 100%;
-            height: 180px;
-            object-fit: cover;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            background-color: #f5f5f5;
-            transition: all 0.3s ease-in-out;
-        }
-
-            .vinut-market-page .section-real-img:hover {
-                transform: scale(1.06);
-                filter: brightness(95%);
+            .market-page .section-content ul li::before {
+                content: "";
+                position: absolute;
+                left: 2px;
+                top: .62em;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: var(--gs-blue-500);
             }
 
-        .vinut-market-page .section-content {
-            flex: 0 0 75%;
-            max-width: 75%;
+    .market-page .section-content p {
+        margin: 0 0 10px;
+        font-size: 15px;
+        line-height: 1.75;
+        color: var(--gs-text);
+    }
+
+    .market-page .banner-section {
+        scroll-margin-top: 120px;
+    }
+
+    @@media (max-width: 860px) {
+        .market-page .banner-section,
+        .market-page .section-row {
+            grid-template-columns: 1fr;
         }
 
-            /* Tiêu đề có gạch chân màu xanh đặc trưng */
-            .vinut-market-page .section-content h2 {
-                font-size: 22px;
-                font-weight: bold;
-                color: #1a1a1a;
-                margin-bottom: 15px;
-                padding-bottom: 6px;
-                border-bottom: 3px solid #007a3d;
-                display: inline-block;
-            }
-
-            .vinut-market-page .section-content ul {
-                list-style: none;
-            }
-
-                .vinut-market-page .section-content ul li {
-                    font-size: 15px;
-                    color: #333333;
-                    margin-bottom: 10px;
-                    position: relative;
-                    padding-left: 20px;
-                    line-height: 1.6;
-                }
-
-                    /* Dấu chấm tròn trước danh sách */
-                    .vinut-market-page .section-content ul li::before {
-                        content: "•";
-                        color: #a0aec0;
-                        font-size: 20px;
-                        position: absolute;
-                        left: 0;
-                        top: -3px;
-                    }
-
-            .vinut-market-page .section-content p {
-                font-size: 15px;
-                color: #444444;
-                line-height: 1.7;
-                text-align: justify;
-            }
-
-    /* Tương thích giao diện điện thoại mượt mà */
-    @@media (max-width: 768px) {
-        .vinut-market-page .banner-section,
-        .vinut-market-page .section-row {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
+        .market-page .banner-img-thay-video {
+            height: 220px;
         }
 
-        .vinut-market-page .banner-left,
-        .vinut-market-page .banner-right,
-        .vinut-market-page .section-img,
-        .vinut-market-page .section-content {
-            flex: 0 0 100%;
-            max-width: 100%;
-            width: 100%;
-        }
-
-        .vinut-market-page .section-content {
-            padding-left: 0;
+        .market-page .section-real-img {
+            height: 190px;
         }
     }
 </style>
 
-<div class="vinut-market-page">
-    <div class="content-container">
+<div class="market-page">
 
-        <div class="banner-section" id="tong-quan-vinut">
-            <div class="banner-left">
-                <img class="banner-img-thay-video" src="@Url.Content("~/Content/images/thuonghieu.png")" alt="Hình ảnh giới thiệu nhà máy VINUT" />
-            </div>
-            <div class="banner-right">
-                <p><b>VINUT</b> là thương hiệu chuyên sản xuất và xuất khẩu nước giải khát hàng đầu Việt Nam, nổi bật với các dòng sản phẩm được chế biến từ nguyên liệu tự nhiên. Với hệ thống nhà máy hiện đại đạt chuẩn quốc tế, VINUT không ngừng cải tiến công nghệ và quy trình sản xuất nhằm mang đến những thức uống chất lượng cao, an toàn cho sức khỏe người tiêu dùng.</p>
-                <p>Mang trong mình khát vọng vươn tầm thế giới, VINUT không chỉ chinh phục thị trường nội địa mà còn khẳng định dấu ấn thương hiệu Việt trên bản đồ ngành đồ uống toàn cầu.</p>
-            </div>
+    <div class="banner-section" id="tong-quan-vinut">
+        <div class="banner-left">
+            <img class="banner-img-thay-video" src="@Url.Content("~/Content/images/thuonghieu.png")" alt="Hình ảnh giới thiệu nhà máy VINUT" />
         </div>
-
-        <div class="section-row">
-            <div class="section-img">
-                <img class="section-real-img" src="@Url.Content("~/images/anh5.png")" alt="Quy mô sản xuất VINUT" />
-            </div>
-            <div class="section-content">
-                <h2 id="quy-mo-san-xuat">Quy mô sản xuất ấn tượng</h2>
-                <ul>
-                    <li>6 nhà máy sản xuất với công nghệ hiện đại.</li>
-                    <li>50 dây chuyền sản xuất tự động hóa, đạt tiêu chuẩn quốc tế.</li>
-                    <li>Năng lực sản xuất: 1.725.000 lít/ngày.</li>
-                    <li>Đội ngũ gần 1000 nhân viên có chuyên môn cao.</li>
-                </ul>
-            </div>
+        <div class="banner-right">
+            <p><b>VINUT</b> là thương hiệu chuyên sản xuất và xuất khẩu nước giải khát hàng đầu Việt Nam, nổi bật với các dòng sản phẩm được chế biến từ nguyên liệu tự nhiên. Với hệ thống nhà máy hiện đại đạt chuẩn quốc tế, VINUT không ngừng cải tiến công nghệ và quy trình sản xuất nhằm mang đến những thức uống chất lượng cao, an toàn cho sức khỏe người tiêu dùng.</p>
+            <p>Mang trong mình khát vọng vươn tầm thế giới, VINUT không chỉ chinh phục thị trường nội địa mà còn khẳng định dấu ấn thương hiệu Việt trên bản đồ ngành đồ uống toàn cầu.</p>
         </div>
-
-        <div class="section-row">
-            <div class="section-img">
-                <img class="section-real-img" src="@Url.Content("~/images/anh4.png")" alt="Thị trường toàn cầu VINUT" />
-            </div>
-            <div class="section-content">
-                <h2 id="thi-truong-toan-cau">Thị trường toàn cầu</h2>
-                <ul>
-                    <li>Tham gia chuỗi cung ứng toàn cầu, sản phẩm xuất khẩu đến hơn 200 quốc gia và vùng lãnh thổ.</li>
-                    <li>Thâm nhập thành công vào các thị trường khó tính như: Mỹ, EU, Nhật Bản, Hàn Quốc, Nga,...</li>
-                    <li>Có mặt trong hệ thống của tập đoàn bán lẻ hàng đầu của Mỹ là Walmart và Amazon.</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="section-row">
-            <div class="section-img">
-                <img class="section-real-img" src="@Url.Content("~/images/anh3.png")" alt="Trung tâm Nghiên cứu và Phát triển R&D VINUT" />
-            </div>
-            <div class="section-content">
-                <h2 id="nghien-cuu-phat-trien">Nghiên cứu & Phát triển (R&D)</h2>
-                <ul>
-                    <li>Sở hữu 1 trung tâm nghiên cứu và phát triển sản phẩm (R&D) riêng.</li>
-                    <li>14 công nghệ sản xuất độc quyền.</li>
-                    <li>Thường xuyên cho ra mắt sản phẩm mới từ nguyên liệu tự nhiên như: sữa thực vật, nước ép trái cây, nước yến, thức uống hỗ trợ sức khỏe...</li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="section-row">
-            <div class="section-img">
-                <img class="section-real-img" src="@Url.Content("~/images/anh2.png")" alt="Chuỗi giá trị nông trại khép kín VINUT" />
-            </div>
-            <div class="section-content">
-                <h2 id="chuoi-gia-tri">Chuỗi giá trị khép kín</h2>
-                <p>Sở hữu một nông trại cây ăn quả nhiệt đới, cung cấp nguyên liệu sạch, an toàn cho sản xuất. Ứng dụng mô hình từ nông trại đến sản phẩm; tự chủ nguyên liệu, kiểm soát chất lượng đầu vào, nâng cao chất lượng sản phẩm đầu ra.</p>
-            </div>
-        </div>
-
-        <div class="section-row">
-            <div class="section-img">
-                <img class="section-real-img" src="@Url.Content("~/images/anh1.png")" alt="Chứng nhận và tiêu chuẩn quốc tế VINUT" />
-            </div>
-            <div class="section-content">
-                <h2 id="chung-nhan-quoc-te">Chứng nhận và tiêu chuẩn quốc tế</h2>
-                <p style="margin-bottom: 10px;">Với cam kết không ngừng đổi mới và nâng cao chất lượng, VINUT đã khẳng định uy tín của mình trong ngành nước giải khát, được minh chứng qua hàng loạt chứng nhận quốc tế danh giá như:</p>
-                <ul>
-                    <li>Hệ thống chứng nhận toàn diện: BRCGS, FDA, HACCP, GMP, ISO 14001, WCA, GSV, SMETA, SA 8000, Halal, Kosher, USDA Organic, EU Organi, ...</li>
-                    <li>Được vinh danh với nhiều giải thưởng uy tín như: Top 10 thương hiệu nổi tiếng Asean, Strong Brands 2024, Top 100 doanh nghiệp nổi bật trên Alibaba.com, ...</li>
-                </ul>
-            </div>
-        </div>
-
     </div>
+
+    <div class="section-row">
+        <div class="section-img">
+            <img class="section-real-img" src="@Url.Content("~/images/anh5.png")" alt="Quy mô sản xuất VINUT" />
+        </div>
+        <div class="section-content">
+            <h2 id="quy-mo-san-xuat">Quy mô sản xuất ấn tượng</h2>
+            <ul>
+                <li>6 nhà máy sản xuất với công nghệ hiện đại.</li>
+                <li>50 dây chuyền sản xuất tự động hóa, đạt tiêu chuẩn quốc tế.</li>
+                <li>Năng lực sản xuất: 1.725.000 lít/ngày.</li>
+                <li>Đội ngũ gần 1000 nhân viên có chuyên môn cao.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-row">
+        <div class="section-img">
+            <img class="section-real-img" src="@Url.Content("~/images/anh4.png")" alt="Thị trường toàn cầu VINUT" />
+        </div>
+        <div class="section-content">
+            <h2 id="thi-truong-toan-cau">Thị trường toàn cầu</h2>
+            <ul>
+                <li>Tham gia chuỗi cung ứng toàn cầu, sản phẩm xuất khẩu đến hơn 200 quốc gia và vùng lãnh thổ.</li>
+                <li>Thâm nhập thành công vào các thị trường khó tính như: Mỹ, EU, Nhật Bản, Hàn Quốc, Nga,...</li>
+                <li>Có mặt trong hệ thống của tập đoàn bán lẻ hàng đầu của Mỹ là Walmart và Amazon.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-row">
+        <div class="section-img">
+            <img class="section-real-img" src="@Url.Content("~/images/anh3.png")" alt="Trung tâm Nghiên cứu và Phát triển R&D VINUT" />
+        </div>
+        <div class="section-content">
+            <h2 id="nghien-cuu-phat-trien">Nghiên cứu &amp; Phát triển (R&amp;D)</h2>
+            <ul>
+                <li>Sở hữu 1 trung tâm nghiên cứu và phát triển sản phẩm (R&amp;D) riêng.</li>
+                <li>14 công nghệ sản xuất độc quyền.</li>
+                <li>Thường xuyên cho ra mắt sản phẩm mới từ nguyên liệu tự nhiên như: sữa thực vật, nước ép trái cây, nước yến, thức uống hỗ trợ sức khỏe...</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="section-row">
+        <div class="section-img">
+            <img class="section-real-img" src="@Url.Content("~/images/anh2.png")" alt="Chuỗi giá trị nông trại khép kín VINUT" />
+        </div>
+        <div class="section-content">
+            <h2 id="chuoi-gia-tri">Chuỗi giá trị khép kín</h2>
+            <p>Sở hữu một nông trại cây ăn quả nhiệt đới, cung cấp nguyên liệu sạch, an toàn cho sản xuất. Ứng dụng mô hình từ nông trại đến sản phẩm; tự chủ nguyên liệu, kiểm soát chất lượng đầu vào, nâng cao chất lượng sản phẩm đầu ra.</p>
+        </div>
+    </div>
+
+    <div class="section-row">
+        <div class="section-img">
+            <img class="section-real-img" src="@Url.Content("~/images/anh1.png")" alt="Chứng nhận và tiêu chuẩn quốc tế VINUT" />
+        </div>
+        <div class="section-content">
+            <h2 id="chung-nhan-quoc-te">Chứng nhận và tiêu chuẩn quốc tế</h2>
+            <p>Với cam kết không ngừng đổi mới và nâng cao chất lượng, VINUT đã khẳng định uy tín của mình trong ngành nước giải khát, được minh chứng qua hàng loạt chứng nhận quốc tế danh giá như:</p>
+            <ul>
+                <li>Hệ thống chứng nhận toàn diện: BRCGS, FDA, HACCP, GMP, ISO 14001, WCA, GSV, SMETA, SA 8000, Halal, Kosher, USDA Organic, EU Organi, ...</li>
+                <li>Được vinh danh với nhiều giải thưởng uy tín như: Top 10 thương hiệu nổi tiếng Asean, Strong Brands 2024, Top 100 doanh nghiệp nổi bật trên Alibaba.com, ...</li>
+            </ul>
+        </div>
+    </div>
+
 </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        if (window.location.hash) {
-            const hash = window.location.hash;
-            const targetElement = document.querySelector(hash);
+@section Scripts {
+    <script>
+                // Cuộn mượt tới mục theo #hash (ví dụ từ link ở footer/menu)
+                document.addEventListener("DOMContentLoaded", function () {
+                    if (!window.location.hash) return;
 
-            if (targetElement) {
-                // Ép màn hình ở đỉnh trang trước để tránh bị nhảy "bụp" giật lag
-                if ('scrollRestoration' in history) {
-                    history.scrollRestoration = 'manual';
-                }
-                window.scrollTo(0, 0);
+                    var target = document.querySelector(window.location.hash);
+                    if (!target) return;
 
-                // Chờ cấu trúc trang ổn định rồi kích hoạt hiệu ứng lướt xuống mượt mà
-                setTimeout(function () {
-                    // Lấy chiều cao của thanh menu header động (nếu có hệ thống menu bar)
-                    const header = document.querySelector('.top-header');
-                    const menuBar = document.querySelector('.menu-bar');
+                    if ('scrollRestoration' in history) {
+                        history.scrollRestoration = 'manual';
+                    }
+                    window.scrollTo(0, 0);
 
-                    let totalHeaderHeight = 0;
-                    if (header) totalHeaderHeight += header.offsetHeight;
-                    if (menuBar) totalHeaderHeight += menuBar.offsetHeight;
+                    setTimeout(function () {
+                        var header = document.querySelector('.top-header');
+                        var menuBar = document.querySelector('.menu-bar');
+                        var offset = 0;
+                        if (header) offset += header.offsetHeight;
+                        if (menuBar) offset += menuBar.offsetHeight;
+                        offset = offset > 0 ? offset + 30 : 90;
 
-                    // Nếu không bắt được class menu, dùng khoảng đệm mặc định 90px để tránh che chữ
-                    const totalOffset = totalHeaderHeight > 0 ? (totalHeaderHeight + 30) : 90;
-
-                    const elementPosition = targetElement.getBoundingClientRect().top;
-                    const offsetPosition = elementPosition + window.pageYOffset - totalOffset;
-
-                    window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth'
-                    });
-                }, 300); // Trì hoãn 300ms tạo hiệu ứng lướt cực đẹp mắt
-            }
-        }
-    });
-</script>
-
+                        var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                        window.scrollTo({ top: top, behavior: 'smooth' });
+                    }, 300);
+                });
+    </script>
+}

@@ -1,81 +1,119 @@
 ﻿@{
-    ViewBag.Title = "ChinhSachThanhToan";
+    ViewBag.Title = "Chính Sách Thanh Toán";
 }
-<link href="~/Content/ChinhSachThanhToan.css" rel="stylesheet" />
 
-<div class="shipping-policy">
+<style>
+    .hero-feature {
+        display: none !important;
+    }
+</style>
 
+<div class="page-hero">
     <h1 id="tieu-de-thanh-toan">Chính Sách Thanh Toán</h1>
+    <p>Nhiều hình thức thanh toán linh hoạt, thuận tiện và an toàn</p>
+</div>
 
-    <p>
-        Gas Spark cung cấp nhiều phương thức thanh toán linh hoạt nhằm tạo sự thuận tiện
-        và an toàn cho khách hàng khi mua sắm trên website.
-    </p>
+<div class="policy-layout">
 
-    <h2>I. Các phương thức thanh toán</h2>
+    @Html.Partial("_PolicyNav", "thanhtoan")
 
-    <p>Hiện tại Gas Spark hỗ trợ các hình thức thanh toán sau:</p>
+    <article class="policy-card">
 
-    <ul>
-        <li>Thanh toán khi nhận hàng (COD)</li>
-        <li>Thanh toán chuyển khoản ngân hàng</li>
-        <li>Thanh toán trực tiếp tại cửa hàng</li>
-    </ul>
+        <p class="policy-intro">
+            Gas Spark cung cấp nhiều phương thức thanh toán linh hoạt nhằm tạo sự thuận tiện
+            và an toàn cho khách hàng khi mua sắm trên website.
+        </p>
 
-    <h2>II. Thanh toán khi nhận hàng (COD)</h2>
+        <section class="policy-section">
+            <h2><span class="policy-num">I</span> Các phương thức thanh toán</h2>
 
-    <p>
-        Khách hàng có thể thanh toán trực tiếp cho nhân viên giao hàng sau khi nhận
-        và kiểm tra sản phẩm.
-    </p>
+            <p>Hiện tại Gas Spark hỗ trợ các hình thức thanh toán sau:</p>
 
-    <p>
-        Phương thức này giúp khách hàng yên tâm hơn khi mua sắm trực tuyến.
-    </p>
+            <ul>
+                <li>Thanh toán khi nhận hàng (COD)</li>
+                <li>Thanh toán chuyển khoản ngân hàng</li>
+                <li>Thanh toán trực tiếp tại cửa hàng</li>
+            </ul>
+        </section>
 
-    <h2>III. Thanh toán chuyển khoản ngân hàng</h2>
+        <section class="policy-section">
+            <h2><span class="policy-num">II</span> Thanh toán khi nhận hàng (COD)</h2>
 
-    <p>
-        Khách hàng có thể thanh toán bằng cách chuyển khoản vào tài khoản ngân hàng
-        của Gas Spark theo thông tin dưới đây:
-    </p>
+            <p>
+                Khách hàng có thể thanh toán trực tiếp cho nhân viên giao hàng sau khi nhận
+                và kiểm tra sản phẩm.
+            </p>
 
-    <ul>
-        <li>Tên tài khoản: GAS SPARK</li>
-        <li>Số tài khoản: 0123456789</li>
-        <li>Ngân hàng: Vietcombank</li>
-        <li>Chi nhánh: TP.HCM</li>
-    </ul>
+            <p>
+                Phương thức này giúp khách hàng yên tâm hơn khi mua sắm trực tuyến.
+            </p>
+        </section>
 
-    <p>
-        Sau khi chuyển khoản, khách hàng vui lòng gửi thông tin xác nhận thanh toán
-        để chúng tôi tiến hành xử lý đơn hàng.
-    </p>
+        <section class="policy-section">
+            <h2><span class="policy-num">III</span> Thanh toán chuyển khoản ngân hàng</h2>
 
-    <h2>IV. Thanh toán trực tiếp tại cửa hàng</h2>
+            <p>
+                Khách hàng có thể thanh toán bằng cách chuyển khoản vào tài khoản ngân hàng
+                của Gas Spark theo thông tin dưới đây:
+            </p>
 
-    <p>
-        Khách hàng có thể đến trực tiếp cửa hàng hoặc văn phòng của Gas Spark
-        để thanh toán và nhận sản phẩm.
-    </p>
+            <table class="policy-table">
+                <tr><td>Tên tài khoản</td><td>GAS SPARK</td></tr>
+                <tr><td>Số tài khoản</td><td>0123456789</td></tr>
+                <tr><td>Ngân hàng</td><td>Vietcombank</td></tr>
+                <tr><td>Chi nhánh</td><td>TP.HCM</td></tr>
+            </table>
 
-    <h2>V. Lưu ý khi thanh toán</h2>
+            <div class="policy-callout">
+                <i class="fa-solid fa-circle-info"></i>
+                <p>
+                    Sau khi chuyển khoản, khách hàng vui lòng gửi thông tin xác nhận thanh toán
+                    để chúng tôi tiến hành xử lý đơn hàng.
+                </p>
+            </div>
+        </section>
 
-    <ul>
-        <li>Khách hàng vui lòng kiểm tra kỹ thông tin đơn hàng trước khi thanh toán</li>
-        <li>Giữ lại hóa đơn hoặc chứng từ thanh toán để đối chiếu khi cần</li>
-        <li>Liên hệ bộ phận hỗ trợ nếu gặp sự cố trong quá trình thanh toán</li>
-    </ul>
+        <section class="policy-section">
+            <h2><span class="policy-num">IV</span> Thanh toán trực tiếp tại cửa hàng</h2>
 
-    <h2>VI. Thông tin hỗ trợ</h2>
+            <p>
+                Khách hàng có thể đến trực tiếp cửa hàng hoặc văn phòng của Gas Spark
+                để thanh toán và nhận sản phẩm.
+            </p>
+        </section>
 
-    <p>
-        Nếu cần hỗ trợ liên quan đến việc thanh toán, khách hàng vui lòng liên hệ:
-    </p>
+        <section class="policy-section">
+            <h2><span class="policy-num">V</span> Lưu ý khi thanh toán</h2>
 
-    <ul>
-        <li>Hotline: 1900 xxxx</li>
-        <li>Email: support@gasspark.com</li>
-        <li>Website: www.gasspark.vn</li>
-    </ul>
+            <ul>
+                <li>Khách hàng vui lòng kiểm tra kỹ thông tin đơn hàng trước khi thanh toán</li>
+                <li>Giữ lại hóa đơn hoặc chứng từ thanh toán để đối chiếu khi cần</li>
+                <li>Liên hệ bộ phận hỗ trợ nếu gặp sự cố trong quá trình thanh toán</li>
+            </ul>
+        </section>
+
+        <section class="policy-section">
+            <h2><span class="policy-num">VI</span> Thông tin hỗ trợ</h2>
+
+            <p>
+                Nếu cần hỗ trợ liên quan đến việc thanh toán, khách hàng vui lòng liên hệ:
+            </p>
+
+            <div class="policy-contact">
+                <div class="policy-contact-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <div><small>Hotline</small><strong>1900 8888</strong></div>
+                </div>
+                <div class="policy-contact-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <div><small>Email</small><strong>support&#64;gasspark.com</strong></div>
+                </div>
+                <div class="policy-contact-item">
+                    <i class="fa-solid fa-globe"></i>
+                    <div><small>Website</small><a href="https://www.gasspark.vn">www.gasspark.vn</a></div>
+                </div>
+            </div>
+        </section>
+
+    </article>
 </div>

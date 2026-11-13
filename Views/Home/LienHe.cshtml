@@ -3,76 +3,142 @@
 }
 
 <style>
+    /* Font có đủ dấu tiếng Việt. Khi đã thêm vào _Layout thì có thể xoá dòng @@import này */
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
     .hero-feature {
         display: none !important;
     }
+
     .lienhe-page {
+        --blue: #0a3cff;
+        --blue-2: #1a9bd7;
+        --ink: #101828;
+        --muted: #667085;
+        --line: #e4e9f2;
+        --soft: #f5f8ff;
+        --danger: #e11d48;
+        --font: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+        font-family: var(--font);
+        color: var(--ink);
         max-width: 1100px;
         margin: 0 auto;
-        padding: 40px 20px 60px;
+        padding: 48px 20px 64px;
     }
 
+        /* Ép font cho heading/form (trước đây heading dùng font không có dấu Việt nên bị lẫn serif) */
+        .lienhe-page h2,
+        .lienhe-page h3,
+        .lienhe-page p,
+        .lienhe-page label,
+        .lienhe-page input,
+        .lienhe-page textarea,
+        .lienhe-page button,
+        .lienhe-page strong,
+        .lienhe-page span {
+            font-family: var(--font);
+        }
+
+    /* ---------- TIÊU ĐỀ ---------- */
     .lienhe-title {
         text-align: center;
-        margin-bottom: 40px;
+        margin-bottom: 44px;
     }
 
         .lienhe-title h2 {
-            font-size: 28px;
+            font-size: clamp(26px, 4vw, 34px);
             font-weight: 800;
-            color: #111;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            color: var(--ink);
+            margin: 0;
         }
 
             .lienhe-title h2 span {
-                color: #0a3cff;
+                color: var(--blue);
             }
 
         .lienhe-title p {
-            color: #888;
-            font-size: 15px;
-            margin-top: 8px;
+            color: var(--muted);
+            font-size: 16px;
+            margin: 10px 0 0;
         }
 
     .lienhe-grid {
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 40px;
-        align-items: start;
+        grid-template-columns: 1fr 1.1fr;
+        gap: 32px;
+        align-items: stretch;
     }
 
-    /* THÔNG TIN */
+    /* ---------- THÔNG TIN ---------- */
     .info-box {
-        background: linear-gradient(135deg, #0a3cff, #1a9bd7);
-        border-radius: 20px;
-        padding: 36px 32px;
-        color: white;
+        position: relative;
+        overflow: hidden;
+        background: linear-gradient(150deg, var(--blue) 0%, #0b2fc4 55%, #0a2490 100%);
+        border-radius: 24px;
+        padding: 40px 34px;
+        color: #fff;
+        box-shadow: 0 24px 48px -20px rgba(10, 60, 255, .55);
     }
+
+        /* vòng tròn mờ trang trí, gợi bọt gas */
+        .info-box::before,
+        .info-box::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .08);
+            pointer-events: none;
+        }
+
+        .info-box::before {
+            width: 220px;
+            height: 220px;
+            right: -70px;
+            bottom: -70px;
+        }
+
+        .info-box::after {
+            width: 110px;
+            height: 110px;
+            right: 60px;
+            bottom: 90px;
+            background: rgba(255, 255, 255, .06);
+        }
+
+        .info-box > * {
+            position: relative;
+            z-index: 1;
+        }
 
         .info-box h3 {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
-            margin-bottom: 8px;
+            margin: 0 0 8px;
+            color: #fff;
         }
 
         .info-box p {
-            font-size: 14px;
-            opacity: 0.85;
-            margin-bottom: 30px;
-            line-height: 1.6;
+            font-size: 14.5px;
+            color: rgba(255, 255, 255, .85);
+            margin: 0 0 32px;
+            line-height: 1.65;
         }
 
     .info-item {
         display: flex;
-        align-items: flex-start;
-        gap: 14px;
+        align-items: center;
+        gap: 16px;
         margin-bottom: 22px;
     }
 
     .info-icon {
-        width: 42px;
-        height: 42px;
-        background: rgba(255,255,255,0.2);
-        border-radius: 10px;
+        width: 46px;
+        height: 46px;
+        background: rgba(255, 255, 255, .16);
+        border: 1px solid rgba(255, 255, 255, .18);
+        border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -82,55 +148,67 @@
 
     .info-text strong {
         display: block;
-        font-size: 13px;
-        opacity: 0.75;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: rgba(255, 255, 255, .7);
         margin-bottom: 2px;
     }
 
     .info-text span {
-        font-size: 15px;
+        font-size: 15.5px;
         font-weight: 600;
+        color: #fff;
     }
 
     .social-links {
         display: flex;
         gap: 10px;
-        margin-top: 30px;
+        margin-top: 34px;
     }
 
         .social-links a {
-            width: 38px;
-            height: 38px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, .16);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: #fff;
             text-decoration: none;
             font-size: 15px;
-            transition: 0.2s;
+            transition: background .2s, transform .2s;
         }
 
             .social-links a:hover {
-                background: rgba(255,255,255,0.35);
+                background: #fff;
+                color: var(--blue);
+                transform: translateY(-2px);
             }
 
-    /* FORM */
+    /* ---------- FORM ---------- */
     .form-box {
-        background: white;
-        border-radius: 20px;
-        padding: 36px 32px;
-        box-shadow: 0 4px 20px rgba(10,60,255,0.08);
-        border: 1px solid #eef0ff;
+        background: #fff;
+        border-radius: 24px;
+        padding: 40px 34px;
+        box-shadow: 0 16px 40px -20px rgba(16, 40, 120, .25);
+        border: 1px solid var(--line);
     }
 
         .form-box h3 {
-            font-size: 20px;
+            font-size: 22px;
             font-weight: 800;
-            color: #111;
-            margin-bottom: 24px;
+            color: var(--ink);
+            margin: 0 0 26px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+
+            .form-box h3 i {
+                color: var(--blue);
+                font-size: 20px;
+            }
 
     .form-row {
         display: grid;
@@ -146,12 +224,12 @@
             display: block;
             font-size: 13px;
             font-weight: 600;
-            color: #444;
-            margin-bottom: 6px;
+            color: #344054;
+            margin-bottom: 7px;
         }
 
         .form-group .required {
-            color: #e63946;
+            color: var(--danger);
         }
 
         .form-group input,
@@ -159,99 +237,139 @@
         .form-group textarea {
             width: 100%;
             padding: 12px 14px;
-            border: 2px solid #e8ecff;
-            border-radius: 10px;
-            font-size: 14px;
+            background: var(--soft);
+            border: 1px solid var(--line);
+            border-radius: 12px;
+            font-size: 14.5px;
+            color: var(--ink);
             outline: none;
-            transition: 0.2s;
+            transition: border-color .2s, box-shadow .2s, background .2s;
             font-family: inherit;
             box-sizing: border-box;
         }
 
+            .form-group input::placeholder,
+            .form-group textarea::placeholder {
+                color: #98a2b3;
+            }
+
+            .form-group input:hover,
+            .form-group textarea:hover {
+                border-color: #c9d6f5;
+            }
+
             .form-group input:focus,
             .form-group select:focus,
             .form-group textarea:focus {
-                border-color: #0a3cff;
-                box-shadow: 0 0 0 3px rgba(10,60,255,0.08);
+                background: #fff;
+                border-color: var(--blue);
+                box-shadow: 0 0 0 4px rgba(10, 60, 255, .12);
             }
 
         .form-group textarea {
             resize: vertical;
-            min-height: 120px;
+            min-height: 130px;
+            line-height: 1.55;
         }
 
     .btn-submit {
         width: 100%;
         padding: 14px;
-        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
-        color: white;
+        background: linear-gradient(135deg, var(--blue-2), var(--blue));
+        color: #fff;
         border: none;
         border-radius: 12px;
         font-size: 15px;
         font-weight: 700;
         cursor: pointer;
-        transition: 0.3s;
+        transition: transform .2s, box-shadow .2s, filter .2s;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 8px;
+        box-shadow: 0 10px 20px -10px rgba(10, 60, 255, .7);
     }
 
         .btn-submit:hover {
-            opacity: 0.9;
+            filter: brightness(1.06);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(10,60,255,0.3);
+            box-shadow: 0 14px 26px -10px rgba(10, 60, 255, .75);
         }
 
-    .alert-success {
-        background: #e8fff3;
-        border: 1px solid #5cb85c;
-        color: #2d6a2d;
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+    .lienhe-page :focus-visible {
+        outline: 3px solid rgba(10, 60, 255, .35);
+        outline-offset: 2px;
+    }
+
+    /* ---------- THÔNG BÁO ---------- */
+    .alert-success,
+    .alert-error {
         padding: 14px 18px;
-        border-radius: 10px;
+        border-radius: 12px;
         margin-bottom: 20px;
         font-size: 14px;
+        font-weight: 500;
         display: flex;
         align-items: center;
         gap: 10px;
+    }
+
+    .alert-success {
+        background: #ecfdf3;
+        border: 1px solid #abefc6;
+        color: #067647;
     }
 
     .alert-error {
-        background: #fff0f0;
-        border: 1px solid #e63946;
-        color: #c0392b;
-        padding: 14px 18px;
-        border-radius: 10px;
-        margin-bottom: 20px;
-        font-size: 14px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
+        background: #fef3f2;
+        border: 1px solid #fecdca;
+        color: #b42318;
     }
 
-    /* MAP */
+    /* ---------- BẢN ĐỒ ---------- */
     .map-box {
-        margin-top: 50px;
-        border-radius: 20px;
+        margin-top: 48px;
+        border-radius: 24px;
         overflow: hidden;
-        box-shadow: 0 4px 20px rgba(10,60,255,0.1);
-        border: 1px solid #eef0ff;
+        box-shadow: 0 16px 40px -20px rgba(16, 40, 120, .25);
+        border: 1px solid var(--line);
     }
 
         .map-box iframe {
             width: 100%;
-            height: 380px;
+            height: 400px;
             border: none;
             display: block;
         }
 
-    @@media (max-width: 768px) {
+    @@media (max-width: 860px) {
         .lienhe-grid {
             grid-template-columns: 1fr;
         }
+    }
 
+    @@media (max-width: 560px) {
         .form-row {
             grid-template-columns: 1fr;
+        }
+
+        .info-box,
+        .form-box {
+            padding: 28px 22px;
+        }
+
+        .map-box iframe {
+            height: 300px;
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .lienhe-page * {
+            transition: none !important;
         }
     }
 </style>
@@ -313,7 +431,7 @@
 
         <!-- FORM GỬI TIN -->
         <div class="form-box">
-            <h3>📩 Gửi tin nhắn cho chúng tôi</h3>
+            <h3><i class="fa-solid fa-paper-plane"></i> Gửi tin nhắn cho chúng tôi</h3>
 
             @if (ViewBag.Success != null)
             {
@@ -334,17 +452,17 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Họ và tên <span class="required">*</span></label>
-                        <input type="text" name="hoTen" placeholder="Nguyễn Văn A" />
+                        <input type="text" name="hoTen" placeholder="Nguyễn Văn A" required />
                     </div>
                     <div class="form-group">
                         <label>Số điện thoại</label>
-                        <input type="text" name="soDienThoai" placeholder="0912 345 678" />
+                        <input type="tel" name="soDienThoai" placeholder="0912 345 678" />
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label>Email <span class="required">*</span></label>
-                    <input type="email" name="email" placeholder="example@gmail.com" />
+                    <input type="email" name="email" placeholder="example@gmail.com" required />
                 </div>
 
                 <div class="form-group">
@@ -354,7 +472,7 @@
 
                 <div class="form-group">
                     <label>Nội dung <span class="required">*</span></label>
-                    <textarea name="noiDung" placeholder="Nhập nội dung tin nhắn của bạn..."></textarea>
+                    <textarea name="noiDung" placeholder="Nhập nội dung tin nhắn của bạn..." required></textarea>
                 </div>
 
                 <button type="submit" class="btn-submit">
@@ -367,7 +485,7 @@
     <!-- BẢN ĐỒ -->
     <div class="map-box">
         <iframe src="https://maps.google.com/maps?q=61+Duong+so+21+Di+An+Ho+Chi+Minh&output=embed"
-                allowfullscreen loading="lazy">
+                allowfullscreen loading="lazy" title="Bản đồ Gas Spark">
         </iframe>
     </div>
 

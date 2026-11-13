@@ -1,0 +1,171 @@
+﻿@model Wedsite_LTWW.Models.Voucher
+@{
+    ViewBag.Title = ViewBag.TieuDeTrang ?? "Voucher";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .vf-wrap {
+        max-width: 720px;
+        padding: 20px;
+    }
+
+        .vf-wrap h2 {
+            font-size: 22px;
+            font-weight: 800;
+            margin-bottom: 18px;
+        }
+
+    .vf-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .vf-group {
+        margin-bottom: 14px;
+    }
+
+        .vf-group label {
+            display: block;
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .vf-group input[type=text], .vf-group input[type=number], .vf-group input[type=datetime-local], .vf-group select, .vf-group textarea {
+            width: 100%;
+            padding: 9px 12px;
+            border: 1.5px solid #dde1f5;
+            border-radius: 8px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+    .vf-hint {
+        font-size: 12px;
+        color: #888;
+        margin-top: 3px;
+    }
+
+    .vf-btn {
+        padding: 10px 22px;
+        border: none;
+        border-radius: 8px;
+        background: #0a3cff;
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .vf-back {
+        margin-left: 12px;
+        color: #666;
+        text-decoration: none;
+    }
+
+    .vf-err {
+        color: #d93025;
+        margin-bottom: 14px;
+    }
+</style>
+
+<div class="vf-wrap">
+    <h2>@ViewBag.TieuDeTrang</h2>
+
+    @Html.ValidationSummary(true, "", new { @class = "vf-err" })
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+
+        if (!ViewData.ModelState.IsValid)
+        {
+            <div class="vf-err">
+                @foreach (var e in ViewData.ModelState.Values.SelectMany(x => x.Errors))
+                {
+                    <div>• @e.ErrorMessage</div>
+                }
+            </div>
+        }
+
+        <div class="vf-row">
+            <div class="vf-group">
+                <label>Mã voucher *</label>
+                <input type="text" name="Ma" value="@Model.Ma" placeholder="VD: GAS10" />
+                <div class="vf-hint">Viết liền, không dấu. Tự động in hoa.</div>
+            </div>
+            <div class="vf-group">
+                <label>Tiêu đề *</label>
+                <input type="text" name="TieuDe" value="@Model.TieuDe" />
+            </div>
+        </div>
+
+        <div class="vf-group">
+            <label>Mô tả</label>
+            <textarea name="MoTa" rows="2">@Model.MoTa</textarea>
+        </div>
+
+        <div class="vf-row">
+            <div class="vf-group">
+                <label>Loại giảm</label>
+                <select name="LoaiGiam">
+                    <option value="PhanTram" @(Model.LoaiGiam == "PhanTram" ? "selected" : "")>Giảm theo %</option>
+                    <option value="SoTien" @(Model.LoaiGiam == "SoTien" ? "selected" : "")>Giảm số tiền cố định</option>
+                </select>
+            </div>
+            <div class="vf-group">
+                <label>Giá trị *</label>
+                <input type="number" name="GiaTri" value="@Model.GiaTri.ToString("0")" min="1" />
+                <div class="vf-hint">% (1–100) hoặc số tiền VNĐ</div>
+            </div>
+        </div>
+
+        <div class="vf-row">
+            <div class="vf-group">
+                <label>Đơn tối thiểu (VNĐ)</label>
+                <input type="number" name="DonToiThieu" value="@Model.DonToiThieu.ToString("0")" min="0" />
+            </div>
+            <div class="vf-group">
+                <label>Giảm tối đa (VNĐ)</label>
+                <input type="number" name="GiamToiDa" value="@(Model.GiamToiDa.HasValue ? Model.GiamToiDa.Value.ToString("0") : "")" min="0" />
+                <div class="vf-hint">Chỉ áp dụng loại %. Để trống = không giới hạn.</div>
+            </div>
+        </div>
+
+        <div class="vf-row">
+            <div class="vf-group">
+                <label>Bắt đầu</label>
+                <input type="datetime-local" name="NgayBatDau" value="@Model.NgayBatDau.ToString("yyyy-MM-ddTHH:mm")" />
+            </div>
+            <div class="vf-group">
+                <label>Kết thúc</label>
+                <input type="datetime-local" name="NgayKetThuc" value="@Model.NgayKetThuc.ToString("yyyy-MM-ddTHH:mm")" />
+            </div>
+        </div>
+
+        <div class="vf-row">
+            <div class="vf-group">
+                <label>Tổng số lượt dùng</label>
+                <input type="number" name="SoLuong" value="@(Model.SoLuong.HasValue ? Model.SoLuong.Value.ToString() : "")" min="1" />
+                <div class="vf-hint">Để trống = không giới hạn.</div>
+            </div>
+            <div class="vf-group">
+                <label>Số lần tối đa / người</label>
+                <input type="number" name="MoiNguoiToiDa" value="@Model.MoiNguoiToiDa" min="1" />
+            </div>
+        </div>
+
+        <div class="vf-group">
+            <label>
+                <input type="checkbox" name="TrangThai" value="true" @(Model.TrangThai ? "checked" : "") />
+                Đang hoạt động
+            </label>
+            <input type="hidden" name="TrangThai" value="false" />
+        </div>
+
+        <button type="submit" class="vf-btn">Lưu</button>
+        <a class="vf-back" href="@Url.Action("Index")">Quay lại</a>
+    }
+</div>

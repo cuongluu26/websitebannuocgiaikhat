@@ -32,5 +32,9 @@ namespace Wedsite_LTWW.Models
         public virtual DbSet<ChiTietDonHang> ChiTietDonHangs { get; set; }
         public virtual DbSet<DonHang> DonHangs { get; set; }
         public virtual DbSet<LienHe> LienHes { get; set; }
+        public virtual DbSet<ChatLichSu> ChatLichSus { get; set; }
+        public virtual DbSet<GioHang> GioHangs { get; set; }
+        public virtual DbSet<Voucher> Vouchers { get; set; }
+        public virtual DbSet<VoucherUsage> VoucherUsages { get; set; }
     }
 }

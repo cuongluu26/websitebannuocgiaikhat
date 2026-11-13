@@ -1,6 +1,11 @@
 ﻿@model List<Wedsite_LTWW.Models.CartItem>
 @{
     ViewBag.Title = "Thanh Toán";
+
+    decimal tamTinh = Model.Sum(x => x.ThanhTien);
+    decimal giam = ViewBag.TienGiam != null ? (decimal)ViewBag.TienGiam : 0m;
+    string maDangDung = ViewBag.VoucherMa as string;
+    var dsVoucher = ViewBag.DsVoucher as List<Wedsite_LTWW.Models.Voucher>;
 }
 
 <style>
@@ -317,6 +322,7 @@
         margin-top: 14px;
         font-weight: 600;
     }
+
     .pay-option {
         display: flex;
         align-items: center;
@@ -338,6 +344,81 @@
             width: 16px;
             height: 16px;
         }
+
+    /* VOUCHER */
+    .voucher-box {
+        margin: 6px 0 14px;
+    }
+
+    .voucher-input {
+        display: flex;
+        gap: 8px;
+    }
+
+        .voucher-input input {
+            flex: 1;
+            padding: 10px 12px;
+            border: 2px solid #eef0ff;
+            border-radius: 10px;
+            font-size: 14px;
+            text-transform: uppercase;
+            outline: none;
+        }
+
+            .voucher-input input:focus {
+                border-color: #0a3cff;
+            }
+
+        .voucher-input button {
+            padding: 0 16px;
+            border: none;
+            border-radius: 10px;
+            background: #0a3cff;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+    .voucher-msg {
+        font-size: 12px;
+        margin-top: 6px;
+        min-height: 16px;
+    }
+
+        .voucher-msg.ok {
+            color: #28a745;
+        }
+
+        .voucher-msg.err {
+            color: #e63946;
+        }
+
+    .voucher-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+    }
+
+    .voucher-chip {
+        border: 1.5px dashed #0a3cff;
+        background: #f0f4ff;
+        color: #0a3cff;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .voucher-link {
+        font-size: 12px;
+        color: #0a3cff;
+        text-decoration: none;
+        display: inline-block;
+        margin-top: 8px;
+    }
+
     @@media (max-width: 768px) {
         .checkout-layout {
             grid-template-columns: 1fr;
@@ -380,10 +461,10 @@
         @Html.AntiForgeryToken()
 
         @Html.ValidationSummary(
-                 false,
-                 "",
-                 new { @class = "text-danger", style = "margin-bottom:15px;" }
-             )
+                      false,
+                      "",
+                      new { @class = "text-danger", style = "margin-bottom:15px;" }
+                  )
 
         <div class="checkout-layout">
 
@@ -403,7 +484,7 @@
                     <div class="form-group">
                         <label>Số điện thoại <span>*</span></label>
                         <input type="text" name="soDienThoai" class="form-control-custom"
-                               placeholder="0912 345 678" required />
+                               placeholder="0900 888 999" required />
                     </div>
                 </div>
 
@@ -469,16 +550,42 @@
 
                 <div class="summary-row">
                     <span>Tạm tính</span>
-                    <span>@Model.Sum(x => x.ThanhTien).ToString("N0") VNĐ</span>
+                    <span>@tamTinh.ToString("N0") VNĐ</span>
                 </div>
                 <div class="summary-row">
                     <span>Phí vận chuyển</span>
                     <span style="color:#28a745; font-weight:700;">Miễn phí</span>
                 </div>
 
+                <!-- VOUCHER -->
+                <div class="voucher-box">
+                    <div class="voucher-input">
+                        <input type="text" id="voucher-ma" placeholder="Nhập mã giảm giá" value="@maDangDung" />
+                        <button type="button" id="btn-ap-voucher">Áp dụng</button>
+                    </div>
+                    <div id="voucher-msg" class="voucher-msg @(giam > 0 ? "ok" : "")">@(giam > 0 ? "Đã áp dụng mã " + maDangDung : "")</div>
+
+                    @if (dsVoucher != null && dsVoucher.Any())
+                    {
+                        <div class="voucher-list">
+                            @foreach (var v in dsVoucher)
+                            {
+                                <button type="button" class="voucher-chip" data-ma="@v.Ma" title="@v.TieuDe">@v.Ma</button>
+                            }
+                        </div>
+                    }
+                    <a href="/KhuyenMai/Index" class="voucher-link" target="_blank">Xem tất cả khuyến mãi</a>
+                    <a href="#" id="btn-go-voucher" class="voucher-link" style="margin-left:12px;@(giam > 0 ? "" : "display:none")">Bỏ mã</a>
+                </div>
+
+                <div class="summary-row" id="row-giam" style="@(giam > 0 ? "" : "display:none")">
+                    <span>Giảm giá</span>
+                    <span id="so-giam" style="color:#28a745; font-weight:700;">-@giam.ToString("N0") VNĐ</span>
+                </div>
+
                 <div class="summary-total">
                     <span>Tổng cộng</span>
-                    <span>@Model.Sum(x => x.ThanhTien).ToString("N0") VNĐ</span>
+                    <span id="tong-cong">@((tamTinh - giam).ToString("N0")) VNĐ</span>
                 </div>
 
                 <button type="submit" class="btn-order">
@@ -498,21 +605,96 @@
         </div>
     }
 </div>
+
 <script>
-    (function () {
-        var radios = document.querySelectorAll('input[name="phuongThuc"]');
+        (function () {
+            var radios = document.querySelectorAll('input[name="phuongThuc"]');
 
-        function capNhat() {
-            for (var i = 0; i < radios.length; i++) {
-                var box = radios[i].closest('.pay-option');
-                if (box) box.classList.toggle('selected', radios[i].checked);
+            function capNhat() {
+                for (var i = 0; i < radios.length; i++) {
+                    var box = radios[i].closest('.pay-option');
+                    if (box) box.classList.toggle('selected', radios[i].checked);
+                }
             }
-        }
 
-        for (var i = 0; i < radios.length; i++) {
-            radios[i].addEventListener('change', capNhat);
-        }
+            for (var i = 0; i < radios.length; i++) {
+                radios[i].addEventListener('change', capNhat);
+            }
 
-        capNhat();
-    })();
+            capNhat();
+        })();
+</script>
+
+<script>
+        // VOUCHER (dùng fetch vì jQuery của _Layout nạp sau view)
+        (function () {
+            var inp = document.getElementById('voucher-ma');
+            var msg = document.getElementById('voucher-msg');
+            var rowGiam = document.getElementById('row-giam');
+            var soGiam = document.getElementById('so-giam');
+            var tong = document.getElementById('tong-cong');
+            var btnGo = document.getElementById('btn-go-voucher');
+
+            function fmt(n) {
+                return Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            }
+
+            function goi(url, ma) {
+                var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+                var body = new URLSearchParams();
+                body.append('__RequestVerificationToken', token);
+                body.append('ma', ma || '');
+                return fetch(url, {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: body.toString()
+                }).then(function (r) { return r.json(); });
+            }
+
+            function hienThi(res, thongBaoOk) {
+                if (res.requireLogin) { location.href = '/Account/Login'; return; }
+                var giam = res.giam || 0;
+                rowGiam.style.display = giam > 0 ? '' : 'none';
+                soGiam.textContent = '-' + fmt(giam) + ' VNĐ';
+                tong.textContent = fmt(res.tong) + ' VNĐ';
+                btnGo.style.display = giam > 0 ? '' : 'none';
+                msg.className = 'voucher-msg ' + (res.success ? 'ok' : 'err');
+                msg.textContent = res.success ? thongBaoOk : (res.message || '');
+            }
+
+            function apDung() {
+                var ma = inp.value.trim();
+                goi('/Cart/ApDungVoucher', ma).then(function (res) {
+                    hienThi(res, 'Đã áp dụng mã ' + (res.ma || ma));
+                }).catch(function () {
+                    msg.className = 'voucher-msg err';
+                    msg.textContent = 'Có lỗi xảy ra, vui lòng thử lại.';
+                });
+            }
+
+            document.getElementById('btn-ap-voucher').addEventListener('click', apDung);
+
+            inp.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') { e.preventDefault(); apDung(); }   // tránh submit form đặt hàng
+            });
+
+            var chips = document.querySelectorAll('.voucher-chip');
+            for (var i = 0; i < chips.length; i++) {
+                chips[i].addEventListener('click', function () {
+                    inp.value = this.getAttribute('data-ma');
+                    apDung();
+                });
+            }
+
+            btnGo.addEventListener('click', function (e) {
+                e.preventDefault();
+                goi('/Cart/GoVoucher', '').then(function (res) {
+                    inp.value = '';
+                    hienThi(res, '');
+                    msg.className = 'voucher-msg';
+                    msg.textContent = '';
+                });
+            });
+        })();
 </script>

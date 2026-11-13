@@ -5,6 +5,16 @@
 		<!-- SSDL content -->
 		<edmx:StorageModels>
 		<Schema Namespace="GasSparkDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ChatLichSu">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="VaiTro" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="NoiDung" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ThoiGian" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="ChiTietDonHang">
           <Key>
             <PropertyRef Name="Id" />
@@ -44,6 +54,20 @@
           <Property Name="PhuongThucThanhToan" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="TrangThaiThanhToan" Type="nvarchar" MaxLength="30" Nullable="false" />
           <Property Name="NoiDungChuyenKhoan" Type="nvarchar" MaxLength="30" />
+          <Property Name="MaVoucher" Type="nvarchar" MaxLength="50" />
+          <Property Name="TienGiam" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GioHang">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="SanPhamId" Type="int" Nullable="false" />
+          <Property Name="TenSanPham" Type="nvarchar" MaxLength="255" />
+          <Property Name="HinhAnh" Type="nvarchar" MaxLength="255" />
+          <Property Name="DonGia" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="SoLuong" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="LienHe">
           <Key>
@@ -85,6 +109,35 @@
           <Property Name="Email" Type="nvarchar" MaxLength="100" />
           <Property Name="Role" Type="nvarchar" MaxLength="20" />
         </EntityType>
+        <EntityType Name="Voucher">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Ma" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TieuDe" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="MoTa" Type="nvarchar" MaxLength="500" />
+          <Property Name="LoaiGiam" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="GiaTri" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="DonToiThieu" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="GiamToiDa" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="NgayBatDau" Type="datetime" Nullable="false" />
+          <Property Name="NgayKetThuc" Type="datetime" Nullable="false" />
+          <Property Name="SoLuong" Type="int" />
+          <Property Name="DaDung" Type="int" Nullable="false" />
+          <Property Name="MoiNguoiToiDa" Type="int" Nullable="false" />
+          <Property Name="TrangThai" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="VoucherUsage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="VoucherId" Type="int" Nullable="false" />
+          <Property Name="Username" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="IdDonHang" Type="int" Nullable="false" />
+          <Property Name="NgaySuDung" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="YeuThiches">
           <Key>
             <PropertyRef Name="Id" />
@@ -117,6 +170,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK__VoucherUs__Vouch__1A34DF26">
+          <End Role="Voucher" Type="Self.Voucher" Multiplicity="1" />
+          <End Role="VoucherUsage" Type="Self.VoucherUsage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Voucher">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VoucherUsage">
+              <PropertyRef Name="VoucherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK__YeuThiche__IdSan__2F650636">
           <End Role="SanPhams" Type="Self.SanPhams" Multiplicity="1" />
           <End Role="YeuThiches" Type="Self.YeuThiches" Multiplicity="*" />
@@ -142,12 +207,16 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="GasSparkDBModelStoreContainer">
+          <EntitySet Name="ChatLichSu" EntityType="Self.ChatLichSu" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ChiTietDonHang" EntityType="Self.ChiTietDonHang" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DanhMucs" EntityType="Self.DanhMucs" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DonHang" EntityType="Self.DonHang" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GioHang" EntityType="Self.GioHang" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LienHe" EntityType="Self.LienHe" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SanPhams" EntityType="Self.SanPhams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Voucher" EntityType="Self.Voucher" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VoucherUsage" EntityType="Self.VoucherUsage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="YeuThiches" EntityType="Self.YeuThiches" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__ChiTietDo__IdDon__361203C5" Association="Self.FK__ChiTietDo__IdDon__361203C5">
             <End Role="DonHang" EntitySet="DonHang" />
@@ -156,6 +225,10 @@
           <AssociationSet Name="FK__ChiTietDo__IdSan__370627FE" Association="Self.FK__ChiTietDo__IdSan__370627FE">
             <End Role="SanPhams" EntitySet="SanPhams" />
             <End Role="ChiTietDonHang" EntitySet="ChiTietDonHang" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VoucherUs__Vouch__1A34DF26" Association="Self.FK__VoucherUs__Vouch__1A34DF26">
+            <End Role="Voucher" EntitySet="Voucher" />
+            <End Role="VoucherUsage" EntitySet="VoucherUsage" />
           </AssociationSet>
           <AssociationSet Name="FK__YeuThiche__IdSan__2F650636" Association="Self.FK__YeuThiche__IdSan__2F650636">
             <End Role="SanPhams" EntitySet="SanPhams" />
@@ -224,6 +297,14 @@
 						<End Role="ChiTietDonHang" EntitySet="ChiTietDonHangs" />
 					</AssociationSet>
 					<EntitySet Name="LienHes" EntityType="GasSparkDBModel.LienHe" />
+          <EntitySet Name="ChatLichSus" EntityType="GasSparkDBModel.ChatLichSu" />
+          <EntitySet Name="GioHangs" EntityType="GasSparkDBModel.GioHang" />
+          <EntitySet Name="Vouchers" EntityType="GasSparkDBModel.Voucher" />
+          <EntitySet Name="VoucherUsages" EntityType="GasSparkDBModel.VoucherUsage" />
+          <AssociationSet Name="FK__VoucherUs__Vouch__1A34DF26" Association="GasSparkDBModel.FK__VoucherUs__Vouch__1A34DF26">
+            <End Role="Voucher" EntitySet="Vouchers" />
+            <End Role="VoucherUsage" EntitySet="VoucherUsages" />
+          </AssociationSet>
 				</EntityContainer>
 				<EntityType Name="DanhMuc">
 					<Key>
@@ -301,6 +382,8 @@
           <Property Name="PhuongThucThanhToan" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="TrangThaiThanhToan" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="NoiDungChuyenKhoan" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="MaVoucher" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TienGiam" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
 				</EntityType>
 				<Association Name="FK__ChiTietDo__IdDon__57DD0BE4">
 					<End Type="GasSparkDBModel.DonHang" Role="DonHang" Multiplicity="1" />
@@ -339,6 +422,71 @@
 					<Property Name="NgayGui" Type="DateTime" Precision="3" />
 					<Property Name="DaDoc" Type="Boolean" />
 				</EntityType>
+        <EntityType Name="ChatLichSu">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="VaiTro" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="NoiDung" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ThoiGian" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="GioHang">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SanPhamId" Type="Int32" Nullable="false" />
+          <Property Name="TenSanPham" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="HinhAnh" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="DonGia" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="SoLuong" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Voucher">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Ma" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TieuDe" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MoTa" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="LoaiGiam" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="GiaTri" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="DonToiThieu" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="GiamToiDa" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="NgayBatDau" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="NgayKetThuc" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SoLuong" Type="Int32" />
+          <Property Name="DaDung" Type="Int32" Nullable="false" />
+          <Property Name="MoiNguoiToiDa" Type="Int32" Nullable="false" />
+          <Property Name="TrangThai" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="VoucherUsages" Relationship="GasSparkDBModel.FK__VoucherUs__Vouch__1A34DF26" FromRole="Voucher" ToRole="VoucherUsage" />
+        </EntityType>
+        <EntityType Name="VoucherUsage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VoucherId" Type="Int32" Nullable="false" />
+          <Property Name="Username" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="IdDonHang" Type="Int32" Nullable="false" />
+          <Property Name="NgaySuDung" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Voucher" Relationship="GasSparkDBModel.FK__VoucherUs__Vouch__1A34DF26" FromRole="VoucherUsage" ToRole="Voucher" />
+        </EntityType>
+        <Association Name="FK__VoucherUs__Vouch__1A34DF26">
+          <End Type="GasSparkDBModel.Voucher" Role="Voucher" Multiplicity="1" />
+          <End Type="GasSparkDBModel.VoucherUsage" Role="VoucherUsage" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Voucher">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VoucherUsage">
+              <PropertyRef Name="VoucherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
 			</Schema>
 		</edmx:ConceptualModels>
 		<!-- C-S mapping content -->
@@ -411,7 +559,9 @@
 					<EntitySetMapping Name="DonHangs">
 						<EntityTypeMapping TypeName="GasSparkDBModel.DonHang">
 							<MappingFragment StoreEntitySet="DonHang">
-								<ScalarProperty Name="NoiDungChuyenKhoan" ColumnName="NoiDungChuyenKhoan" />
+								<ScalarProperty Name="TienGiam" ColumnName="TienGiam" />
+                <ScalarProperty Name="MaVoucher" ColumnName="MaVoucher" />
+                <ScalarProperty Name="NoiDungChuyenKhoan" ColumnName="NoiDungChuyenKhoan" />
                 <ScalarProperty Name="TrangThaiThanhToan" ColumnName="TrangThaiThanhToan" />
                 <ScalarProperty Name="PhuongThucThanhToan" ColumnName="PhuongThucThanhToan" />
                 <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
@@ -440,6 +590,61 @@
 							</MappingFragment>
 						</EntityTypeMapping>
 					</EntitySetMapping>
+          <EntitySetMapping Name="ChatLichSus">
+            <EntityTypeMapping TypeName="GasSparkDBModel.ChatLichSu">
+              <MappingFragment StoreEntitySet="ChatLichSu">
+                <ScalarProperty Name="ThoiGian" ColumnName="ThoiGian" />
+                <ScalarProperty Name="NoiDung" ColumnName="NoiDung" />
+                <ScalarProperty Name="VaiTro" ColumnName="VaiTro" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GioHangs">
+            <EntityTypeMapping TypeName="GasSparkDBModel.GioHang">
+              <MappingFragment StoreEntitySet="GioHang">
+                <ScalarProperty Name="SoLuong" ColumnName="SoLuong" />
+                <ScalarProperty Name="DonGia" ColumnName="DonGia" />
+                <ScalarProperty Name="HinhAnh" ColumnName="HinhAnh" />
+                <ScalarProperty Name="TenSanPham" ColumnName="TenSanPham" />
+                <ScalarProperty Name="SanPhamId" ColumnName="SanPhamId" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vouchers">
+            <EntityTypeMapping TypeName="GasSparkDBModel.Voucher">
+              <MappingFragment StoreEntitySet="Voucher">
+                <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
+                <ScalarProperty Name="MoiNguoiToiDa" ColumnName="MoiNguoiToiDa" />
+                <ScalarProperty Name="DaDung" ColumnName="DaDung" />
+                <ScalarProperty Name="SoLuong" ColumnName="SoLuong" />
+                <ScalarProperty Name="NgayKetThuc" ColumnName="NgayKetThuc" />
+                <ScalarProperty Name="NgayBatDau" ColumnName="NgayBatDau" />
+                <ScalarProperty Name="GiamToiDa" ColumnName="GiamToiDa" />
+                <ScalarProperty Name="DonToiThieu" ColumnName="DonToiThieu" />
+                <ScalarProperty Name="GiaTri" ColumnName="GiaTri" />
+                <ScalarProperty Name="LoaiGiam" ColumnName="LoaiGiam" />
+                <ScalarProperty Name="MoTa" ColumnName="MoTa" />
+                <ScalarProperty Name="TieuDe" ColumnName="TieuDe" />
+                <ScalarProperty Name="Ma" ColumnName="Ma" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VoucherUsages">
+            <EntityTypeMapping TypeName="GasSparkDBModel.VoucherUsage">
+              <MappingFragment StoreEntitySet="VoucherUsage">
+                <ScalarProperty Name="NgaySuDung" ColumnName="NgaySuDung" />
+                <ScalarProperty Name="IdDonHang" ColumnName="IdDonHang" />
+                <ScalarProperty Name="Username" ColumnName="Username" />
+                <ScalarProperty Name="VoucherId" ColumnName="VoucherId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
 				</EntityContainerMapping>
 			</Mapping>
 		</edmx:Mappings>

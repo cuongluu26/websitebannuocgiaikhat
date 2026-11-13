@@ -194,6 +194,10 @@
             background: linear-gradient(135deg,#ec4899,#db2777);
         }
 
+        .bg-teal {
+            background: linear-gradient(135deg,#14b8a6,#0f766e);
+        }
+
         /* QUICK LINKS */
         .section-title {
             font-size: 16px;
@@ -250,6 +254,7 @@
             <a href="/Admin/SanPham"><i class="fa-solid fa-box"></i> Sản phẩm</a>
             <a href="/Admin/DanhMuc"><i class="fa-solid fa-list"></i> Danh mục</a>
             <a href="/Admin/DonHang"><i class="fa-solid fa-cart-shopping"></i> Đơn hàng</a>
+            <a href="/VoucherAdmin/Index"><i class="fa-solid fa-ticket"></i> Voucher</a>
             <a href="/Admin/User"><i class="fa-solid fa-users"></i> Người dùng</a>
             <a href="/Admin/LienHe">
                 <i class="fa-solid fa-envelope"></i> Liên hệ
@@ -320,6 +325,13 @@
                             </span>
                         }
                     </div>
+                </div>
+            </a>
+            <a href="/VoucherAdmin/Index" class="stat-card">
+                <div class="stat-icon bg-teal"><i class="fa-solid fa-ticket"></i></div>
+                <div>
+                    <div class="stat-num">@ViewBag.VoucherCount</div>
+                    <div class="stat-lbl">Voucher</div>
                 </div>
             </a>
             <a href="/" class="stat-card">

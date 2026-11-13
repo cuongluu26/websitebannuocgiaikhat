@@ -1,56 +1,49 @@
 ﻿
 @model List<Wedsite_LTWW.Models.SanPham>
 
+@{
+    decimal? giaMin = ViewBag.GiaMin as decimal?;
+    decimal? giaMax = ViewBag.GiaMax as decimal?;
+    string sapXep = ViewBag.SapXep as string ?? "macdinh";
+
+    int currentPage = Convert.ToInt32(ViewBag.CurrentPage ?? 1);
+    int totalPages = Convert.ToInt32(ViewBag.TotalPages ?? 1);
+    int tongSoSanPham = Convert.ToInt32(ViewBag.TongSoSanPham ?? 0);
+
+    bool q1 = !giaMin.HasValue && giaMax == 30000m;
+    bool q2 = giaMin == 30000m && giaMax == 50000m;
+    bool q3 = giaMin == 50000m && !giaMax.HasValue;
+
+    object categoryRouteId = ViewContext.RouteData.Values["id"];
+}
+
 <style>
     .hero-feature {
         display: none !important;
     }
 
-    .danhmuc-header {
-        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
-        padding: 30px 15px;
-        text-align: center;
-        margin: -25px -50px 30px -50px;
-        border-radius: 0 0 18px 18px;
-    }
-
-        .danhmuc-header h2 {
-            color: white;
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin: 0;
-        }
-
-        .danhmuc-header p {
-            color: rgba(255,255,255,.85);
-            margin-top: 8px;
-            font-size: 15px;
-        }
-
     /* BỘ LỌC GIÁ */
     .filter-panel {
-        background: #fff;
-        border: 1px solid #e8edf5;
-        border-radius: 16px;
-        padding: 22px;
-        margin: 0 0 28px;
-        box-shadow: 0 5px 20px rgba(20, 50, 100, .06);
+        margin: 0 0 26px;
+        padding: 24px;
+        background: var(--gs-surface);
+        border: 1px solid var(--gs-line);
+        border-radius: var(--gs-r-md);
+        box-shadow: var(--gs-sh-sm);
     }
 
     .filter-heading {
         display: flex;
         align-items: center;
         gap: 10px;
-        color: #123b86;
-        font-size: 19px;
-        font-weight: 800;
         margin-bottom: 18px;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--gs-blue-900);
     }
 
         .filter-heading i {
-            color: #168ddd;
+            color: var(--gs-blue-500);
         }
 
     .filter-form {
@@ -62,401 +55,354 @@
 
     .filter-field label {
         display: block;
+        margin-bottom: 7px;
         font-size: 13px;
-        font-weight: 700;
-        color: #526079;
-        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--gs-muted);
     }
 
     .filter-input,
     .filter-select {
         width: 100%;
-        height: 44px;
-        box-sizing: border-box;
-        padding: 0 12px;
-        border: 1px solid #dce4ef;
-        border-radius: 10px;
-        background: #f9fbff;
-        color: #26364d;
+        height: 46px;
+        padding: 0 14px;
+        border: 1px solid var(--gs-line);
+        border-radius: var(--gs-r-sm);
+        background: #f8faff;
+        color: var(--gs-ink);
         font-size: 14px;
         outline: none;
-        transition: .2s;
+        transition: border-color .2s, box-shadow .2s, background .2s;
     }
+
+        .filter-input:hover,
+        .filter-select:hover {
+            border-color: #c9d6f5;
+        }
 
         .filter-input:focus,
         .filter-select:focus {
-            border-color: #168ddd;
-            box-shadow: 0 0 0 3px rgba(22,141,221,.12);
-            background: white;
+            border-color: var(--gs-blue-700);
+            background: #fff;
+            box-shadow: 0 0 0 4px rgba(10, 60, 255, .12);
         }
 
     .filter-btn,
     .reset-btn {
-        height: 44px;
-        padding: 0 19px;
-        border-radius: 10px;
+        height: 46px;
+        padding: 0 20px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 7px;
-        font-weight: 700;
-        font-size: 13px;
-        text-decoration: none !important;
+        gap: 8px;
+        border-radius: var(--gs-r-sm);
+        font-size: 14px;
+        font-weight: 600;
         white-space: nowrap;
         cursor: pointer;
-        transition: .2s;
+        text-decoration: none !important;
+        transition: transform .2s, box-shadow .2s, border-color .2s, color .2s;
     }
 
     .filter-btn {
-        border: none;
-        color: white !important;
-        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+        border: 0;
+        color: #fff !important;
+        background: linear-gradient(135deg, var(--gs-blue-500), var(--gs-blue-700));
+        box-shadow: 0 8px 16px -8px rgba(10, 60, 255, .7);
     }
 
         .filter-btn:hover {
-            box-shadow: 0 5px 14px rgba(10,60,255,.22);
             transform: translateY(-1px);
+            box-shadow: 0 12px 20px -8px rgba(10, 60, 255, .75);
         }
 
     .reset-btn {
-        border: 1px solid #dce4ef;
-        background: white;
-        color: #58677c !important;
+        border: 1px solid var(--gs-line);
+        background: #fff;
+        color: var(--gs-text) !important;
     }
 
         .reset-btn:hover {
-            border-color: #168ddd;
-            color: #087dc0 !important;
+            border-color: var(--gs-blue-700);
+            color: var(--gs-blue-700) !important;
         }
 
+    /* MỨC GIÁ NHANH */
     .quick-prices {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: 9px;
-        margin-top: 17px;
-        padding-top: 16px;
-        border-top: 1px solid #edf1f7;
+        gap: 10px;
+        margin-top: 18px;
+        padding-top: 18px;
+        border-top: 1px solid var(--gs-line);
     }
 
     .quick-label {
+        margin-right: 4px;
         font-size: 13px;
-        color: #6b778b;
         font-weight: 600;
-        margin-right: 3px;
+        color: var(--gs-muted);
     }
 
     .quick-price {
-        display: inline-block;
-        padding: 8px 14px;
-        border: 1px solid #dce7f5;
-        border-radius: 22px;
-        background: #f5f9ff;
-        color: #2364aa !important;
+        padding: 8px 15px;
+        border: 1px solid transparent;
+        border-radius: 999px;
+        background: var(--gs-blue-100);
+        color: var(--gs-blue-700) !important;
+        font-size: 13px;
+        font-weight: 600;
         text-decoration: none !important;
-        font-size: 12px;
-        font-weight: 700;
-        transition: .2s;
+        transition: background .2s, color .2s;
     }
 
         .quick-price:hover,
         .quick-price.active {
-            color: white !important;
-            border-color: #147fd0;
-            background: linear-gradient(135deg, #1a9bd7, #0a3cff);
+            background: var(--gs-blue-700);
+            color: #fff !important;
         }
 
+    /* THANH THÔNG TIN */
     .product-toolbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
         margin-bottom: 18px;
-        flex-wrap: wrap;
     }
 
     .result-count {
-        color: #667085;
         font-size: 14px;
+        color: var(--gs-muted);
     }
 
         .result-count strong {
-            color: #163d80;
+            color: var(--gs-ink);
         }
 
-    /* LƯỚI SẢN PHẨM */
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 25px;
-        padding: 10px 0;
-    }
-
-    .product-card {
-        background: #fff;
-        border-radius: 16px;
-        overflow: hidden;
-        text-decoration: none;
-        color: inherit;
-        box-shadow: 0 4px 15px rgba(0,0,0,.08);
-        transition: all .3s ease;
-        display: flex;
-        flex-direction: column;
-        border: 1px solid #f0f0f0;
-        min-width: 0;
-    }
-
-        .product-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 35px rgba(10,60,255,.13);
-            border-color: #1a9bd7;
-        }
-
-    .product-image {
-        background: #f8f9ff;
-        padding: 20px;
-        text-align: center;
-        height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-    }
-
-        .product-image img {
-            max-height: 160px;
-            max-width: 100%;
-            object-fit: contain;
-            transition: transform .3s ease;
-        }
-
-    .product-card:hover .product-image img {
-        transform: scale(1.08);
-    }
-
-    .product-info {
-        padding: 15px;
-        flex: 1;
-    }
-
-    .product-name {
-        font-size: 15px;
-        font-weight: 600;
-        color: #222;
-        margin-bottom: 8px;
-        line-height: 1.5;
-        min-height: 42px;
-    }
-
-    .product-price {
-        font-size: 18px;
-        font-weight: 800;
-        color: #e63946;
-        margin: 0;
-    }
-
-    .product-btn {
-        display: block;
-        margin: 0 15px 15px;
-        padding: 10px;
-        text-align: center;
-        background: linear-gradient(135deg, #1a9bd7, #0a3cff);
-        color: white !important;
-        border-radius: 30px;
-        font-size: 13px;
-        font-weight: 600;
-        transition: .3s;
-    }
-
-    .product-card:hover .product-btn {
-        background: linear-gradient(135deg, #ff7b00, #ff3c00);
-    }
-
+    /* KHÔNG CÓ SẢN PHẨM */
     .empty-box {
+        padding: 64px 20px;
         text-align: center;
-        padding: 65px 20px;
-        color: #888;
-        background: #fff;
-        border-radius: 16px;
-        border: 1px solid #edf1f7;
+        color: var(--gs-muted);
+        background: #fafcff;
+        border: 1px dashed #c9d6f5;
+        border-radius: var(--gs-r-md);
     }
 
         .empty-box i {
-            font-size: 52px;
+            margin-bottom: 16px;
+            font-size: 48px;
             color: #b8cce7;
-            margin-bottom: 18px;
         }
 
         .empty-box p {
-            font-size: 17px;
-            margin-bottom: 18px;
+            margin: 0 0 18px;
+            font-size: 16px;
         }
+
+    /* PHÂN TRANG */
+    .pagination-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 9px;
+        margin: 40px 0 30px;
+        flex-wrap: wrap;
+    }
+
+        .pagination-container a,
+        .pagination-container span {
+            min-width: 42px;
+            height: 42px;
+            padding: 0 13px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            border: 1px solid var(--gs-line);
+            background: #fff;
+            color: var(--gs-blue-700);
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all .25s ease;
+        }
+
+            .pagination-container a:hover {
+                background: var(--gs-blue-100);
+                border-color: var(--gs-blue-500);
+                transform: translateY(-2px);
+            }
+
+            .pagination-container a.active {
+                color: #fff;
+                border-color: transparent;
+                background: linear-gradient(135deg, var(--gs-blue-500), var(--gs-blue-700));
+                box-shadow: 0 5px 13px rgba(10, 60, 255, .25);
+            }
+
+    .pagination-info {
+        margin-top: 14px;
+        text-align: center;
+        color: var(--gs-muted);
+        font-size: 13px;
+    }
 
     @@media (max-width: 1100px) {
         .filter-form {
             grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        .product-grid {
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+        .filter-field.sort-field {
+            grid-column: 1 / -1;
         }
     }
 
-    @@media (max-width: 700px) {
-        .danhmuc-header {
-            margin: -15px -12px 22px;
-            padding: 25px 10px;
-        }
-
-            .danhmuc-header h2 {
-                font-size: 23px;
-            }
-
+    @@media (max-width: 560px) {
         .filter-panel {
             padding: 16px;
         }
 
-        .filter-form {
-            grid-template-columns: 1fr 1fr;
-        }
-
-        .filter-field.sort-field {
-            grid-column: 1 / -1;
-        }
-
-        .filter-btn, .reset-btn {
+        .filter-btn,
+        .reset-btn {
             width: 100%;
-            padding: 0 8px;
-        }
-
-        .product-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 12px;
-        }
-
-        .product-image {
-            height: 155px;
-            padding: 12px;
-        }
-
-            .product-image img {
-                max-height: 130px;
-            }
-
-        .product-info {
-            padding: 12px;
-        }
-
-        .product-name {
-            font-size: 13px;
-        }
-
-        .product-price {
-            font-size: 15px;
-        }
-
-        .product-btn {
-            margin: 0 10px 12px;
-            font-size: 12px;
         }
     }
 </style>
 
-@{
-    decimal? giaMin = ViewBag.GiaMin as decimal?;
-    decimal? giaMax = ViewBag.GiaMax as decimal?;
-    string sapXep = ViewBag.SapXep as string ?? "macdinh";
-}
-
-<div class="danhmuc-header">
-    <h2><i class="fa-solid fa-tag"></i> @ViewBag.TenDanhMuc</h2>
+<!-- TIÊU ĐỀ DANH MỤC -->
+<div class="page-hero">
+    <h2>
+        <i class="fa-solid fa-tag"></i>
+        @ViewBag.TenDanhMuc
+    </h2>
     <p>Khám phá sản phẩm yêu thích với mức giá phù hợp</p>
 </div>
 
 <!-- BỘ LỌC GIÁ -->
 <div class="filter-panel">
+
     <div class="filter-heading">
         <i class="fa-solid fa-sliders"></i>
         Lọc sản phẩm
     </div>
 
-    @using (Html.BeginForm("DanhMuc", "SanPham",
-        new { id = ViewContext.RouteData.Values["id"] },
-        FormMethod.Get, new { @class = "filter-form" }))
+    @using (Html.BeginForm(
+        "DanhMuc",
+        "SanPham",
+        new { id = categoryRouteId },
+        FormMethod.Get,
+        new { @class = "filter-form" }))
     {
         <div class="filter-field">
             <label for="giaMin">Giá thấp nhất (VNĐ)</label>
+
             <input class="filter-input"
-                   type="number" id="giaMin" name="giaMin"
-                   min="0" step="1000"
+                   type="number"
+                   id="giaMin"
+                   name="giaMin"
+                   min="0"
+                   step="1000"
                    placeholder="Ví dụ: 10000"
                    value="@(giaMin.HasValue ? giaMin.Value.ToString("0.##") : "")" />
         </div>
 
         <div class="filter-field">
             <label for="giaMax">Giá cao nhất (VNĐ)</label>
+
             <input class="filter-input"
-                   type="number" id="giaMax" name="giaMax"
-                   min="0" step="1000"
+                   type="number"
+                   id="giaMax"
+                   name="giaMax"
+                   min="0"
+                   step="1000"
                    placeholder="Ví dụ: 50000"
                    value="@(giaMax.HasValue ? giaMax.Value.ToString("0.##") : "")" />
         </div>
 
         <div class="filter-field sort-field">
             <label for="sapXep">Sắp xếp sản phẩm</label>
+
             <select class="filter-select" id="sapXep" name="sapXep">
-                <option value="macdinh" @(sapXep == "macdinh" ? "selected" : "")>Mặc định</option>
-                <option value="tang" @(sapXep == "tang" ? "selected" : "")>Giá thấp đến cao</option>
-                <option value="giam" @(sapXep == "giam" ? "selected" : "")>Giá cao đến thấp</option>
+                <option value="macdinh" @(sapXep == "macdinh" ? "selected" : "")>
+                    Mặc định
+                </option>
+
+                <option value="tang" @(sapXep == "tang" ? "selected" : "")>
+                    Giá thấp đến cao
+                </option>
+
+                <option value="giam" @(sapXep == "giam" ? "selected" : "")>
+                    Giá cao đến thấp
+                </option>
             </select>
         </div>
 
         <button class="filter-btn" type="submit">
-            <i class="fa-solid fa-filter"></i> Lọc giá
+            <i class="fa-solid fa-filter"></i>
+            Lọc giá
         </button>
 
         <a class="reset-btn"
-           href="@Url.Action("DanhMuc", "SanPham",
-                new { id = ViewContext.RouteData.Values["id"] })">
-            <i class="fa-solid fa-rotate-left"></i> Xóa lọc
+           href="@Url.Action("DanhMuc", "SanPham", new { id = categoryRouteId })">
+            <i class="fa-solid fa-rotate-left"></i>
+            Xóa lọc
         </a>
     }
 
+    <!-- MỨC GIÁ NHANH -->
     <div class="quick-prices">
         <span class="quick-label">Mức giá nhanh:</span>
 
-        <a class="quick-price"
-           href="@Url.Action("DanhMuc", "SanPham", new { id = ViewContext.RouteData.Values["id"], giaMax = 30000 })">
+        <a class="quick-price@(q1 ? " active" : "")"
+           href="@Url.Action("DanhMuc", "SanPham", new {
+                id = categoryRouteId,
+                giaMax = 30000
+           })">
             Dưới 30.000đ
         </a>
 
-        <a class="quick-price"
-           href="@Url.Action("DanhMuc", "SanPham", new { id = ViewContext.RouteData.Values["id"], giaMin = 30000, giaMax = 50000 })">
+        <a class="quick-price@(q2 ? " active" : "")"
+           href="@Url.Action("DanhMuc", "SanPham", new {
+                id = categoryRouteId,
+                giaMin = 30000,
+                giaMax = 50000
+           })">
             30.000đ – 50.000đ
         </a>
 
-        <a class="quick-price"
-           href="@Url.Action("DanhMuc", "SanPham", new { id = ViewContext.RouteData.Values["id"], giaMin = 50000 })">
+        <a class="quick-price@(q3 ? " active" : "")"
+           href="@Url.Action("DanhMuc", "SanPham", new {
+                id = categoryRouteId,
+                giaMin = 50000
+           })">
             Từ 50.000đ
         </a>
     </div>
 </div>
 
+<!-- THÔNG TIN SẢN PHẨM -->
 <div class="product-toolbar">
     <div class="result-count">
-        Danh mục: <strong>@ViewBag.TenDanhMuc</strong>
-        &nbsp;|&nbsp; Tìm thấy <strong>@Model.Count</strong> sản phẩm
+        Danh mục:
+        <strong>@ViewBag.TenDanhMuc</strong>
+
+        &nbsp;|&nbsp;
+
+        Tìm thấy:
+        <strong>@tongSoSanPham</strong>
+        sản phẩm
     </div>
 </div>
 
+<!-- DANH SÁCH SẢN PHẨM -->
 @if (!Model.Any())
 {
     <div class="empty-box">
         <i class="fa-solid fa-box-open"></i>
+
         <p>Không tìm thấy sản phẩm phù hợp với bộ lọc giá.</p>
+
         <a class="reset-btn"
-           href="@Url.Action("DanhMuc", "SanPham",
-                new { id = ViewContext.RouteData.Values["id"] })">
+           href="@Url.Action("DanhMuc", "SanPham", new { id = categoryRouteId })">
             Xem tất cả sản phẩm
         </a>
     </div>
@@ -464,26 +410,89 @@
 else
 {
     <div class="product-grid">
+
         @foreach (var item in Model)
         {
             <a href="@Url.Action("SanPham", "Home", new { id = item.Id })"
                class="product-card">
+
                 <div class="product-image">
                     <img src="@Url.Content("~/Images/" + item.HinhAnh)"
                          alt="@item.TenSanPham" />
                 </div>
 
                 <div class="product-info">
-                    <p class="product-name">@item.TenSanPham</p>
+                    <p class="product-name">
+                        @item.TenSanPham
+                    </p>
+
                     <p class="product-price">
                         @String.Format("{0:N0}", item.Gia) VNĐ
                     </p>
                 </div>
 
                 <span class="product-btn">
-                    <i class="fa-solid fa-cart-shopping"></i> Xem chi tiết
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    Xem chi tiết
                 </span>
+
             </a>
         }
+
+    </div>
+}
+
+<!-- PHÂN TRANG: ĐẶT NGOÀI IF / ELSE ĐỂ TRÁNH LỖI RAZOR -->
+@if (Model.Any() && totalPages > 1)
+{
+    <div class="pagination-container">
+
+        @if (currentPage > 1)
+        {
+            <a href="@Url.Action("DanhMuc", "SanPham", new {
+                id = categoryRouteId,
+                page = currentPage - 1,
+                giaMin = giaMin,
+                giaMax = giaMax,
+                sapXep = sapXep
+            })"
+               title="Trang trước">
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+        }
+
+        @for (int i = 1; i <= totalPages; i++)
+        {
+            <a href="@Url.Action("DanhMuc", "SanPham", new {
+                id = categoryRouteId,
+                page = i,
+                giaMin = giaMin,
+                giaMax = giaMax,
+                sapXep = sapXep
+            })"
+               class="@(i == currentPage ? "active" : "")">
+                @i
+            </a>
+        }
+
+        @if (currentPage < totalPages)
+        {
+            <a href="@Url.Action("DanhMuc", "SanPham", new {
+                id = categoryRouteId,
+                page = currentPage + 1,
+                giaMin = giaMin,
+                giaMax = giaMax,
+                sapXep = sapXep
+            })"
+               title="Trang tiếp">
+                <i class="fa-solid fa-chevron-right"></i>
+            </a>
+        }
+
+    </div>
+
+    <div class="pagination-info">
+        Trang @currentPage / @totalPages
+        · Hiển thị tối đa 10 sản phẩm mỗi trang
     </div>
 }

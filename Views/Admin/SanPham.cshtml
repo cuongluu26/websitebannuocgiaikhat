@@ -54,8 +54,8 @@
 
             <!-- ADD -->
             <div class="col-md-3 text-end">
-                <a href="@Url.Action("Create")" class="btn btn-success">
-                    + Thêm sản phẩm
+                <a href="@Url.Action("CreateSanPham", "Admin")" class="btn btn-success">
+                    <i class="fa fa-plus"></i> Thêm sản phẩm
                 </a>
             </div>
 
@@ -132,7 +132,7 @@
 
                         <!-- ACTION -->
                         <td class="text-center">
-                            <a href="@Url.Action("Edit", new { id = sp.Id })"
+                            <a href="@Url.Action("EditSanPham", "Admin", new { id = sp.Id })"
                                class="btn btn-sm btn-warning">
                                 <i class="fa fa-edit"></i>
                             </a>

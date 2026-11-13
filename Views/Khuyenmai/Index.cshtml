@@ -1,0 +1,308 @@
+﻿@model List<Wedsite_LTWW.Models.Voucher>
+@{
+    ViewBag.Title = "Khuyến mãi";
+    ViewBag.HideHero = true; // ẩn ảnh banner lớn ở layout (xem hướng dẫn sửa layout)
+    int page = (int)ViewBag.Page;
+    int totalPages = (int)ViewBag.TotalPages;
+}
+
+<style>
+    .km-wrap {
+        max-width: 1100px;
+        margin: 20px auto 50px;
+        padding: 0 16px;
+    }
+
+    .km-breadcrumb {
+        font-size: 13px;
+        color: #0b66d6;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e7eb;
+        margin-bottom: 24px;
+    }
+
+        .km-breadcrumb a {
+            color: #0b66d6;
+            text-decoration: none;
+        }
+
+        .km-breadcrumb span {
+            color: #374151;
+        }
+
+    .km-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+    }
+
+    .km-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 4px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        transition: .2s;
+    }
+
+        .km-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 22px rgba(0,0,0,.12);
+        }
+
+    /* Khung "banner" thay cho ảnh khuyến mãi */
+    .km-banner {
+        height: 140px;
+        overflow: hidden;
+        background: linear-gradient(135deg, #1d9bd8, #0b3fff);
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+
+        .km-banner .km-big {
+            font-size: 24px;
+            font-weight: 800;
+            line-height: 1.25;
+            text-align: center;
+            padding: 0 14px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            word-break: break-word;
+        }
+
+        .km-banner .km-sub {
+            font-size: 12px;
+            opacity: .9;
+            margin-top: 4px;
+        }
+
+        .km-banner i {
+            font-size: 22px;
+            margin-bottom: 6px;
+        }
+
+    .km-meta {
+        text-align: right;
+        font-size: 11px;
+        color: #9ca3af;
+        padding: 6px 10px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .km-title {
+        padding: 10px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #1f2937;
+        line-height: 1.5;
+        min-height: 54px;
+    }
+
+    .km-code-row {
+        display: flex;
+        gap: 6px;
+        padding: 0 10px 10px;
+        margin-top: auto;
+    }
+
+    .km-code {
+        flex: 1;
+        text-align: center;
+        border: 1px dashed #0b66d6;
+        color: #0b66d6;
+        font-weight: 700;
+        font-size: 13px;
+        padding: 6px 4px;
+        border-radius: 4px;
+        letter-spacing: 1px;
+    }
+
+    .km-copy {
+        background: #0b3fff;
+        color: #fff;
+        border: 0;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 0 12px;
+        cursor: pointer;
+    }
+
+        .km-copy:hover {
+            background: #0a34d1;
+        }
+
+    .km-empty {
+        text-align: center;
+        color: #6b7280;
+        padding: 60px 0;
+    }
+
+    /* Phân trang */
+    .km-paging {
+        display: flex;
+        justify-content: center;
+        gap: 6px;
+        margin-top: 28px;
+    }
+
+        .km-paging a, .km-paging span {
+            min-width: 26px;
+            height: 26px;
+            line-height: 26px;
+            text-align: center;
+            font-size: 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 3px;
+            color: #374151;
+            text-decoration: none;
+            background: #fff;
+        }
+
+            .km-paging a:hover {
+                border-color: #0b66d6;
+                color: #0b66d6;
+            }
+
+        .km-paging .active {
+            background: #0b66d6;
+            border-color: #0b66d6;
+            color: #fff;
+        }
+
+        .km-paging .disabled {
+            color: #d1d5db;
+        }
+
+    @@media (max-width: 992px) {
+        .km-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 720px) {
+        .km-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 480px) {
+        .km-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="km-wrap">
+    <div class="km-breadcrumb">
+        <a href="/">Trang chủ</a> / <span>Khuyến mãi</span>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="km-empty">Hiện chưa có khuyến mãi nào.</div>
+    }
+    else
+    {
+        <div class="km-grid">
+            @foreach (var v in Model)
+            {
+                // ==== NẾU BÁO LỖI TÊN THUỘC TÍNH, CHỈ CẦN SỬA KHỐI NÀY ====
+                string ma = v.Ma;                       // mã voucher
+                string tieuDe = v.TieuDe;               // tiêu đề
+                string nhan = v.TieuDe;                 // chữ to trên banner (vd: -10%, -20K)
+                string phu = "Đơn từ " + v.DonToiThieu.ToString("N0") + "đ";
+                string soDung = v.SoLuong == null
+                    ? v.DaDung + " / ∞"
+                    : v.DaDung + " / " + v.SoLuong;
+                // ============================================================
+
+                <div class="km-card">
+                    <div class="km-banner">
+                        <i class="fa-solid fa-ticket"></i>
+                        <div class="km-big">@nhan</div>
+                        <div class="km-sub">@phu</div>
+                    </div>
+                    <div class="km-meta">
+                        <i class="fa-regular fa-eye"></i> Đã dùng @soDung
+                    </div>
+                    <div class="km-title">@tieuDe</div>
+                    <div class="km-meta" style="border-top:1px solid #e5e7eb;border-bottom:0;text-align:left;">
+                        HSD: @v.NgayKetThuc.ToString("dd/MM/yyyy HH:mm")
+                    </div>
+                    <div class="km-code-row">
+                        <div class="km-code">@ma</div>
+                        <button type="button" class="km-copy" data-code="@ma">Sao chép</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        if (totalPages > 1)
+        {
+            <div class="km-paging">
+                @if (page > 1)
+                {
+                    <a href="@Url.Action("Index", "KhuyenMai", new { page = page - 1 })">&lsaquo;</a>
+                }
+                else
+                {
+                    <span class="disabled">&lsaquo;</span>
+                }
+
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    if (i == page)
+                    {
+                        <span class="active">@i</span>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Index", "KhuyenMai", new { page = i })">@i</a>
+                    }
+                }
+
+                @if (page < totalPages)
+                {
+                    <a href="@Url.Action("Index", "KhuyenMai", new { page = page + 1 })">&rsaquo;</a>
+                }
+                else
+                {
+                    <span class="disabled">&rsaquo;</span>
+                }
+            </div>
+        }
+    }
+</div>
+
+<script>
+        document.querySelectorAll('.km-copy').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var code = btn.getAttribute('data-code');
+                var done = function () {
+                    var old = btn.textContent;
+                    btn.textContent = 'Đã chép!';
+                    setTimeout(function () { btn.textContent = old; }, 1500);
+                };
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(code).then(done);
+                } else {
+                    var t = document.createElement('textarea');
+                    t.value = code;
+                    document.body.appendChild(t);
+                    t.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(t);
+                    done();
+                }
+            });
+        });
+</script>

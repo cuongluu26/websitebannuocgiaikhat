@@ -1,8 +1,8 @@
 ﻿@model List<Wedsite_LTWW.Models.SanPham>
 
-<link href="~/Content/sanpham.css" rel="stylesheet" />
+@* Đã bỏ link sanpham.css: giao diện thẻ sản phẩm nay nằm trong site.css *@
 
-<h2 class="title">DANH SÁCH SẢN PHẨM</h2>
+<h2 class="section-title">Danh sách sản phẩm</h2>
 
 <div class="product-container" id="product-container">
 
@@ -29,31 +29,37 @@
 </div>
 
 <div class="load-more-wrapper">
-    <button id="loadMoreBtn" class="load-more-btn">
+    <button type="button" id="loadMoreBtn" class="load-more-btn">
         HIỂN THỊ THÊM
     </button>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    let page = 2;
+@section Scripts {
+    <script>
+        var page = 2;
 
-    $("#loadMoreBtn").click(function () {
-        $.ajax({
-            url: '@Url.Action("LoadMore", "Home")',
-            type: 'GET',
-            data: { page: page },
-            success: function (data) {
-                if (data.trim() === "") {
-                    $("#loadMoreBtn").hide();
-                } else {
-                    $("#product-container").append(data);
-                    page++;
+        $("#loadMoreBtn").click(function () {
+            var btn = $(this);
+            btn.prop("disabled", true).text("ĐANG TẢI...");
+
+            $.ajax({
+                url: '@Url.Action("LoadMore", "Home")',
+                type: 'GET',
+                data: { page: page },
+                success: function (data) {
+                    if (data.trim() === "") {
+                        btn.hide();
+                    } else {
+                        $("#product-container").append(data);
+                        page++;
+                        btn.prop("disabled", false).text("HIỂN THỊ THÊM");
+                    }
+                },
+                error: function () {
+                    btn.prop("disabled", false).text("HIỂN THỊ THÊM");
+                    alert("Có lỗi xảy ra!");
                 }
-            },
-            error: function () {
-                alert("Có lỗi xảy ra!");
-            }
+            });
         });
-    });
-</script>
+    </script>
+}

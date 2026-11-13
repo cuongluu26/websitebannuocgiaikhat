@@ -222,48 +222,8 @@
         color: #ffd700;
     }
 
-/* MENU GIỮA */
 
-.menu {
-    display: flex;
-    gap: 40px;
-}
-
-    .menu a {
-        text-decoration: none;
-        color: white;
-        font-size: 16px;
-        font-weight: 600;
-        padding: 6px 14px;
-        border-radius: 20px;
-        transition: 0.3s;
-        position: relative;
-    }
-
-        /* hover menu */
-
-        .menu a:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-2px);
-        }
-
-        /* gạch chạy */
-
-        .menu a::after {
-            content: "";
-            position: absolute;
-            bottom: -6px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: #ffd700;
-            transition: 0.3s;
-        }
-
-        .menu a:hover::after {
-            width: 100%;
-        }
-
+    
 /* HOTLINE */
 
 .hotline {

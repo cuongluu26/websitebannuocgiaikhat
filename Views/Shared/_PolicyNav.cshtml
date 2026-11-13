@@ -1,0 +1,22 @@
+﻿
+@model string
+
+@{
+    var items = new[]
+    {
+        new { Key = "giaohang",  Text = "Chính sách giao hàng",  Url = "/Home/ChinhSachGiaoHang",  Icon = "fa-truck-fast" },
+        new { Key = "kiemhang",  Text = "Chính sách kiểm hàng",  Url = "/Home/ChinhSachKiemHang",  Icon = "fa-box-open" },
+        new { Key = "doitra",    Text = "Chính sách đổi trả",    Url = "/Home/ChinhSachDoiTra",    Icon = "fa-rotate-left" },
+        new { Key = "thanhtoan", Text = "Chính sách thanh toán", Url = "/Home/ChinhSachThanhToan", Icon = "fa-credit-card" }
+    };
+}
+
+<nav class="policy-nav" aria-label="Danh sách chính sách">
+    <div class="policy-nav-title">Chính sách</div>
+    @foreach (var it in items)
+    {
+        <a href="@it.Url" class="policy-nav-link@(Model == it.Key ? " active" : "")">
+            <i class="fa-solid @it.Icon"></i> @it.Text
+        </a>
+    }
+</nav>

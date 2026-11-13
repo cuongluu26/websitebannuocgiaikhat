@@ -52,6 +52,7 @@ namespace Wedsite_LTWW.Controllers
         {
             ViewBag.TongSanPham = db.SanPhams.Count();
             ViewBag.TongDanhMuc = db.DanhMucs.Count();
+            ViewBag.VoucherCount = db.Vouchers.Count();
             ViewBag.TongDonHang = db.DonHangs.Count();
             ViewBag.TongUser = db.Users.Count();
             ViewBag.LienHeChuaDoc = db.LienHes.Count(x => x.DaDoc == false);
@@ -127,7 +128,7 @@ namespace Wedsite_LTWW.Controllers
             db.SanPhams.Add(sp);
             db.SaveChanges();
 
-            return RedirectToAction("SanPham");
+            return RedirectToAction("CreateSanPham");
         }
 
         public ActionResult EditSanPham(int id)
