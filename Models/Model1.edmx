@@ -127,6 +127,7 @@
           <Property Name="DaDung" Type="int" Nullable="false" />
           <Property Name="MoiNguoiToiDa" Type="int" Nullable="false" />
           <Property Name="TrangThai" Type="bit" Nullable="false" />
+          <Property Name="HinhAnh" Type="nvarchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="VoucherUsage">
           <Key>
@@ -463,6 +464,7 @@
           <Property Name="MoiNguoiToiDa" Type="Int32" Nullable="false" />
           <Property Name="TrangThai" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="VoucherUsages" Relationship="GasSparkDBModel.FK__VoucherUs__Vouch__1A34DF26" FromRole="Voucher" ToRole="VoucherUsage" />
+          <Property Name="HinhAnh" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="VoucherUsage">
           <Key>
@@ -617,6 +619,7 @@
           <EntitySetMapping Name="Vouchers">
             <EntityTypeMapping TypeName="GasSparkDBModel.Voucher">
               <MappingFragment StoreEntitySet="Voucher">
+                <ScalarProperty Name="HinhAnh" ColumnName="HinhAnh" />
                 <ScalarProperty Name="TrangThai" ColumnName="TrangThai" />
                 <ScalarProperty Name="MoiNguoiToiDa" ColumnName="MoiNguoiToiDa" />
                 <ScalarProperty Name="DaDung" ColumnName="DaDung" />

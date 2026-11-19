@@ -63,6 +63,27 @@
             font-size: 12px;
         }
 
+    .vc-thumb {
+        width: 88px;
+        height: 48px;
+        border-radius: 6px;
+        object-fit: cover;
+        display: block;
+        background: #eef2ff;
+    }
+
+    .vc-noimg {
+        width: 88px;
+        height: 48px;
+        border-radius: 6px;
+        background: #f1f3f9;
+        color: #aab;
+        font-size: 11px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     .tag {
         padding: 3px 10px;
         border-radius: 12px;
@@ -95,6 +116,7 @@
         <table class="vc-table">
             <thead>
                 <tr>
+                    <th>Ảnh</th>
                     <th>Mã</th>
                     <th>Tiêu đề</th>
                     <th>Giảm</th>
@@ -109,7 +131,18 @@
                 @foreach (var v in Model)
                 {
                     bool hetHan = v.NgayKetThuc < DateTime.Now;
+                    bool coAnh = !string.IsNullOrEmpty(v.HinhAnh);
                     <tr>
+                        <td>
+                            @if (coAnh)
+                            {
+                                <img class="vc-thumb" src="~/Content/Images/KhuyenMai/@v.HinhAnh" alt="@v.Ma" />
+                            }
+                            else
+                            {
+                                <div class="vc-noimg">Chưa có ảnh</div>
+                            }
+                        </td>
                         <td><b>@v.Ma</b></td>
                         <td>@v.TieuDe</td>
                         <td>

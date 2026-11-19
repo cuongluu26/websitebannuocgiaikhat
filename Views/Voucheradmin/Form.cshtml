@@ -2,6 +2,8 @@
 @{
     ViewBag.Title = ViewBag.TieuDeTrang ?? "Voucher";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+    bool coAnh = !string.IsNullOrEmpty(Model.HinhAnh);
+    string anhHienTai = coAnh ? Url.Content("~/Content/Images/KhuyenMai/" + Model.HinhAnh) : "";
 }
 
 <style>
@@ -68,6 +70,46 @@
         color: #d93025;
         margin-bottom: 14px;
     }
+
+    /* ---- Upload ảnh ---- */
+    .vf-img-box {
+        padding: 14px;
+        border: 1.5px dashed #b8c4f0;
+        border-radius: 10px;
+        background: #f8faff;
+    }
+
+    .vf-img-preview {
+        width: 100%;
+        max-width: 320px;
+        aspect-ratio: 800 / 440;
+        border-radius: 10px;
+        background: #e9eefc center / cover no-repeat;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #8a97c4;
+        font-size: 13px;
+        margin-bottom: 10px;
+        overflow: hidden;
+    }
+
+        .vf-img-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+    .vf-img-box input[type=file] {
+        font-size: 13px;
+    }
+
+    .vf-img-del {
+        display: block;
+        margin-top: 8px;
+        font-weight: 500 !important;
+    }
 </style>
 
 <div class="vf-wrap">
@@ -75,7 +117,8 @@
 
     @Html.ValidationSummary(true, "", new { @class = "vf-err" })
 
-    @using (Html.BeginForm())
+    @* enctype multipart là BẮT BUỘC để gửi được file *@
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.Id)
@@ -105,6 +148,32 @@
         <div class="vf-group">
             <label>Mô tả</label>
             <textarea name="MoTa" rows="2">@Model.MoTa</textarea>
+        </div>
+
+        <div class="vf-group">
+            <label>Hình ảnh khuyến mãi</label>
+            <div class="vf-img-box">
+                <div class="vf-img-preview" id="vfPreview">
+                    @if (coAnh)
+                    {
+                        <img src="@anhHienTai" alt="Ảnh voucher" />
+                    }
+                    else
+                    {
+                        <span>Chưa có ảnh</span>
+                    }
+                </div>
+
+                <input type="file" name="fileAnh" id="vfFile" accept=".jpg,.jpeg,.png,.webp,image/*" />
+                <div class="vf-hint">JPG, PNG hoặc WEBP, tối đa 2MB. Tỉ lệ khuyến nghị 800×440. Để trống nếu không muốn đổi ảnh.</div>
+
+                @if (coAnh)
+                {
+                    <label class="vf-img-del">
+                        <input type="checkbox" name="xoaAnh" value="true" id="vfXoa" /> Xóa ảnh hiện tại
+                    </label>
+                }
+            </div>
         </div>
 
         <div class="vf-row">
@@ -169,3 +238,38 @@
         <a class="vf-back" href="@Url.Action("Index")">Quay lại</a>
     }
 </div>
+
+<script>
+    (function () {
+        var file = document.getElementById('vfFile');
+        var box = document.getElementById('vfPreview');
+        var del = document.getElementById('vfXoa');
+        var oldHtml = box.innerHTML;
+        var MAX = 2 * 1024 * 1024;
+
+        file.addEventListener('change', function () {
+            var f = this.files[0];
+            if (!f) { box.innerHTML = oldHtml; return; }
+
+            if (f.size > MAX) {
+                alert('Ảnh tối đa 2MB. Vui lòng chọn ảnh nhỏ hơn.');
+                this.value = '';
+                box.innerHTML = oldHtml;
+                return;
+            }
+
+            var img = document.createElement('img');
+            img.src = URL.createObjectURL(f);
+            box.innerHTML = '';
+            box.appendChild(img);
+            if (del) del.checked = false;      // chọn ảnh mới thì bỏ tick "Xóa ảnh"
+        });
+
+        if (del) {
+            del.addEventListener('change', function () {
+                if (this.checked) { file.value = ''; box.innerHTML = '<span>Sẽ xóa ảnh khi lưu</span>'; }
+                else { box.innerHTML = oldHtml; }
+            });
+        }
+    })();
+</script>

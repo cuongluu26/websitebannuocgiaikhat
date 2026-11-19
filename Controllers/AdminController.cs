@@ -8,7 +8,7 @@ using Wedsite_LTWW.Models;
 
 namespace Wedsite_LTWW.Controllers
 {
-    public class AdminController : Controller
+    public partial  class AdminController : Controller
     {
         private readonly GasSparkDBEntities db =
             new GasSparkDBEntities();
@@ -44,30 +44,6 @@ namespace Wedsite_LTWW.Controllers
             base.OnActionExecuting(filterContext);
         }
 
-        // =====================================================
-        // DASHBOARD  ->  Views/Admin/Index.cshtml
-        // So lieu truyen qua ViewBag
-        // =====================================================
-        public ActionResult Index()
-        {
-            ViewBag.TongSanPham = db.SanPhams.Count();
-            ViewBag.TongDanhMuc = db.DanhMucs.Count();
-            ViewBag.VoucherCount = db.Vouchers.Count();
-            ViewBag.TongDonHang = db.DonHangs.Count();
-            ViewBag.TongUser = db.Users.Count();
-            ViewBag.LienHeChuaDoc = db.LienHes.Count(x => x.DaDoc == false);
-
-            ViewBag.DoanhThu = db.DonHangs
-                .Where(x => x.TrangThai == "Hoàn thành")
-                .Select(x => (decimal?)x.TongTien)
-                .Sum() ?? 0;
-
-            ViewBag.ChoThanhToan = db.DonHangs.Count(x =>
-                x.PhuongThucThanhToan == "Banking" &&
-                x.TrangThaiThanhToan != "Đã thanh toán");
-
-            return View();
-        }
 
         // =====================================================
         // SAN PHAM  ->  SanPham / CreateSanPham / EditSanPham

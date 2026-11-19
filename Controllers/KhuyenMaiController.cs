@@ -35,6 +35,7 @@ namespace Wedsite_LTWW.Controllers
 
             ViewBag.Page = page;
             ViewBag.TotalPages = totalPages;
+            ViewBag.DanhMuc = db.DanhMucs.ToList();
 
             return View(ds);
         }

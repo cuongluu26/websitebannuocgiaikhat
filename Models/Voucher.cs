@@ -34,6 +34,7 @@ namespace Wedsite_LTWW.Models
         public int DaDung { get; set; }
         public int MoiNguoiToiDa { get; set; }
         public bool TrangThai { get; set; }
+        public string HinhAnh { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<VoucherUsage> VoucherUsages { get; set; }

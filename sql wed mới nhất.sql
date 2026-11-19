@@ -361,3 +361,6 @@ WHERE @IdDM IS NOT NULL
 PRINT N'Đã thêm: ' + CAST(@@ROWCOUNT AS NVARCHAR(10)) + N' sản phẩm vào danh mục Nước giải khát (Id = ' + CAST(@IdDM AS NVARCHAR(10)) + N')';
 GO
 
+UPDATE Voucher SET HinhAnh = LOWER(Ma) + '.png'
+WHERE Ma IN ('WEEKEND20','BLACKFRI30','SUMMER25','COMBO50K','TRASUA10','GAS10',
+             'FREE20K','COFFEE5K','SAVE30K','QUATANG40','WELCOME15','VIP50');

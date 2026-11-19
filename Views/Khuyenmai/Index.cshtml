@@ -87,7 +87,24 @@
             font-size: 22px;
             margin-bottom: 6px;
         }
+    .km-banner {
+        padding: 0;
+    }
 
+    .km-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .km-fallback {
+        position: absolute;
+        inset: 0;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
     .km-meta {
         text-align: right;
         font-size: 11px;
@@ -226,10 +243,19 @@
                 // ============================================================
 
                 <div class="km-card">
+                    @{
+                        string anh = !string.IsNullOrEmpty(v.HinhAnh)
+                            ? Url.Content("~/Content/Images/KhuyenMai/" + v.HinhAnh)
+                            : Url.Content("~/Content/Images/KhuyenMai/" + ma.ToLower() + ".png");
+                    }
                     <div class="km-banner">
-                        <i class="fa-solid fa-ticket"></i>
-                        <div class="km-big">@nhan</div>
-                        <div class="km-sub">@phu</div>
+                        <img src="@anh" alt="@tieuDe" class="km-img"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                        <div class="km-fallback" style="display:none;">
+                            <i class="fa-solid fa-ticket"></i>
+                            <div class="km-big">@nhan</div>
+                            <div class="km-sub">@phu</div>
+                        </div>
                     </div>
                     <div class="km-meta">
                         <i class="fa-regular fa-eye"></i> Đã dùng @soDung
